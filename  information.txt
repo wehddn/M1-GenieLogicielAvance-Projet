@@ -1,3 +1,8 @@
 NOM, Prénom, mail, numéro etudiant et Formation
 
-LE JEUNE Alban albanlejeune94@gmail.com 21960311 Impairs
+LE JEUNE Alban albanlejeune94@gmail.com 21960311 IMPAIRS
+SONNEVILLE Charly charly.sonneville@gmail.com 71800649 IMPAIRS
+GRAFF Nicolas nicolas.graff@etu.u-paris.fr 22209354 LP
+QUACH Kévin kevin.quach360@gmail.com 71800727 LP
+CHEMEQUE Maël maelchemeque@gmail.com 21961183 GENIAL
+GANGNEUX Paul paul.gangneux@gmail.com 21958573 GENIAL

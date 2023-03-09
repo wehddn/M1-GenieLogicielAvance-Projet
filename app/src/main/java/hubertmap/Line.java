@@ -1,4 +1,4 @@
-public class Line extends Station{
+/*public class Line extends Station{
     private String name;
     private String TerminalStationDeparture;
     private String TerminalStationArrival;
@@ -20,4 +20,4 @@ public class Line extends Station{
     public String getTerminalStationArrival(){
         return TerminalStationArrival;
     }
-}
+}*/

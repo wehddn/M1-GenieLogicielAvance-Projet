@@ -1,7 +1,9 @@
-import java.io. * ;
+package hubertmap.model.parser;
+
+import java.io.* ;
 import java.util.Scanner;
 
-public class InterpreterCSV extends InterpreterV0 {
+public class InterpreterCSV {
     public static void main(String[] args) {
         try {
             File file = new File("test.csv");
@@ -9,8 +11,10 @@ public class InterpreterCSV extends InterpreterV0 {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] values = line.split(",");
-                Edge edge = new Edge(values[0], values[1], values[2]);
-                System.out.println(edge);
+                for (String s : values) {
+                    System.out.print(s + " ");
+                }
+                System.out.println();
             }
             scanner.close();
         } catch (FileNotFoundException e) {

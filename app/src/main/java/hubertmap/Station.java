@@ -4,15 +4,15 @@ public class Station {
     private Float x;
     private Float y;
 
-    public Station(String Name, ArrayList<Line> Lines, Float x, Float y){
+    public Station(String Name, ArrayList<int> allLines, Float x, Float y){
         this.Name = Name;
         this.x = x;
         this.y = y;
-        if(Lines != null){
-            this.Lines = Lines;
+        if(allLines != null){
+            this.allLines = Lines;
         }
         else{
-            this.Lines = new ArrayList<Line>();
+            this.allLines = new ArrayList<int>();
         }
     }
 
@@ -20,7 +20,7 @@ public class Station {
         return Name;
     }
 
-    public ArrayList<Line> getLines(){
+    public ArrayList<int> getAllLines(){
         return Lines;
     }
 

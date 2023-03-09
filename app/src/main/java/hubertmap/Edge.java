@@ -4,7 +4,7 @@ public class Edge extends Station{
     private Station StartingStation;
     private Station EndingStation;
 
-    public Edge  (Station StartingStation, Station EndingStation, int Line){
+    public createEdgeForSimpleParser  (Station StartingStation, Station EndingStation, int Line){
         this.StartingStation = StartingStation;
         this.EndingStation = EndingStation;
         this.Line = Line;

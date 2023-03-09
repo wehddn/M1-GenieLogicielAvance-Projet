@@ -3,7 +3,7 @@ package hubertmap.model.parser;
 import java.io.* ;
 import java.util.Scanner;
 
-public class InterpreterCSV {
+public class ParserCSV {
     public static void main(String[] args) {
         try {
             File file = new File("test.csv");

@@ -1,7 +1,7 @@
 import java.io. * ;
 import java.util.Scanner;
 
-public class Interpreter extends InterpreterV0 {
+public class InterpreterCSV extends InterpreterV0 {
     public static void main(String[] args) {
         try {
             File file = new File("test.csv");

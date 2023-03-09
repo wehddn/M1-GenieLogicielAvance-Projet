@@ -1,8 +1,8 @@
-public class Graph extends Station, Edge{
+public class Network extends Station, Edge{
     private ArrayList<Station> Stations;
     private ArrayList<Edge> Edges;
 
-    public Graph(ArrayList<Station> Stations, ArrayList<Edge> Edges){
+    public Network(ArrayList<Station> Stations, ArrayList<Edge> Edges){
         if(Stations != null){
             this.Stations = Stations;
         }

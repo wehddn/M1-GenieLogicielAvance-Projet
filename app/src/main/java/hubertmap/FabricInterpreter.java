@@ -1,4 +1,4 @@
-public abstract class InterpreterV0 {
+public abstract class FabricInterpreter {
     
     private String line;
     private String TerminalStationDeparture;

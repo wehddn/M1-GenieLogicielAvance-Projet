@@ -1,6 +1,6 @@
 package hubertmap.model.parser;
 
-public abstract class FabricInterpreter {
+public abstract class FabricParser {
     
     private String line;
     private String TerminalStationDeparture;

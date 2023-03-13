@@ -14,6 +14,10 @@
 
 ./gradlew test
 
+## Apply Spotless code formatter
+
+./gradlew spotlessApply
+
 
 # Windows :
 
@@ -31,3 +35,7 @@ gradle run
 ## Run the tests
 
 gradle test
+
+## Apply Spotless code formatter
+
+gradle spotlessApply

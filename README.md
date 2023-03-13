@@ -18,6 +18,10 @@
 
 ./gradlew javadoc
 
+## Apply Spotless code formatter
+
+./gradlew spotlessApply
+
 
 # Windows :
 
@@ -39,3 +43,7 @@ gradle test
 ## Generate javadoc in build/docs/javadoc
 
 gradle javadoc
+
+## Apply Spotless code formatter
+
+gradle spotlessApply

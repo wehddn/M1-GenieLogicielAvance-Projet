@@ -14,6 +14,10 @@
 
 ./gradlew test
 
+## Generate javadoc in build/docs/javadoc
+
+./gradlew javadoc
+
 
 # Windows :
 
@@ -31,3 +35,7 @@ gradle run
 ## Run the tests
 
 gradle test
+
+## Generate javadoc in build/docs/javadoc
+
+gradle javadoc

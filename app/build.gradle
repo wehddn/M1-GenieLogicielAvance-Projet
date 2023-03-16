@@ -9,6 +9,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'java'
 }
 
 repositories {
@@ -33,3 +34,13 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+javadoc {
+    source = sourceSets.main.allJava
+    destinationDir = reporting.file("javadoc")
+    classpath = configurations.runtimeClasspath
+}
+
+//Create javadoc and check commentaries every build and run
+tasks.build.dependsOn javadoc
+tasks.run.dependsOn javadoc

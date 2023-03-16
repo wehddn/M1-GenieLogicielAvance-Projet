@@ -41,6 +41,6 @@ javadoc {
     classpath = configurations.runtimeClasspath
 }
 
-//Create javadoc and check commentaries every build and run
+//Create javadoc and check comments every build and run
 tasks.build.dependsOn javadoc
 tasks.run.dependsOn javadoc

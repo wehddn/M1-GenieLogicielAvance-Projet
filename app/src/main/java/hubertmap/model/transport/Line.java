@@ -2,24 +2,24 @@ package hubertmap.model.transport;
 
 public class Line {
     private String name;
-    private String terminalStationDeparture;
-    private String terminalStationArrival;
+    private Station firstStation;
+    private Station lastStation;
 
-    public Line(String name, String terminalStationDeparture, String terminalStationArrival){
+    public Line(String name, Station firstStation, Station lastStation){
         this.name = name;
-        this.terminalStationDeparture = terminalStationDeparture;
-        this.terminalStationArrival = terminalStationArrival;
+        this.firstStation = firstStation;
+        this.lastStation = lastStation;
     }
 
     public String getName(){
         return name;
     }
 
-    public String getterminalStationDeparture(){
-        return terminalStationDeparture;
+    public Station getFirstStation(){
+        return firstStation;
     }
 
-    public String getterminalStationArrival(){
-        return terminalStationArrival;
+    public Station getLastStation(){
+        return lastStation;
     }
 }

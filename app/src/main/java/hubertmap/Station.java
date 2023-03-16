@@ -31,4 +31,13 @@ public class Station {
     public Float getY(){
         return y;
     }
+    @Override
+    public boolean equals(Station station){
+        if(this.Name == station.getName() && this.x == station.getX() && this.y == station.getY()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

@@ -1,5 +1,8 @@
 package hubertmap.model;
-public class Network extends Station, Edge{
+
+import java.util.ArrayList;
+
+public class Network{
     private ArrayList<Station> Stations;
     private ArrayList<Edge> Edges;
 

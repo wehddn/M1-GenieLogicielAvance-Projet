@@ -3,8 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class InterpreterCSV extends InterpreterV0 {
-    @Override
+public class InterpreterCSV extends FabricInterpreter{
     /*public static void main(String[] args) {
         try {
             File file = new File("test.csv");

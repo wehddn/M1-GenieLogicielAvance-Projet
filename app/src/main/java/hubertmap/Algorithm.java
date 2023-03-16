@@ -1,4 +1,4 @@
-public class Algorithm extends Graph{
+public class Algorithm{
 
     public DistanceFavoredAwnser(){
         //TODO : Implement the algorithm

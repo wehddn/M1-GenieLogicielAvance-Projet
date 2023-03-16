@@ -19,6 +19,13 @@ public class Station {
             this.allLines = new ArrayList<String>();
         }
     }
+    public Station(String Name, String Line, Float x, Float y){
+        this.Name = Name;
+        this.x = x;
+        this.y = y;
+        this.allLines = new ArrayList<String>();
+        this.allLines.add(Line);
+    }
 
     public String getName(){
         return Name;

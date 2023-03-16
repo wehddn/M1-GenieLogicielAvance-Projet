@@ -1,4 +1,4 @@
-public class Algorithm{
+/*public class Algorithm{
 
     public DistanceFavoredAwnser(){
         //TODO : Implement the algorithm
@@ -11,4 +11,4 @@ public class Algorithm{
     public GenericAwnser(){
         //TODO : Implement the algorithm
     }
-}
+}*/

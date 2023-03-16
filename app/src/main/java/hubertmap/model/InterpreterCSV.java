@@ -43,8 +43,8 @@ public class InterpreterCSV extends FabricInterpreter{
 
                 if (station1Name.equals("Jeanne D'arc") && station2Name.equals("Jean Jaurès")) {
                     Station station1 = new Station(station1Name,lineName, station1Lat, station1Lon);
-                    Station station2 = new Station(station2Name,lineName station2Lat, station2Lon);
-                    Edge edge = new Edge(station1, station2, lineName, time, distance);
+                    Station station2 = new Station(station2Name,lineName, station2Lat, station2Lon);
+                    Edge edge = new Edge(station1, station2, time, distance);
 
                     System.out.println("Created edge: " + edge);
                 }

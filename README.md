@@ -47,3 +47,7 @@ gradle javadoc
 ## Apply Spotless code formatter
 
 gradle spotlessApply
+
+## Apply Spotless code formatter
+
+gradle spotlessApply

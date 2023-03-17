@@ -23,7 +23,7 @@ public class InterpreterCSV extends FabricInterpreter{
     //StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
     public static void main(String[] args) {
         try {
-            File file = new File("map_data.csv");
+            File file = new File("./map_data.csv");
             Scanner scanner = new Scanner(file);
 
 

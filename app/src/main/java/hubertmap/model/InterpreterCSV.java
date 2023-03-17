@@ -1,6 +1,5 @@
 package hubertmap.model;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 
 public class InterpreterCSV extends FabricInterpreter{
@@ -24,7 +23,9 @@ public class InterpreterCSV extends FabricInterpreter{
     //StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
     public static void main(String[] args) {
         try {
-            Scanner scanner = new Scanner(new File("test.csv"));
+            File file = new File("map_data.csv");
+            Scanner scanner = new Scanner(file);
+
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -40,22 +41,19 @@ public class InterpreterCSV extends FabricInterpreter{
                 String timeString = values[5].trim();
                 Time time = new Time(Integer.parseInt(timeString.split(":")[0]), Integer.parseInt(timeString.split(":")[1]));
                 float distance = Float.parseFloat(values[6].trim());
+                Station station1 = new Station(station1Name,lineName, station1Lat, station1Lon);
+                Station station2 = new Station(station2Name,lineName, station2Lat, station2Lon);
+                Edge edge = new Edge(station1, station2, time, distance);
 
-                if (station1Name.equals("Jeanne D'arc") && station2Name.equals("Jean Jaurès")) {
-                    Station station1 = new Station(station1Name,lineName, station1Lat, station1Lon);
-                    Station station2 = new Station(station2Name,lineName, station2Lat, station2Lon);
-                    Edge edge = new Edge(station1, station2, time, distance);
-
-                    System.out.println("Created edge: " + edge);
-                }
+                 System.out.println("Created edge: " + edge);
+                
             }
 
        
 
      scanner.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());        }
     }
 
 }

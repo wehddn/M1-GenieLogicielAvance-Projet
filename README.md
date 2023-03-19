@@ -1,7 +1,12 @@
 # projet-gl-avance-groupe-lithium
 
-## Only for Winfows
-You need to download Gradle here : https://gradle.org/releases/.
+## Configuration
+
+**Configure git hooks**
+
+git config core.hooksPath .githooks
+
+# Unix-based systems :
 
 ## Build the project
 
@@ -22,3 +27,29 @@ You need to download Gradle here : https://gradle.org/releases/.
 ## Apply Spotless code formatter
 
 ./gradlew spotlessApply
+
+# Windows :
+
+## Install Gradle
+
+You need to download Gradle here : https://gradle.org/releases/. After that, unpack to any directory and add "bin" folder to PATH.
+
+## Build the project
+
+gradle build
+
+## Run the project
+
+gradle run
+
+## Run the tests
+
+gradle test
+
+## Generate javadoc in build/docs/javadoc
+
+gradle javadoc
+
+## Apply Spotless code formatter
+
+gradle spotlessApply

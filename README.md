@@ -1,6 +1,12 @@
 # projet-gl-avance-groupe-lithium
 
-# Unix-based systems : 
+## Configuration
+
+**Configure git hooks**
+
+git config core.hooksPath .githooks
+
+# Unix-based systems :
 
 ## Build the project
 
@@ -22,10 +28,10 @@
 
 ./gradlew spotlessApply
 
-
 # Windows :
 
 ## Install Gradle
+
 You need to download Gradle here : https://gradle.org/releases/. After that, unpack to any directory and add "bin" folder to PATH.
 
 ## Build the project

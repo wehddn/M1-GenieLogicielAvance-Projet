@@ -15,6 +15,7 @@ fi
 exec 1>&2
 
 # Run Gradle build
+echo "Checking compilation works..."
 if ! ./gradlew build ; then
   echo "Error: Failed to build project. Please fix the build errors before committing."
   exit 1

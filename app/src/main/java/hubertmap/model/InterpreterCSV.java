@@ -21,9 +21,9 @@ public class InterpreterCSV extends FabricInterpreter{
     //Jeanne d’arc; 43.60887,1.44544; Jean Jaurès; 43.60573,1.44883; B; 1:42; 8.43;
     //Create a parser that uses a CSV file with this format to create an edge, using scanner and split = ","
     //StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
-    public static void main(String[] args) {
+    public InterpreterCSV() {
         try {
-            File file = new File("./map_data.csv");
+            File file = new File("src/main/java/hubertmap/model/map_data.csv");
             Scanner scanner = new Scanner(file);
 
 

@@ -24,6 +24,12 @@ public class Edge{
         this.Distance = Distance;
     }
 
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return StartingStation + " - " + EndingStation + "; time : " + Time + "; distance : " + Distance;
+    }
+
     
     /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String Time, Float Distance){
         this.StartingStation = StartingStation;

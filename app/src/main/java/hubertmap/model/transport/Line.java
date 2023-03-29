@@ -18,6 +18,10 @@ package hubertmap.model.transport;
         return TerminalStationDeparture;
     }
 
+    public Station getLastStation(){
+        return lastStation;
+    }
+}
     public String getTerminalStationArrival(){
         return TerminalStationArrival;
     }

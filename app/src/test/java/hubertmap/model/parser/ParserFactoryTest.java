@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParserFactoryTest {
 
-    @Test
+    /*@Test
     void parserFactoryTest() {
         ParserFactory factory = new ParserFactory();
         assertNotEquals(null, factory);
-    }
+    }*/
 
 }

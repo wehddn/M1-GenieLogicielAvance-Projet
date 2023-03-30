@@ -9,24 +9,13 @@ import hubertmap.model.transport.Station;
 import hubertmap.model.graph.Edge;
 
 public class Parser extends ParserFactory{
-    /*public static void main(String[] args) {
-        try {
-            File file = new File("test.csv");
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] values = line.split(",");
-                Edge edge = new Edge(values[0], values[1], values[2]);
-                System.out.println(edge);
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }*/
-    //Jeanne d’arc; 43.60887,1.44544; Jean Jaurès; 43.60573,1.44883; B; 1:42; 8.43;
-    //Create a parser that uses a CSV file with this format to create an edge, using scanner and split = ","
-    //StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+//StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+/**
+ * Parses the input CSV file and returns the network data as a tuple of Stations and Edges.
+ * @param filePath the path to the input file
+ * @return the tuple of Stations and Edges
+ * @throws Exception if an error occurs during parsing
+ */
     public Parser() {
         try {
             File file = new File("src/main/java/hubertmap/model/map_data.csv");

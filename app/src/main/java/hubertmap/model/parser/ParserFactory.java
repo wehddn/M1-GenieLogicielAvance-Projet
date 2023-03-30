@@ -1,12 +1,14 @@
 package hubertmap.model.parser;
 
-public class ParserFactory {
+import hubertmap.model.Time;
 
-    public ParserFactory() {
-        // todo
-    }
-
-    public Parser getParser() {
-        return new Parser();
-    }
+/**
+ * This abstract class is a factory for parsing different types of transport data files.
+ */
+public abstract class ParserFactory {
+    
+    private String line;
+    private String TerminalStationDeparture;
+    private String TerminalStationArrival;
+    private Time StartingTime;   
 }

@@ -35,10 +35,6 @@ class GraphTest {
         List<Vertex> path = g.shortestPath(vertices[0], vertices[0]);
         assertEquals(1, path.size());
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> graph is now oriented
 
     void oneWayPathTest() {
         Vertex v1 = new Vertex("A");
@@ -50,9 +46,4 @@ class GraphTest {
         assertFalse(path1.isEmpty());
         assertTrue(path2.isEmpty());
     }
-<<<<<<< HEAD
-=======
->>>>>>> added tests for graph
-=======
->>>>>>> graph is now oriented
 }

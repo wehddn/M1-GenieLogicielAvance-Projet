@@ -3,7 +3,7 @@
  */
 package hubertmap;
 
-import hubertmap.model.parser.InterpreterCSV;
+import hubertmap.model.parser.Parser;
 
 public class App {
     public String getGreeting() {
@@ -12,7 +12,7 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
-        InterpreterCSV interpreterCSV = new InterpreterCSV();
+        Parser interpreterCSV = new Parser();
         
     }
 }

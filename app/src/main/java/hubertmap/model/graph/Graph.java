@@ -32,35 +32,6 @@ public class Graph {
         }
     }
 
-    public Graph(Edge[] edges, Vertex[] vertices) {
-        this(vertices, edges);
-    }
-
-    public Graph(Edge[] edges) {
-        this(new Vertex[0], edges);
-    }
-
-    public Graph(Vertex[] vertices) {
-        this(vertices, new Edge[0]);
-    }
-
-    public Graph() {
-        this(new Vertex[0], new Edge[0]);
-    }
-
-    public void addEdge(Edge edge) {
-        vertexEdges.putIfAbsent(edge.getV1(), new ArrayList<>());
-        vertexEdges.putIfAbsent(edge.getV2(), new ArrayList<>());
-        vertexEdges.get(edge.getV1()).add(edge);
-        // we suppose the graph is not oriented for now
-        // might create duplicate edges, should not pose a problem
-        vertexEdges.get(edge.getV2()).add(new Edge(edge.getWeight(), edge.getV2(), edge.getV1()));
-    }
-
-    public void addVertex(Vertex vertex) {
-        vertexEdges.putIfAbsent(vertex, new ArrayList<>());
-    }
-
     /**
      * Construct a new graph
      *

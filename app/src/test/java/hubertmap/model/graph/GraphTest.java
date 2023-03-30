@@ -35,6 +35,7 @@ class GraphTest {
         List<Vertex> path = g.shortestPath(vertices[0], vertices[0]);
         assertEquals(1, path.size());
     }
+<<<<<<< HEAD
 
     void oneWayPathTest() {
         Vertex v1 = new Vertex("A");
@@ -46,4 +47,6 @@ class GraphTest {
         assertFalse(path1.isEmpty());
         assertTrue(path2.isEmpty());
     }
+=======
+>>>>>>> added tests for graph
 }

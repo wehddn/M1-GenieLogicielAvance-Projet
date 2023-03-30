@@ -1,7 +1,8 @@
 package hubertmap.model.parser;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ParserTest {
 
@@ -10,5 +11,4 @@ class ParserTest {
         // todo
         assertTrue(true);
     }
-
 }

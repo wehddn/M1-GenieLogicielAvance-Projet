@@ -1,8 +1,6 @@
 package hubertmap.model.transport;
 
-/**
- * The Line class represents a transportation line that connects two terminal stations.
- */
+/** The Line class represents a transportation line that connects two terminal stations. */
 
 /*public class Line extends Station{
     private String name;

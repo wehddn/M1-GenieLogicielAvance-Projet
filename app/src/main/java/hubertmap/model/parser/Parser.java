@@ -1,26 +1,19 @@
 package hubertmap.model.parser;
+
+import hubertmap.model.Time;
+import hubertmap.model.graph.Edge;
+import hubertmap.model.transport.Station;
 import java.io.*;
 import java.util.Scanner;
 
-import hubertmap.model.Time;
-
-import hubertmap.model.parser.ParserFactory;
-import hubertmap.model.transport.Station;
-import hubertmap.model.graph.Edge;
-
-public class Parser extends ParserFactory{
-//StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation; EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
-/**
- * Parses the input CSV file and returns the network data as a tuple of Stations and Edges.
- * @param filePath the path to the input file
- * @return the tuple of Stations and Edges
- * @throws Exception if an error occurs during parsing
- */
+public class Parser extends ParserFactory {
+    // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
+    // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+    /** Parses the input CSV file and returns the network data as a tuple of Stations and Edges. */
     public Parser() {
         try {
             File file = new File("src/main/java/hubertmap/model/map_data.csv");
             Scanner scanner = new Scanner(file);
-
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -34,21 +27,21 @@ public class Parser extends ParserFactory{
                 float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
                 String lineName = values[4].trim();
                 String timeString = values[5].trim();
-                Time time = new Time(Integer.parseInt(timeString.split(":")[0]), Integer.parseInt(timeString.split(":")[1]));
+                Time time =
+                        new Time(
+                                Integer.parseInt(timeString.split(":")[0]),
+                                Integer.parseInt(timeString.split(":")[1]));
                 float distance = Float.parseFloat(values[6].trim());
-                Station station1 = new Station(station1Name,lineName, station1Lat, station1Lon);
-                Station station2 = new Station(station2Name,lineName, station2Lat, station2Lon);
+                Station station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
+                Station station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
                 Edge edge = new Edge(station1, station2, time, distance);
 
-                 System.out.println("Created edge: " + edge);
-                
+                System.out.println("Created edge: " + edge);
             }
 
-       
-
-     scanner.close();
+            scanner.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());        }
+            System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
+        }
     }
-
 }

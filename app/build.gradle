@@ -9,6 +9,8 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'java'
+    id 'com.diffplug.spotless' version '6.16.0'
 }
 
 repositories {
@@ -33,3 +35,31 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+javadoc {
+    source = sourceSets.main.allJava
+    destinationDir = reporting.file("javadoc")
+    classpath = configurations.runtimeClasspath
+}
+
+spotless {
+   java {
+      target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+      }
+      googleJavaFormat('1.15.0').aosp().reflowLongStrings()
+      removeUnusedImports()
+      trimTrailingWhitespace()
+      endWithNewline()
+   }
+}
+
+//Create javadoc and check comments every build and run
+tasks.build.dependsOn javadoc
+tasks.run.dependsOn javadoc
+
+//Run Spotless evry build, run and test
+tasks.build.dependsOn spotlessApply
+tasks.run.dependsOn spotlessApply
+tasks.test.dependsOn spotlessApply

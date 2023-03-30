@@ -6,10 +6,21 @@ package hubertmap;
 import hubertmap.model.parser.Parser;
 
 public class App {
+    /**
+     * Retrieves a greeting message.
+     *
+     * @return a String containing the greeting message
+     */
     public String getGreeting() {
         return "Hello World!";
     }
 
+    /**
+     * The main method of this class and application. Prints the greeting message returned by the
+     * getGreeting() method to the console.
+     *
+     * @param args an array of command-line arguments (unused in this implementation)
+     */
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
         Parser interpreterCSV = new Parser();

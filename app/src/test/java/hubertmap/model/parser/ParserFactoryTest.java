@@ -7,7 +7,7 @@ class ParserFactoryTest {
 
     /*@Test
     void parserFactoryTest() {
-        ParserFactory factory = new ParserFactory();
+        ParserFactory factory = new ParserFactory() {};
         assertNotEquals(null, factory);
     }*/
 

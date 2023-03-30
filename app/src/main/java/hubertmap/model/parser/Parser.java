@@ -1,7 +1,6 @@
 package hubertmap.model.parser;
 
 import hubertmap.model.Time;
-import hubertmap.model.graph.Edge;
 import hubertmap.model.transport.Station;
 import java.io.*;
 import java.util.Scanner;
@@ -34,9 +33,6 @@ public class Parser extends ParserFactory {
                 float distance = Float.parseFloat(values[6].trim());
                 Station station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
                 Station station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
-                Edge edge = new Edge(station1, station2, time, distance);
-
-                System.out.println("Created edge: " + edge);
             }
 
             scanner.close();

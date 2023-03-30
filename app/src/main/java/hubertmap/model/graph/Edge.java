@@ -1,82 +1,63 @@
 package hubertmap.model.graph;
 
-import hubertmap.model.Time;
-import hubertmap.model.transport.Station;
-
-/**
- * This class represents an edge in a graph, which connects two stations and provides information
- * about the time and distance required to travel between them.
- */
+/** Positively weighted oriented edge between two vertices */
 public class Edge {
-    private Time Time;
-    private Float Distance;
-    private Station StartingStation;
-    private Station EndingStation;
+    private float weight;
+    private Vertex v1;
+    private Vertex v2;
 
     /**
-     * Constructs a new Edge object.
+     * constructs a new oriented edge from v1 to v2
      *
-     * @param StartingStation the starting station of the edge
-     * @param EndingStation the ending station of the edge
+     * @param weight positive weight
+     * @param v1 origin vertex
+     * @param v2 end vertex
+     * @throws IllegalArgumentException
      */
-    public Edge(Station StartingStation, Station EndingStation) {
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
-    }
-    /**
-     * Constructs a new Edge object.
-     *
-     * @param Time the time required to travel the edge
-     * @param Distance the distance between the starting and ending stations of the edge
-     * @param StartingStation the starting station of the edge
-     * @param EndingStation the ending station of the edge
-     */
-    public Edge(Time Time, Float Distance, Station StartingStation, Station EndingStation) {
-        this.Time = Time;
-        this.Distance = Distance;
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
-    }
-    /**
-     * Constructs a new Edge object.
-     *
-     * @param StartingStation the starting station of the edge
-     * @param EndingStation the ending station of the edge
-     * @param Time the time required to travel the edge
-     * @param Distance the distance between the starting and ending stations of the edge
-     */
-    public Edge(Station StartingStation, Station EndingStation, Time Time, Float Distance) {
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
-        this.Time = Time;
-        this.Distance = Distance;
-    }
-    /**
-     * Returns a string representation of the edge.
-     *
-     * @return a string representation of the edge
-     */
-    @Override
-    public String toString() {
-        // TODO Auto-generated method stub
-        return StartingStation
-                + " - "
-                + EndingStation
-                + "; time : "
-                + Time
-                + "; distance : "
-                + Distance;
+    public Edge(float weight, Vertex v1, Vertex v2) {
+        if (weight < 0) {
+            throw new IllegalArgumentException("Weight must be positive");
+        }
+        this.weight = weight;
+        this.v1 = v1;
+        this.v2 = v2;
     }
 
-    /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String Time, Float Distance){
-        this.StartingStation = StartingStation;
-        this.StartingStationLatitude = StartingStationLatitude;
-        this.StartingStationLongitude = StartingStationLongitude;
-        this.EndingStation = EndingStation;
-        this.EndingStationLatitude = EndingStationLatitude;
-        this.EndingStationLongitude = EndingStationLongitude;
-        this.Line = Line;
-        this.Time = Time;
-        this.Distance = Distance;
-    }*/
+    /**
+     * constructs a new oriented edge with new vertices
+     *
+     * @param weight positive weight
+     * @param label1 label of origin vertex
+     * @param label2 label of end vertex
+     * @throws IllegalArgumentException
+     */
+    public Edge(float weight, String label1, String label2) {
+        if (weight < 0) {
+            throw new IllegalArgumentException("Weight must be positive");
+        }
+        this.weight = weight;
+        this.v1 = new Vertex(label1);
+        this.v2 = new Vertex(label2);
+    }
+
+    /**
+     * @return weight
+     */
+    public float getWeight() {
+        return weight;
+    }
+
+    /**
+     * @return origin vertex
+     */
+    protected Vertex getV1() {
+        return v1;
+    }
+
+    /**
+     * @return end vertex
+     */
+    protected Vertex getV2() {
+        return v2;
+    }
 }

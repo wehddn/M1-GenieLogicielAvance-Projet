@@ -1,25 +1,31 @@
 package hubertmap.model.transport;
 
-public class Line {
-    private String name;
-    private Station firstStation;
-    private Station lastStation;
+/** The Line class represents a transportation line that connects two terminal stations. */
 
-    public Line(String name, Station firstStation, Station lastStation) {
+/*public class Line extends Station{
+    private String name;
+    private String TerminalStationDeparture;
+    private String TerminalStationArrival;
+
+    public Line(String name, String TerminalStationDeparture, String TerminalStationArrival){
         this.name = name;
-        this.firstStation = firstStation;
-        this.lastStation = lastStation;
+        this.TerminalStationDeparture = TerminalStationDeparture;
+        this.TerminalStationArrival = TerminalStationArrival;
     }
 
-    public String getName() {
+    public String getName(){
         return name;
     }
 
-    public Station getFirstStation() {
-        return firstStation;
+    public String getTerminalStationDeparture(){
+        return TerminalStationDeparture;
     }
 
-    public Station getLastStation() {
+    public Station getLastStation(){
         return lastStation;
     }
 }
+    public String getTerminalStationArrival(){
+        return TerminalStationArrival;
+    }
+}*/

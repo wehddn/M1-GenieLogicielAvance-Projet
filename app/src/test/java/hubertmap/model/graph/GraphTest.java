@@ -8,7 +8,6 @@ class GraphTest {
 
     @Test
     void shortestPathTest() {
-        // todo
         Graph g = new Graph();
         assertEquals(null, g.shortestPath());
     }

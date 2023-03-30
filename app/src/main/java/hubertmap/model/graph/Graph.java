@@ -2,6 +2,9 @@ package hubertmap.model.graph;
 
 import java.util.List;
 
+/**
+ * The Graph class represents a graph.
+ */
 public class Graph {
 
     public List<Vertex> shortestPath() {

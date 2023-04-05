@@ -107,4 +107,15 @@ public class Station {
         // TODO Auto-generated method stub
         return Name;
     }
+
+    public void addLine(String lineName) {
+        boolean exist = false;
+        for (String line : allLines) {
+            if (line.contains(lineName)) {
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) allLines.add(lineName);
+    }
 }

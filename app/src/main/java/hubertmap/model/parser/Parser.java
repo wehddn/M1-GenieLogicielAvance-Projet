@@ -15,7 +15,7 @@ public class Parser extends ParserFactory {
 
     public Parser() {
         try {
-            parseCsv(openFile("src/main/java/hubertmap/model/map_data.csv"));
+            parseCsv(openFile("src/main/java/hubertmap/model/map_data2.csv"));
         } catch (Exception e) {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
         }
@@ -61,17 +61,18 @@ public class Parser extends ParserFactory {
             float distance = Float.parseFloat(values[6].trim());
             Station station1;
             Station station2;
+
             station1 = stationAlreadyExist(station1Name, lineName);
             if (station1 == null) {
                 station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
                 list.add(station1);
-            }
+            } else station1.addLine(lineName);
 
             station2 = stationAlreadyExist(station2Name, lineName);
             if (station2 == null) {
                 station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
                 list.add(station2);
-            }
+            } else station2.addLine(lineName);
 
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
             System.out.println("Created edge: " + edge);

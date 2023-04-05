@@ -31,13 +31,13 @@ public class Parser extends ParserFactory {
         }
     }
 
-    public boolean stationAlreadyExist(String name, String line) {
+    public Station stationAlreadyExist(String name, String line) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(name) && list.get(i).getAllLines().contains(line)) {
-                return true;
+            if (list.get(i).getName().equals(name)) {
+                return list.get(i);
             }
         }
-        return false;
+        return null;
     }
 
     public void parseCsv(File file) throws Exception {
@@ -59,16 +59,24 @@ public class Parser extends ParserFactory {
                             Integer.parseInt(timeString.split(":")[0]),
                             Integer.parseInt(timeString.split(":")[1]));
             float distance = Float.parseFloat(values[6].trim());
-            if (!stationAlreadyExist(station1Name, lineName)
-                    && !stationAlreadyExist(station2Name, lineName)) {
-                Station station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
+            Station station1;
+            Station station2;
+            station1 = stationAlreadyExist(station1Name, lineName);
+            if (station1 == null) {
+                station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
                 list.add(station1);
-                Station station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
-                list.add(station2);
-                EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
-                System.out.println("Created edge: " + edge);
             }
+
+            station2 = stationAlreadyExist(station2Name, lineName);
+            if (station2 == null) {
+                station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
+                list.add(station2);
+            }
+
+            EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
+            System.out.println("Created edge: " + edge);
         }
+        System.out.println(list);
         scanner.close();
     }
 }

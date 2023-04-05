@@ -105,7 +105,7 @@ public class Station {
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return Name + allLines;
+        return Name;
     }
 
     public void addLine(String lineName) {

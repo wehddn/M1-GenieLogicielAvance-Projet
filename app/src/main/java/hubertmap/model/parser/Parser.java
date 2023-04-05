@@ -15,7 +15,7 @@ public class Parser extends ParserFactory {
 
     public Parser() {
         try {
-            parseCsv(openFile("src/main/java/hubertmap/model/map_data2.csv"));
+            parseCsv(openFile("src/main/java/hubertmap/model/map_data.csv"));
         } catch (Exception e) {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
         }
@@ -77,7 +77,6 @@ public class Parser extends ParserFactory {
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
             System.out.println("Created edge: " + edge);
         }
-        System.out.println(list);
         scanner.close();
     }
 }

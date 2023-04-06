@@ -1,6 +1,6 @@
 package hubertmap.view;
 
-import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Network;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +33,11 @@ public class Panel extends JPanel {
     /**
      * Constructs a new Panel object with the specified edges.
      *
-     * @param edges the list of edges to be displayed in the panel
+     * @param graph the list of edges to be displayed in the panel
      */
-    public Panel(ArrayList<EdgeTransport> edges) {
+    public Panel(Network graph) {
         JPanel searchPanel = new JPanel();
-        graphPanel = new GraphPanelJung(edges);
+        graphPanel = new GraphPanelJung(graph);
 
         setSearchPanel(searchPanel);
 

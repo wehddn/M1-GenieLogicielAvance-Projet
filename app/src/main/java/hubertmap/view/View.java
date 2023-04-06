@@ -1,8 +1,6 @@
 package hubertmap.view;
 
-import edu.uci.ics.jung.graph.Graph;
-import hubertmap.model.transport.EdgeTransport;
-import hubertmap.model.transport.Station;
+import hubertmap.model.transport.Network;
 import javax.swing.JFrame;
 
 /**
@@ -21,7 +19,7 @@ public class View {
      *
      * @param graph the list of edges to be displayed
      */
-    public View(Graph<Station, EdgeTransport> graph) {
+    public View(Network graph) {
         panel = new Panel(graph);
 
         JFrame frame = new JFrame("Hubertmap");

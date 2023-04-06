@@ -10,6 +10,7 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -18,23 +19,19 @@ import javax.swing.*;
 class GraphPanelJung extends JPanel {
 
     private int panelWidth, panelHeight;
-    private double longitudeScale;
-    private double latitudeScale;
-    private double minimumLongitude;
-    private double maximumLatitude;
     Layout<Station, EdgeTransport> layout;
     ScalingControl scaler;
     VisualizationViewer<Station, EdgeTransport> vv;
     Graph<Station, EdgeTransport> graph;
+    Network network;
 
-    public GraphPanelJung(Graph<Station, EdgeTransport> graph) {
+    public GraphPanelJung(Network network) {
 
-        this.graph = graph;
+        this.network = network;
+        this.graph = network.getGraph();
 
         panelWidth = 600;
         panelHeight = 600;
-
-        createGraph();
 
         layout = new CircleLayout<Station, EdgeTransport>(graph);
         layout.setSize(new Dimension(panelWidth, panelHeight));
@@ -56,38 +53,18 @@ class GraphPanelJung extends JPanel {
         this.add(vv);
     }
 
-    private void createGraph() {
-
-        minimumLongitude = 180;
-        double maximumLongitude = -180;
-        double minimumLatitude = 90;
-        maximumLatitude = -90;
-
-        for (EdgeTransport edge : graph.getEdges()) {
-            Station s1 = edge.getStartingStation();
-            Station s2 = edge.getEndingStation();
-
-            if (s1.getX() < minimumLongitude) minimumLongitude = s1.getX();
-            if (s1.getX() > maximumLongitude) maximumLongitude = s1.getX();
-
-            if (s1.getY() < minimumLatitude) minimumLatitude = s1.getY();
-            if (s1.getY() > maximumLatitude) maximumLatitude = s1.getY();
-
-            if (s2.getX() < minimumLongitude) minimumLongitude = s2.getX();
-            if (s2.getX() > maximumLongitude) maximumLongitude = s2.getX();
-
-            if (s2.getY() < minimumLatitude) minimumLatitude = s2.getY();
-            if (s2.getY() > maximumLatitude) maximumLatitude = s2.getY();
-        }
+    private void setUpCoords() {
+        double minimumLongitude = network.getMinimumLongitude();
+        double maximumLongitude = network.getMaximumLongitude();
+        double minimumLatitude = network.getMinimumLatitude();
+        double maximumLatitude = network.getMaximumLatitude();
 
         double longitudeDiff = maximumLongitude - minimumLongitude;
         double latitudeDiff = maximumLatitude - minimumLatitude;
 
-        longitudeScale = panelWidth / longitudeDiff;
-        latitudeScale = panelHeight / latitudeDiff;
-    }
+        double longitudeScale = panelWidth / longitudeDiff;
+        double latitudeScale = panelHeight / latitudeDiff;
 
-    void setUpCoords() {
         for (Station station : graph.getVertices()) {
             int stationx = (int) Math.round((station.getX() - minimumLongitude) * longitudeScale);
             int stationy = (int) Math.round((maximumLatitude - station.getY()) * latitudeScale);

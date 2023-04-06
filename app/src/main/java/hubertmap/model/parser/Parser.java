@@ -1,9 +1,8 @@
 package hubertmap.model.parser;
 
-import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseGraph;
 import hubertmap.model.Time;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
 import java.util.*;
@@ -12,8 +11,7 @@ public class Parser extends ParserFactory {
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
     // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
 
-    ArrayList<EdgeTransport> edgesList;
-    Graph<Station, EdgeTransport> graph;
+    Network network;
     /** Parses the input CSV file and returns the network data as a tuple of Stations and Edges. */
     private List<Station> list = new ArrayList<>();
 
@@ -25,8 +23,8 @@ public class Parser extends ParserFactory {
         }
     }
 
-    public Graph<Station, EdgeTransport> getEdges() {
-        return graph;
+    public Network getEdges() {
+        return network;
     }
 
     public File openFile(String path) {
@@ -50,8 +48,7 @@ public class Parser extends ParserFactory {
 
     public void parseCsv(File file) throws Exception {
         Scanner scanner = new Scanner(file);
-        ArrayList<EdgeTransport> edges = new ArrayList<>();
-        graph = new SparseGraph<>();
+        network = new Network();
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] values = line.split(";");
@@ -85,9 +82,7 @@ public class Parser extends ParserFactory {
             } else station2.addLine(lineName);
 
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
-            // System.out.println("Created edge: " + edge);
-            edges.add(edge);
-            graph.addEdge(edge, station1, station2);
+            network.addEdge(edge, station1, station2);
         }
         scanner.close();
     }

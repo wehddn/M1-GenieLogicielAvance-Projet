@@ -1,9 +1,7 @@
 package hubertmap.controller;
 
-import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.parser.Parser;
-import hubertmap.model.transport.EdgeTransport;
-import hubertmap.model.transport.Station;
+import hubertmap.model.transport.Network;
 import hubertmap.view.View;
 
 /**
@@ -16,7 +14,7 @@ public class Controller {
     /** Constructs a new Controller instance with the given View and Graph objects. */
     public Controller() {
         Parser parser = new Parser();
-        Graph<Station, EdgeTransport> graph = parser.getEdges();
+        Network graph = parser.getEdges();
         new View(graph);
     }
 }

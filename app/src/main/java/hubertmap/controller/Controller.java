@@ -1,11 +1,10 @@
 package hubertmap.controller;
 
-import hubertmap.model.graph.Graph;
+import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.parser.Parser;
 import hubertmap.model.transport.EdgeTransport;
-import hubertmap.view.Panel;
+import hubertmap.model.transport.Station;
 import hubertmap.view.View;
-import java.util.ArrayList;
 
 /**
  * The Controller class is responsible for managing the interaction between the Model and the View
@@ -14,18 +13,10 @@ import java.util.ArrayList;
  */
 public class Controller {
 
-    /** The panel that displays the graph and other elements in the View. */
-    private static Panel panel;
-
-    /** The graph model that the Controller is managing. */
-    private Graph graph;
-
     /** Constructs a new Controller instance with the given View and Graph objects. */
     public Controller() {
         Parser parser = new Parser();
-        ArrayList<EdgeTransport> edges = parser.getEdges();
-        View view = new View(edges);
-        panel = view.getPanel();
-        graph = new Graph();
+        Graph<Station, EdgeTransport> graph = parser.getEdges();
+        new View(graph);
     }
 }

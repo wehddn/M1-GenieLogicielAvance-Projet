@@ -1,7 +1,8 @@
 package hubertmap.view;
 
+import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.transport.EdgeTransport;
-import java.util.ArrayList;
+import hubertmap.model.transport.Station;
 import javax.swing.JFrame;
 
 /**
@@ -18,10 +19,10 @@ public class View {
      *
      * <p>This constructor creates a JFrame window and adds the Panel to it.
      *
-     * @param edges the list of edges to be displayed
+     * @param graph the list of edges to be displayed
      */
-    public View(ArrayList<EdgeTransport> edges) {
-        panel = new Panel(edges);
+    public View(Graph<Station, EdgeTransport> graph) {
+        panel = new Panel(graph);
 
         JFrame frame = new JFrame("Hubertmap");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

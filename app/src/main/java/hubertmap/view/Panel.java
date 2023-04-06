@@ -1,6 +1,8 @@
 package hubertmap.view;
 
+import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +35,11 @@ public class Panel extends JPanel {
     /**
      * Constructs a new Panel object with the specified edges.
      *
-     * @param edges the list of edges to be displayed in the panel
+     * @param graph the list of edges to be displayed in the panel
      */
-    public Panel(ArrayList<EdgeTransport> edges) {
+    public Panel(Graph<Station, EdgeTransport> graph) {
         JPanel searchPanel = new JPanel();
-        graphPanel = new GraphPanelJung(edges);
+        graphPanel = new GraphPanelJung(graph);
 
         setSearchPanel(searchPanel);
 

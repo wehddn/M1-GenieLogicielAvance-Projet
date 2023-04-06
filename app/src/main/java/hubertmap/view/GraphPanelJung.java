@@ -2,7 +2,7 @@ package hubertmap.view;
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
@@ -13,39 +13,37 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import javax.swing.*;
 
 class GraphPanelJung extends JPanel {
 
     private int panelWidth, panelHeight;
-    private edu.uci.ics.jung.graph.Graph<Node, Integer> graph;
     private double longitudeScale;
     private double latitudeScale;
     private double minimumLongitude;
     private double maximumLatitude;
-    Layout<Node, Integer> layout;
+    Layout<Station, EdgeTransport> layout;
     ScalingControl scaler;
-    VisualizationViewer<Node, Integer> vv;
-    private ArrayList<EdgeTransport> edges;
+    VisualizationViewer<Station, EdgeTransport> vv;
+    Graph<Station, EdgeTransport> graph;
 
-    public GraphPanelJung(ArrayList<EdgeTransport> edges) {
+    public GraphPanelJung(Graph<Station, EdgeTransport> graph) {
 
-        this.edges = edges;
+        this.graph = graph;
 
         panelWidth = 600;
         panelHeight = 600;
 
         createGraph();
 
-        layout = new CircleLayout<Node, Integer>(graph);
+        layout = new CircleLayout<Station, EdgeTransport>(graph);
         layout.setSize(new Dimension(panelWidth, panelHeight));
-        vv = new VisualizationViewer<Node, Integer>(layout);
+        vv = new VisualizationViewer<Station, EdgeTransport>(layout);
 
         setUpCoords();
 
-        DefaultModalGraphMouse<Node, Integer> graphMouse =
-                new DefaultModalGraphMouse<Node, Integer>();
+        DefaultModalGraphMouse<Station, EdgeTransport> graphMouse =
+                new DefaultModalGraphMouse<Station, EdgeTransport>();
         graphMouse.setMode(ModalGraphMouse.Mode.TRANSFORMING);
         vv.setGraphMouse(graphMouse);
 
@@ -59,15 +57,13 @@ class GraphPanelJung extends JPanel {
     }
 
     private void createGraph() {
-        graph = new SparseGraph<Node, Integer>();
 
         minimumLongitude = 180;
         double maximumLongitude = -180;
         double minimumLatitude = 90;
         maximumLatitude = -90;
 
-        int i = 0;
-        for (EdgeTransport edge : edges) {
+        for (EdgeTransport edge : graph.getEdges()) {
             Station s1 = edge.getStartingStation();
             Station s2 = edge.getEndingStation();
 
@@ -82,11 +78,6 @@ class GraphPanelJung extends JPanel {
 
             if (s2.getY() < minimumLatitude) minimumLatitude = s2.getY();
             if (s2.getY() > maximumLatitude) maximumLatitude = s2.getY();
-
-            Node node1 = new Node(s1.getName(), s1.getX(), s1.getY());
-            Node node2 = new Node(s2.getName(), s2.getX(), s2.getY());
-            graph.addEdge(i, node1, node2);
-            i++;
         }
 
         double longitudeDiff = maximumLongitude - minimumLongitude;
@@ -97,46 +88,10 @@ class GraphPanelJung extends JPanel {
     }
 
     void setUpCoords() {
-        for (Node node : graph.getVertices()) {
-            int nodex = (int) Math.round((node.getX() - minimumLongitude) * longitudeScale);
-            int nodey = (int) Math.round((maximumLatitude - node.getY()) * latitudeScale);
-            layout.setLocation(node, new Point2D.Double(nodex, nodey));
-        }
-    }
-
-    class Node {
-
-        String name;
-        double x;
-        double y;
-
-        public Node(String name, double d, double e) {
-            this.name = name;
-            this.x = d;
-            this.y = e;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        public boolean equals(Node node) {
-            if (this.getName() == node.getName()) return true;
-            else return false;
-        }
-
-        private String getName() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            // TODO Auto-generated method stub
-            return name;
+        for (Station station : graph.getVertices()) {
+            int stationx = (int) Math.round((station.getX() - minimumLongitude) * longitudeScale);
+            int stationy = (int) Math.round((maximumLatitude - station.getY()) * latitudeScale);
+            layout.setLocation(station, new Point2D.Double(stationx, stationy));
         }
     }
 }

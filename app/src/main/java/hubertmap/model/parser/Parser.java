@@ -2,6 +2,7 @@ package hubertmap.model.parser;
 
 import hubertmap.model.Time;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
@@ -12,10 +13,12 @@ public class Parser extends ParserFactory {
     // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
 
     Network network;
+    ArrayList<Line> lineStation;
     /** Parses the input CSV file and returns the network data as a tuple of Stations and Edges. */
     private List<Station> list = new ArrayList<>();
 
     public Parser() {
+        this.lineStation = new ArrayList<>();
         try {
             parseCsv(openFile("src/main/java/hubertmap/model/map_data.csv"));
         } catch (Exception e) {
@@ -44,6 +47,15 @@ public class Parser extends ParserFactory {
             }
         }
         return null;
+    }
+
+    public int lineAlreadyExist(String lineName) {
+        for (int i = 0; i < lineStation.size(); i++) {
+            if (lineStation.get(i).getLineName().equals(lineName)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void parseCsv(File file) throws Exception {
@@ -82,6 +94,12 @@ public class Parser extends ParserFactory {
             } else station2.addLine(lineName);
 
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
+            int cpt = 0;
+            if ((cpt = lineAlreadyExist(lineName)) == -1) {
+                lineStation.add(new Line(lineName, station1, station2));
+            } else {
+                lineStation.get(cpt).addStation(station2);
+            }
             network.addEdge(edge, station1, station2);
         }
         scanner.close();

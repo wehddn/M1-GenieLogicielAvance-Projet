@@ -1,20 +1,32 @@
 package hubertmap.model.transport;
 
+import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import java.util.HashMap;
+import java.util.List;
+import org.apache.commons.collections4.Transformer;
 
 /**
  * This class represents a network of stations and edges between them, forming a transport network.
  */
 public class Network {
     Graph<Station, EdgeTransport> graph;
+    HashMap<String, Station> stations;
     double minimumLongitude;
     double maximumLongitude;
     double minimumLatitude;
     double maximumLatitude;
 
+    private class EdgeExtracter implements Transformer<EdgeTransport, Float> {
+        public Float transform(EdgeTransport e) {
+            return e.getDistance();
+        }
+    }
+
     public Network() {
         graph = new SparseGraph<>();
+        stations = new HashMap<>();
         minimumLongitude = 180;
         maximumLongitude = -180;
         minimumLatitude = 90;
@@ -35,6 +47,9 @@ public class Network {
 
         if (station2.getY() < minimumLatitude) minimumLatitude = station2.getY();
         if (station2.getY() > maximumLatitude) maximumLatitude = station2.getY();
+
+        stations.putIfAbsent(station1.getName(), station1);
+        stations.putIfAbsent(station2.getName(), station2);
     }
 
     public Graph<Station, EdgeTransport> getGraph() {
@@ -55,5 +70,15 @@ public class Network {
 
     public double getMaximumLongitude() {
         return maximumLongitude;
+    }
+
+    public List<EdgeTransport> shortestPath(String station1, String station2) {
+        DijkstraShortestPath d =
+                new DijkstraShortestPath(
+                        graph,
+                        (Object e) -> {
+                            return ((EdgeTransport) e).getDistance();
+                        });
+        return d.getPath(stations.get(station1), stations.get(station2));
     }
 }

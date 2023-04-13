@@ -50,6 +50,14 @@ public class EdgeTransport {
         return EndingStation;
     }
 
+    public Time getTime() {
+        return time;
+    }
+
+    public Float getDistance() {
+        return Distance;
+    }
+
     /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String Time, Float Distance){
         this.StartingStation = StartingStation;
         this.StartingStationLatitude = StartingStationLatitude;

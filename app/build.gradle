@@ -28,6 +28,8 @@ dependencies {
     implementation 'net.sf.jung:jung-graph-impl:2.1.1'
     implementation 'net.sf.jung:jung-algorithms:2.1.1'
     implementation 'net.sf.jung:jung-visualization:2.1.1'
+
+    implementation 'org.apache.commons:commons-collections4:4.4'
 }
 
 application {

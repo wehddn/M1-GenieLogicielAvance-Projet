@@ -5,7 +5,6 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.commons.collections4.Transformer;
 
 /**
  * This class represents a network of stations and edges between them, forming a transport network.
@@ -18,11 +17,7 @@ public class Network {
     double minimumLatitude;
     double maximumLatitude;
 
-    private class EdgeExtracter implements Transformer<EdgeTransport, Float> {
-        public Float transform(EdgeTransport e) {
-            return e.getDistance();
-        }
-    }
+    DijkstraShortestPath distancePaths;
 
     public Network() {
         graph = new SparseGraph<>();
@@ -31,6 +26,13 @@ public class Network {
         maximumLongitude = -180;
         minimumLatitude = 90;
         maximumLatitude = -90;
+
+        distancePaths =
+                new DijkstraShortestPath(
+                        graph,
+                        (Object e) -> {
+                            return ((EdgeTransport) e).getDistance();
+                        });
     }
 
     public void addEdge(EdgeTransport edge, Station station1, Station station2) {
@@ -72,13 +74,11 @@ public class Network {
         return maximumLongitude;
     }
 
+    public List<EdgeTransport> shortestPath(Station station1, Station station2) {
+        return distancePaths.getPath(station1, station2);
+    }
+
     public List<EdgeTransport> shortestPath(String station1, String station2) {
-        DijkstraShortestPath d =
-                new DijkstraShortestPath(
-                        graph,
-                        (Object e) -> {
-                            return ((EdgeTransport) e).getDistance();
-                        });
-        return d.getPath(stations.get(station1), stations.get(station2));
+        return shortestPath(stations.get(station1), stations.get(station2));
     }
 }

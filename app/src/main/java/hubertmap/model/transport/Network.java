@@ -90,9 +90,9 @@ public class Network {
     }
 
     /**
-     * Calculates the shortest path from station1 to station2 using
-     * the distance between two stations as weight
-     * 
+     * Calculates the shortest path from station1 to station2 using the distance between two
+     * stations as weight
+     *
      * @param station1 starting station
      * @param station2 destination station
      * @return a list edges to visit in the correct order
@@ -102,9 +102,9 @@ public class Network {
     }
 
     /**
-     * Calculates the shortest path from station1 to station2 using
-     * the distance between two stations as weight
-     * 
+     * Calculates the shortest path from station1 to station2 using the distance between two
+     * stations as weight
+     *
      * @param station1 name of the starting station
      * @param station2 name of the destination station
      * @return a list edges to visit in the correct order

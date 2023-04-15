@@ -5,6 +5,7 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.*;
 
@@ -54,10 +55,12 @@ public class Parser extends ParserFactory {
     }
 
     public void parseCsv(File file) throws Exception {
-        Scanner scanner = new Scanner(file);
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(isr);
+        String line;
         network = new Network();
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+        while ((line = reader.readLine()) != null) {
             String[] values = line.split(";");
 
             String station1Name = values[0].trim();
@@ -93,6 +96,6 @@ public class Parser extends ParserFactory {
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
             network.addEdge(edge, station1, station2);
         }
-        scanner.close();
+        reader.close();
     }
 }

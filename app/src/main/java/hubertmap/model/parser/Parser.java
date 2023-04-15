@@ -60,10 +60,12 @@ public class Parser extends ParserFactory {
             String line = scanner.nextLine();
             String[] values = line.split(";");
 
-            String station1Name = stripAccents(values[0].trim());
+            String station1Name = values[0].trim();
+            station1Name = stripAccents(station1Name);
             float station1Lat = Float.parseFloat(values[1].trim().split(",")[0]);
             float station1Lon = Float.parseFloat(values[1].trim().split(",")[1]);
-            String station2Name = stripAccents(values[2].trim());
+            String station2Name = values[2].trim();
+            station2Name = stripAccents(station2Name);
             float station2Lat = Float.parseFloat(values[3].trim().split(",")[0]);
             float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
             String lineName = values[4].trim();

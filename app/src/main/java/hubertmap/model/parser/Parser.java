@@ -5,6 +5,8 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.Normalizer;
 import java.util.*;
 
 public class Parser extends ParserFactory {
@@ -46,17 +48,27 @@ public class Parser extends ParserFactory {
         return null;
     }
 
+    public static String stripAccents(String s) {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
+    }
+
     public void parseCsv(File file) throws Exception {
-        Scanner scanner = new Scanner(file);
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(isr);
+        String line;
         network = new Network();
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+        while ((line = reader.readLine()) != null) {
             String[] values = line.split(";");
 
             String station1Name = values[0].trim();
+            station1Name = stripAccents(station1Name);
             float station1Lat = Float.parseFloat(values[1].trim().split(",")[0]);
             float station1Lon = Float.parseFloat(values[1].trim().split(",")[1]);
             String station2Name = values[2].trim();
+            station2Name = stripAccents(station2Name);
             float station2Lat = Float.parseFloat(values[3].trim().split(",")[0]);
             float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
             String lineName = values[4].trim();
@@ -84,6 +96,6 @@ public class Parser extends ParserFactory {
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
             network.addEdge(edge, station1, station2);
         }
-        scanner.close();
+        reader.close();
     }
 }

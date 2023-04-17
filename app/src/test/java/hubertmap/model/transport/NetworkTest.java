@@ -2,7 +2,7 @@ package hubertmap.model.transport;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import hubertmap.model.Time;
+import hubertmap.model.DurationJourney;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,9 @@ class NetworkTest {
         Station b = new Station("B", "", 0.0f, 0.0f);
         Station c = new Station("C", "", 0.0f, 0.0f);
 
-        EdgeTransport ab = new EdgeTransport(new Time(0, 0), 10.0f, a, b);
-        EdgeTransport bc = new EdgeTransport(new Time(0, 0), 10.0f, b, c);
-        EdgeTransport ac = new EdgeTransport(new Time(0, 0), 50.0f, a, c);
+        EdgeTransport ab = new EdgeTransport(new DurationJourney("00", "00"), 10.0f, a, b);
+        EdgeTransport bc = new EdgeTransport(new DurationJourney("00", "00"), 10.0f, b, c);
+        EdgeTransport ac = new EdgeTransport(new DurationJourney("00", "00"), 50.0f, a, c);
 
         ArrayList<EdgeTransport> edges = new ArrayList<>();
         edges.add(ab);
@@ -41,8 +41,8 @@ class NetworkTest {
         Station c = new Station("C", "", 0.0f, 0.0f);
         Station d = new Station("D", "", 0.0f, 0.0f);
         ArrayList<EdgeTransport> edges = new ArrayList<>();
-        edges.add(new EdgeTransport(new Time(0, 0), 1.0f, a, b));
-        edges.add(new EdgeTransport(new Time(0, 0), 1.0f, c, d));
+        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, a, b));
+        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, c, d));
         Network g = new Network(edges);
         List<EdgeTransport> path = g.shortestPath(a, c);
         assertTrue(path.isEmpty());
@@ -53,7 +53,7 @@ class NetworkTest {
         Station a = new Station("A", "", 0.0f, 0.0f);
         Station b = new Station("B", "", 0.0f, 0.0f);
         ArrayList<EdgeTransport> edges = new ArrayList<>();
-        edges.add(new EdgeTransport(new Time(0, 0), 1.0f, a, b));
+        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, a, b));
         Network g = new Network(edges);
         List<EdgeTransport> path = g.shortestPath(a, a);
         assertTrue(path.isEmpty());

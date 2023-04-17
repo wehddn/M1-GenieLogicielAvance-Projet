@@ -1,10 +1,10 @@
 package hubertmap.model.transport;
 
-import hubertmap.model.Time;
+import hubertmap.model.DurationJourney;
 
 public class EdgeTransport {
 
-    private Time time;
+    private DurationJourney durationJourney;
     private Float Distance;
     private Station StartingStation;
     private Station EndingStation;
@@ -15,18 +15,24 @@ public class EdgeTransport {
     }
 
     public EdgeTransport(
-            Time time, Float Distance, Station StartingStation, Station EndingStation) {
-        this.time = time;
+            DurationJourney durationJourney,
+            Float Distance,
+            Station StartingStation,
+            Station EndingStation) {
+        this.durationJourney = durationJourney;
         this.Distance = Distance;
         this.StartingStation = StartingStation;
         this.EndingStation = EndingStation;
     }
 
     public EdgeTransport(
-            Station StartingStation, Station EndingStation, Time time, Float Distance) {
+            Station StartingStation,
+            Station EndingStation,
+            DurationJourney durationJourney,
+            Float Distance) {
         this.StartingStation = StartingStation;
         this.EndingStation = EndingStation;
-        this.time = time;
+        this.durationJourney = durationJourney;
         this.Distance = Distance;
     }
 
@@ -36,8 +42,8 @@ public class EdgeTransport {
         return StartingStation
                 + " - "
                 + EndingStation
-                + "; time : "
-                + time
+                + "; durationJourney : "
+                + durationJourney
                 + "; distance : "
                 + Distance;
     }
@@ -50,15 +56,11 @@ public class EdgeTransport {
         return EndingStation;
     }
 
-    public Time getTime() {
-        return time;
-    }
-
     public Float getDistance() {
         return Distance;
     }
 
-    /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String Time, Float Distance){
+    /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String durationJourney, Float Distance){
         this.StartingStation = StartingStation;
         this.StartingStationLatitude = StartingStationLatitude;
         this.StartingStationLongitude = StartingStationLongitude;
@@ -66,7 +68,7 @@ public class EdgeTransport {
         this.EndingStationLatitude = EndingStationLatitude;
         this.EndingStationLongitude = EndingStationLongitude;
         this.Line = Line;
-        this.Time = Time;
+        this.durationJourney = durationJourney;
         this.Distance = Distance;
     }*/
 

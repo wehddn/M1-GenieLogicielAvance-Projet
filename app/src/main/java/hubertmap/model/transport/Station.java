@@ -4,13 +4,17 @@
  */
 package hubertmap.model.transport;
 
+import hubertmap.model.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Station {
     private String Name;
     private Float x;
     private Float y;
     private ArrayList<String> allLines;
+    private Map<String, ArrayList<Time>> schedules = new HashMap<>();
 
     /**
      * Constructs a new station with the given name, list of lines, and coordinates. If the list of
@@ -46,6 +50,7 @@ public class Station {
         this.y = y;
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
+        schedules.put(Line, null);
     }
 
     /**
@@ -56,6 +61,13 @@ public class Station {
     public String getName() {
         return Name;
     }
+
+    /**
+     * @param name the new name of station
+     */
+    public void setName(String name) {
+        this.Name = name;
+    }
     /**
      * Returns the list of all transportation lines that serve the station.
      *
@@ -63,6 +75,15 @@ public class Station {
      */
     public ArrayList<String> getAllLines() {
         return allLines;
+    }
+
+    /**
+     * Returns the list of all transportation lines that serve the station.
+     *
+     * @return the list of all transportation lines that serve the station
+     */
+    public Map<String, ArrayList<Time>> getSchedules() {
+        return schedules;
     }
 
     /**
@@ -108,14 +129,25 @@ public class Station {
         return Name;
     }
 
+    public void addSchedule(Line line, Time time) {
+        if (schedules.get(line.getName()) == null) {
+            schedules.put(line.getName(), new ArrayList<>());
+        }
+        ArrayList<Time> times = schedules.get(line.getName());
+        times.add(time);
+        schedules.put(line.getName(), times);
+    }
+
+    // ! maybe not having to do this verification
     public void addLine(String lineName) {
         boolean exist = false;
-        for (String line : allLines) {
+        for (String line : schedules.keySet()) {
             if (line.contains(lineName)) {
                 exist = true;
                 break;
             }
         }
         if (!exist) allLines.add(lineName);
+        schedules.put(lineName, null);
     }
 }

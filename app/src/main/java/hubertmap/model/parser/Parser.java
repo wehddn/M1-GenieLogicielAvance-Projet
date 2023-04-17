@@ -1,7 +1,9 @@
 package hubertmap.model.parser;
 
+import hubertmap.model.DurationJourney;
 import hubertmap.model.Time;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
@@ -10,18 +12,22 @@ import java.text.Normalizer;
 import java.util.*;
 
 public class Parser extends ParserFactory {
-    // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
-    // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
 
     Network network;
     /** Parses the input CSV file and returns the network data as a tuple of Stations and Edges. */
-    private List<Station> list = new ArrayList<>();
+    public List<Station> stations = new ArrayList<>();
+
+    public List<EdgeTransport> edges = new ArrayList<>();
+    public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
     public Parser() {
         try {
-            parseCsv(openFile("src/main/java/hubertmap/model/map_data.csv"));
-        } catch (Exception e) {
+            parseStations(openFile("src/main/java/hubertmap/model/map_data.csv"));
+            parseLines(openFile("src/main/java/hubertmap/model/timetables.csv"));
+        } catch (FileNotFoundException e) {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur : " + e.getMessage());
         }
     }
 
@@ -40,9 +46,9 @@ public class Parser extends ParserFactory {
     }
 
     public Station stationAlreadyExist(String name, String line) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(name)) {
-                return list.get(i);
+        for (int i = 0; i < stations.size(); i++) {
+            if (stations.get(i).getName().equals(name)) {
+                return stations.get(i);
             }
         }
         return null;
@@ -54,12 +60,28 @@ public class Parser extends ParserFactory {
         return s;
     }
 
-    public void parseCsv(File file) throws Exception {
+    public Line lineAlreadyExist(String name) throws Exception {
+
+        for (Map.Entry<Line, ArrayList<DurationJourney>> entry : dataLine.entrySet()) {
+            if (entry.getKey().getName().equals(name)) {
+                return entry.getKey();
+            }
+        }
+        throw new Exception("Line doesn't already exist in database");
+    }
+
+    // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
+    // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+    public void parseStations(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(isr);
         String line;
         network = new Network();
+        ArrayList<DurationJourney> durationJourneys = new ArrayList<>();
+        String lastLineName = null;
+        Station lastStation = null;
+        Line currentLine = null;
         while ((line = reader.readLine()) != null) {
             String[] values = line.split(";");
 
@@ -73,10 +95,10 @@ public class Parser extends ParserFactory {
             float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
             String lineName = values[4].trim();
             String timeString = values[5].trim();
-            Time time =
-                    new Time(
-                            Integer.parseInt(timeString.split(":")[0]),
-                            Integer.parseInt(timeString.split(":")[1]));
+            DurationJourney time =
+                    new DurationJourney(timeString.split(":")[0], timeString.split(":")[1]);
+            durationJourneys.add(time);
+
             float distance = Float.parseFloat(values[6].trim());
             Station station1;
             Station station2;
@@ -84,18 +106,102 @@ public class Parser extends ParserFactory {
             station1 = stationAlreadyExist(station1Name, lineName);
             if (station1 == null) {
                 station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
-                list.add(station1);
+                stations.add(station1);
             } else station1.addLine(lineName);
 
             station2 = stationAlreadyExist(station2Name, lineName);
             if (station2 == null) {
                 station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
-                list.add(station2);
+                stations.add(station2);
             } else station2.addLine(lineName);
+
+            if (lastStation == null) {
+                lastStation = station2;
+            }
+            if (lastLineName == null) {
+                lastLineName = lineName;
+                currentLine = new Line(lineName, station1);
+                dataLine.put(currentLine, durationJourneys);
+            }
+
+            if (!lastLineName.equals(lineName)) {
+                currentLine.setTerminalStationArrival(lastStation);
+                currentLine = new Line(lineName, station1);
+                durationJourneys.remove(durationJourneys.size() - 1);
+
+                durationJourneys = new ArrayList<>();
+                dataLine.put(currentLine, durationJourneys);
+                durationJourneys.add(time);
+                lastLineName = lineName;
+            }
+            currentLine.addStationsIfNotAlreadyExist(station1);
+            currentLine.addStationsIfNotAlreadyExist(station2);
 
             EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
             network.addEdge(edge, station1, station2);
+            edges.add(edge);
+
+            lastStation = station2;
         }
         reader.close();
+        currentLine.setTerminalStationArrival(lastStation);
+    }
+
+    /*
+     * Parse a file that has the following structure :
+     * Ligne;Terminus;Heure:Minutes;Variante
+     */
+    public void parseLines(File file) throws Exception {
+        FileInputStream fis = new FileInputStream(file);
+        InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(isr);
+        String csvLine;
+
+        while ((csvLine = reader.readLine()) != null) {
+            String[] values = csvLine.split(";");
+            String terminus = values[1];
+            terminus = stripAccents(terminus);
+
+            String completeNameLine = values[0] + " variant " + values[3];
+            Time start =
+                    new Time(
+                            Integer.parseInt(values[2].split(":")[0]),
+                            Integer.parseInt(values[2].split(":")[1]),
+                            0);
+
+            Line currentLine = lineAlreadyExist(completeNameLine);
+            if (!terminus.equals(currentLine.getTerminalStationDeparture().getName())) {
+                throw new Exception(
+                        "Data given doesn't match\nThis line had "
+                                + currentLine.getTerminalStationDeparture().getName()
+                                + " as terminus start. The file has given "
+                                + terminus
+                                + " as terminus start station");
+            } else {
+                currentLine.addStart(start);
+            }
+        }
+        reader.close();
+        this.fillStationsSchedulesFromTerminusLineStart();
+    }
+
+    public void fillStationsSchedulesFromTerminusLineStart() {
+        Time timeToFillStationsSchedules = null;
+        int i = 0;
+        for (Line line : dataLine.keySet()) {
+            for (Time time : line.starts) {
+                timeToFillStationsSchedules = time;
+                i = 0;
+                for (DurationJourney dj : dataLine.get(line)) {
+                    line.allStations
+                            .get(i)
+                            .addSchedule(line, new Time(timeToFillStationsSchedules));
+                    timeToFillStationsSchedules =
+                            timeToFillStationsSchedules.increaseWithADurationJourney(dj);
+                    i++;
+                }
+                line.allStations.get(i).addSchedule(line, new Time(timeToFillStationsSchedules));
+            }
+        }
     }
 }

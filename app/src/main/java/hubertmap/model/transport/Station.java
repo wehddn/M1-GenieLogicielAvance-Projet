@@ -7,7 +7,9 @@ package hubertmap.model.transport;
 import hubertmap.model.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Station {
     private String Name;
@@ -149,5 +151,18 @@ public class Station {
         }
         if (!exist) allLines.add(lineName);
         schedules.put(lineName, null);
+    }
+
+    public ArrayList<String> getLinesNumbers() {
+        Set<String> linesNumbers = new HashSet<String>();
+        for (int i = 0; i < allLines.size(); i++) {
+            String line = allLines.get(i);
+            int index = line.indexOf(" ");
+            if (index != -1) {
+                line = line.substring(0, index);
+                linesNumbers.add(line);
+            }
+        }
+        return new ArrayList<String>(linesNumbers);
     }
 }

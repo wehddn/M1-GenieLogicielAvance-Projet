@@ -25,11 +25,12 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.0.1-jre'
 
-    implementation 'net.sf.jung:jung-graph-impl:2.1.1'
-    implementation 'net.sf.jung:jung-algorithms:2.1.1'
-    implementation 'net.sf.jung:jung-visualization:2.1.1'
+    implementation 'net.sf.jung:jung-graph-impl:2.0.1'
+    implementation 'net.sf.jung:jung-algorithms:2.0.1'
+    implementation 'net.sf.jung:jung-visualization:2.0.1'
 
     implementation 'org.apache.commons:commons-collections4:4.4'
+
 }
 
 application {

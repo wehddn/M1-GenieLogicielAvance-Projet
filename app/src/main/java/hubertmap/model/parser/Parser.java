@@ -31,7 +31,7 @@ public class Parser extends ParserFactory {
         }
     }
 
-    public Network getEdges() {
+    public Network getNetwork() {
         return network;
     }
 

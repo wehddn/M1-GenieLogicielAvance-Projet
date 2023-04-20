@@ -2,6 +2,7 @@ package hubertmap.controller;
 
 import hubertmap.model.parser.Parser;
 import hubertmap.model.transport.Network;
+import hubertmap.view.GraphData;
 import hubertmap.view.View;
 
 /**
@@ -11,10 +12,29 @@ import hubertmap.view.View;
  */
 public class Controller {
 
-    /** Constructs a new Controller instance with the given View and Graph objects. */
+    /* The network of stations and edges managed in Model */
+    static Network network;
+
+    /* The GUI of application. */
+    static View view;
+
+    GraphData graphView;
+
+    /** Constructs a new Controller instance, creates Network and View */
     public Controller() {
         Parser parser = new Parser();
-        Network graph = parser.getEdges();
-        new View(graph);
+        network = parser.getNetwork();
+        graphView = new GraphData(network.getGraph());
+        view = new View(graphView);
+    }
+
+    /**
+     * Calculates the shortest path between two stations and updates the view accordingly.
+     *
+     * @param station1Name the name of the starting station
+     * @param station2Name the name of the destination station
+     */
+    public static void setShortestPath(String station1Name, String station2Name) {
+        view.setShortestPath(network.shortestPath(station1Name, station2Name));
     }
 }

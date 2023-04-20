@@ -16,7 +16,7 @@ public class Network {
     HashMap<String, Station> stations;
     List<EdgeTransport> shortestPath;
 
-    DijkstraShortestPath distancePaths;
+    DijkstraShortestPath<Station, EdgeTransport> distancePaths;
 
     public Network(Collection<EdgeTransport> edges) {
         graph = new SparseGraph<>();
@@ -30,9 +30,9 @@ public class Network {
         }
 
         distancePaths =
-                new DijkstraShortestPath(
+                new DijkstraShortestPath<Station, EdgeTransport>(
                         graph,
-                        (Object e) -> {
+                        (EdgeTransport e) -> {
                             return ((EdgeTransport) e).getDistance();
                         });
     }

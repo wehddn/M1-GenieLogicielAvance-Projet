@@ -20,10 +20,11 @@ public class Network {
 
     DijkstraShortestPath distancePaths;
 
-/**
- * Constructs a new Network object with the given collection of edges.
- * @param edges the collection of edges to add to the network
- */
+    /**
+     * Constructs a new Network object with the given collection of edges.
+     *
+     * @param edges the collection of edges to add to the network
+     */
     public Network(Collection<EdgeTransport> edges) {
         graph = new SparseGraph<>();
         stations = new HashMap<>();
@@ -45,18 +46,17 @@ public class Network {
                             return ((EdgeTransport) e).getDistance();
                         });
     }
-/**
- * Constructs a new Network object with no edges.
- */
+    /** Constructs a new Network object with no edges. */
     public Network() {
         this(null);
     }
-/**
- * Adds an edge to the network, connecting the given stations.
- * @param edge the edge to add
- * @param station1 the first station to connect
- * @param station2 the second station to connect
- */
+    /**
+     * Adds an edge to the network, connecting the given stations.
+     *
+     * @param edge the edge to add
+     * @param station1 the first station to connect
+     * @param station2 the second station to connect
+     */
     public void addEdge(EdgeTransport edge, Station station1, Station station2) {
         graph.addEdge(edge, station1, station2);
 
@@ -76,49 +76,55 @@ public class Network {
         stations.putIfAbsent(station2.getName(), station2);
     }
 
-/**
- * Adds an edge to the network, connecting the stations at the start and end of the edge.
- * @param edge the edge to add
- */
+    /**
+     * Adds an edge to the network, connecting the stations at the start and end of the edge.
+     *
+     * @param edge the edge to add
+     */
     public void addEdge(EdgeTransport edge) {
         addEdge(edge, edge.getStartingStation(), edge.getEndingStation());
     }
 
-/**
- * Returns the graph representing the network.
- * @return the graph representing the network
- */
+    /**
+     * Returns the graph representing the network.
+     *
+     * @return the graph representing the network
+     */
     public Graph<Station, EdgeTransport> getGraph() {
         return graph;
     }
 
-/**
- * Returns the minimum longitude of any station in the network.
- * @return the minimum longitude of any station in the network
- */
+    /**
+     * Returns the minimum longitude of any station in the network.
+     *
+     * @return the minimum longitude of any station in the network
+     */
     public double getMinimumLongitude() {
         return minimumLongitude;
     }
 
-/**
- * Returns the maximum latitude of any station in the network.
- * @return the maximum latitude of any station in the network
- */
+    /**
+     * Returns the maximum latitude of any station in the network.
+     *
+     * @return the maximum latitude of any station in the network
+     */
     public double getMaximumLatitude() {
         return maximumLatitude;
     }
 
-/**
- * Returns the minimum latitude of any station in the network.
- * @return the minimum latitude of any station in the network
- */
+    /**
+     * Returns the minimum latitude of any station in the network.
+     *
+     * @return the minimum latitude of any station in the network
+     */
     public double getMinimumLatitude() {
         return minimumLatitude;
     }
-/**
- * Returns the maximum longitude of any station in the network.
- * @return the maximum longitude of any station in the network
- */
+    /**
+     * Returns the maximum longitude of any station in the network.
+     *
+     * @return the maximum longitude of any station in the network
+     */
     public double getMaximumLongitude() {
         return maximumLongitude;
     }

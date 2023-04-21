@@ -78,41 +78,6 @@ public class Network {
     }
 
     /**
-     * Returns the minimum longitude of any station in the network.
-     *
-     * @return the minimum longitude of any station in the network
-     */
-    public double getMinimumLongitude() {
-        return minimumLongitude;
-    }
-
-    /**
-     * Returns the maximum latitude of any station in the network.
-     *
-     * @return the maximum latitude of any station in the network
-     */
-    public double getMaximumLatitude() {
-        return maximumLatitude;
-    }
-
-    /**
-     * Returns the minimum latitude of any station in the network.
-     *
-     * @return the minimum latitude of any station in the network
-     */
-    public double getMinimumLatitude() {
-        return minimumLatitude;
-    }
-    /**
-     * Returns the maximum longitude of any station in the network.
-     *
-     * @return the maximum longitude of any station in the network
-     */
-    public double getMaximumLongitude() {
-        return maximumLongitude;
-    }
-
-    /**
      * Calculates the shortest path from station1 to station2 using the distance between two
      * stations as weight
      *

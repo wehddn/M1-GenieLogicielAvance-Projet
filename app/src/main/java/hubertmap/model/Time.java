@@ -16,6 +16,7 @@ public class Time {
      *
      * @param hour the hour component of the time
      * @param minute the minute component of the time
+     * @param seconde the seconde component of the time
      */
     public Time(int hour, int minute, int seconde) {
 
@@ -24,13 +25,23 @@ public class Time {
         this.seconde = seconde;
     }
 
+    /**
+     * Constructs a new Time object by copying the fields of another Time object.
+     *
+     * @param time the Time object to copy
+     */
     public Time(Time time) {
 
         this.hour = time.hour;
         this.minute = time.minute;
         this.seconde = time.seconde;
     }
-
+    /**
+     * Increases the time by the specified duration journey.
+     *
+     * @param dj the duration journey to be added to the current time
+     * @return a new Time object with the time increased by the specified duration journey
+     */
     public Time increaseWithADurationJourney(DurationJourney dj) {
         this.increaseBySeconde(dj.getSeconde());
         this.increaseByMinute(dj.getMinute());
@@ -54,7 +65,11 @@ public class Time {
     public void setHour(int hour) {
         this.hour = hour;
     }
-
+    /**
+     * Increases the time by a given number of hours.
+     *
+     * @param hour the number of hours to add to the time
+     */
     public void increaseByHours(int hour) {
         this.hour = (this.hour + hour) % 24;
     }
@@ -85,7 +100,11 @@ public class Time {
     public int getSeconde() {
         return hour;
     }
-
+    /**
+     * Increases the time object by a specified number of minutes.
+     *
+     * @param minute the number of minutes to add to the time object
+     */
     public void increaseByMinute(int minute) {
         this.minute += minute;
         while (this.minute > 59) {
@@ -103,6 +122,12 @@ public class Time {
         this.seconde = seconde;
     }
 
+    /**
+     * Increases the time by a given number of seconds. If the seconds exceed 59, the method adds 1
+     * minute to the time and adjusts the second count accordingly.
+     *
+     * @param seconde The number of seconds to add to the time.
+     */
     public void increaseBySeconde(int seconde) {
         this.seconde += seconde;
         while (this.seconde > 59) {

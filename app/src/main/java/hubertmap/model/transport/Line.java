@@ -11,14 +11,15 @@ public class Line {
     public ArrayList<Time> starts;
     public ArrayList<Station> allStations;
 
-/**
- * Constructs a new instance of the Line class with a specified name, departure terminal station,
- * arrival terminal station and starting time.
- * @param name The name of the metro line.
- * @param terminalStationDeparture The departure terminal station of the metro line.
- * @param terminalStationArrival The arrival terminal station of the metro line.
- * @param start The starting time of the metro line.
- */
+    /**
+     * Constructs a new instance of the Line class with a specified name, departure terminal
+     * station, arrival terminal station and starting time.
+     *
+     * @param name The name of the metro line.
+     * @param terminalStationDeparture The departure terminal station of the metro line.
+     * @param terminalStationArrival The arrival terminal station of the metro line.
+     * @param start The starting time of the metro line.
+     */
     public Line(
             String name,
             Station terminalStationDeparture,
@@ -32,11 +33,13 @@ public class Line {
         this.starts.add(start);
     }
 
-/**
- * Constructs a new instance of the Line class with a specified name and departure terminal station.
- * @param name The name of the metro line.
- * @param terminaleStationDeparture The departure terminal station of the metro line.
- */
+    /**
+     * Constructs a new instance of the Line class with a specified name and departure terminal
+     * station.
+     *
+     * @param name The name of the metro line.
+     * @param terminaleStationDeparture The departure terminal station of the metro line.
+     */
     public Line(String name, Station terminaleStationDeparture) {
         this.name = name;
         this.terminalStationDeparture = terminaleStationDeparture;
@@ -45,33 +48,37 @@ public class Line {
         this.allStations = new ArrayList<>();
     }
 
-/**
- * Returns the name of the metro line.
- * @return The name of the metro line.
- */
+    /**
+     * Returns the name of the metro line.
+     *
+     * @return The name of the metro line.
+     */
     public String getName() {
         return name;
     }
-/**
- * Returns the departure terminal station of the metro line.
- * @return The departure terminal station of the metro line.
- */
+    /**
+     * Returns the departure terminal station of the metro line.
+     *
+     * @return The departure terminal station of the metro line.
+     */
     public Station getTerminalStationDeparture() {
         return terminalStationDeparture;
     }
 
-/**
- * Returns the arrival terminal station of the metro line.
- * @return The arrival terminal station of the metro line.
- */
+    /**
+     * Returns the arrival terminal station of the metro line.
+     *
+     * @return The arrival terminal station of the metro line.
+     */
     public Station getTerminalStationArrival() {
         return terminalStationArrival;
     }
 
-/**
- * Adds a new station to the metro line if it doesn't already exist in the list of stations.
- * @param newStation The new station to be added to the metro line.
- */
+    /**
+     * Adds a new station to the metro line if it doesn't already exist in the list of stations.
+     *
+     * @param newStation The new station to be added to the metro line.
+     */
     public void addStationsIfNotAlreadyExist(Station newStation) {
         for (Station station : allStations) {
             if (station.getName().equals(newStation.getName())) {
@@ -81,27 +88,29 @@ public class Line {
         allStations.add(newStation);
     }
 
-/**
- * Sets the arrival terminal station of the metro line.
- * @param terminalStationArrival The arrival terminal station of the metro line.
- */
+    /**
+     * Sets the arrival terminal station of the metro line.
+     *
+     * @param terminalStationArrival The arrival terminal station of the metro line.
+     */
     public void setTerminalStationArrival(Station terminalStationArrival) {
         this.terminalStationArrival = terminalStationArrival;
     }
 
-/**
- * Adds a new starting time to the metro line.
- * @param start The new starting time to be added to the metro line.
- */
+    /**
+     * Adds a new starting time to the metro line.
+     *
+     * @param start The new starting time to be added to the metro line.
+     */
     public void addStart(Time start) {
         starts.add(start);
     }
-/**
- * Returns a string representation of this line in the format:
- * name, Starting Station : terminalStationDeparture, Terminus : terminalStationArrival, Time : starts
- * 
- * @return a string representation of this line
- */
+    /**
+     * Returns a string representation of this line in the format: name, Starting Station :
+     * terminalStationDeparture, Terminus : terminalStationArrival, Time : starts
+     *
+     * @return a string representation of this line
+     */
     public String toString() {
         return String.format(
                 "%s, Starting Station : %s, Terminus : %s, Time : %s",

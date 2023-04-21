@@ -11,9 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.*;
 
-/**
- * The Parser class parses the input CSV files
- */
+/** The Parser class parses the input CSV files */
 public class Parser extends ParserFactory {
 
     Network network;
@@ -23,12 +21,12 @@ public class Parser extends ParserFactory {
     public List<EdgeTransport> edges = new ArrayList<>();
     public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
-/**
- * The constructor of the Parser class.
- * It calls the parseStations() and parseLines() methods to parse stations and lines from the CSV files.
- * If the file is not found, it catches the FileNotFoundException and prints an error message.
- * If any other exception occurs, it catches the Exception and prints an error message.
-*/
+    /**
+     * The constructor of the Parser class. It calls the parseStations() and parseLines() methods to
+     * parse stations and lines from the CSV files. If the file is not found, it catches the
+     * FileNotFoundException and prints an error message. If any other exception occurs, it catches
+     * the Exception and prints an error message.
+     */
     public Parser() {
         try {
             parseStations(openFile("src/main/java/hubertmap/model/map_data.csv"));
@@ -39,20 +37,22 @@ public class Parser extends ParserFactory {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
-/**
- * Returns the network edges.
- * @return the network edges.
- */
+    /**
+     * Returns the network edges.
+     *
+     * @return the network edges.
+     */
     public Network getEdges() {
         return network;
     }
 
-/**
- * Opens the file at the given path and returns a File object.
- * If the file is not found, it catches the Exception and prints an error message.
- * @param path the path of the file to open.
- * @return a File object of the file at the given path.
- */
+    /**
+     * Opens the file at the given path and returns a File object. If the file is not found, it
+     * catches the Exception and prints an error message.
+     *
+     * @param path the path of the file to open.
+     * @return a File object of the file at the given path.
+     */
     public File openFile(String path) {
         try {
             File file = new File(path);
@@ -63,14 +63,14 @@ public class Parser extends ParserFactory {
         }
     }
 
-/**
- * Checks if a station with the given name and line already exists in the database.
- * If it does, it returns the station object.
- * If it doesn't, it returns null.
- * @param name the name of the station to check.
- * @param line the line of the station to check.
- * @return the station object if it already exists, or null if it doesn't.
- */
+    /**
+     * Checks if a station with the given name and line already exists in the database. If it does,
+     * it returns the station object. If it doesn't, it returns null.
+     *
+     * @param name the name of the station to check.
+     * @param line the line of the station to check.
+     * @return the station object if it already exists, or null if it doesn't.
+     */
     public Station stationAlreadyExist(String name, String line) {
         for (int i = 0; i < stations.size(); i++) {
             if (stations.get(i).getName().equals(name)) {
@@ -80,25 +80,25 @@ public class Parser extends ParserFactory {
         return null;
     }
 
-/**
- * Removes accents from a given string.
- * @param s the string to remove accents from.
- * @return the string without accents.
- */
+    /**
+     * Removes accents from a given string.
+     *
+     * @param s the string to remove accents from.
+     * @return the string without accents.
+     */
     public static String stripAccents(String s) {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;
     }
-/**
- * Checks if a line with the given name already exists in the database.
- * If it does, it returns the line object.
- * If it doesn't, it throws an Exception with an error message.
- * 
- * @param name the name of the line to check.
- * @return the line object if it already exists.
- * @throws Exception if the line doesn't already exist in the database.
- */
+    /**
+     * Checks if a line with the given name already exists in the database. If it does, it returns
+     * the line object. If it doesn't, it throws an Exception with an error message.
+     *
+     * @param name the name of the line to check.
+     * @return the line object if it already exists.
+     * @throws Exception if the line doesn't already exist in the database.
+     */
     public Line lineAlreadyExist(String name) throws Exception {
 
         for (Map.Entry<Line, ArrayList<DurationJourney>> entry : dataLine.entrySet()) {

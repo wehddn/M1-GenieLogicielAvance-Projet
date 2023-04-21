@@ -8,7 +8,9 @@ public class Line {
     private String name;
     private Station terminalStationDeparture;
     private Station terminalStationArrival;
+    /** The list of all starting times of the line. */
     public ArrayList<Time> starts;
+    /** The list of all stations that the line passes through. */
     public ArrayList<Station> allStations;
 
     /**

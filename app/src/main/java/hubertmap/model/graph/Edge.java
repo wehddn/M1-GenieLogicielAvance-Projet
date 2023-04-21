@@ -12,7 +12,7 @@ public class Edge {
      * @param weight positive weight
      * @param v1 origin vertex
      * @param v2 end vertex
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the weight is negative
      */
     public Edge(float weight, Vertex v1, Vertex v2) {
         if (weight < 0) {
@@ -29,7 +29,7 @@ public class Edge {
      * @param weight positive weight
      * @param label1 label of origin vertex
      * @param label2 label of end vertex
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the weight is negative
      */
     public Edge(float weight, String label1, String label2) {
         if (weight < 0) {

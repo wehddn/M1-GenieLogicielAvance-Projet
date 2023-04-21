@@ -15,10 +15,11 @@ import java.util.*;
 public class Parser extends ParserFactory {
 
     Network network;
-
+    /** The list of all stations in the database. */
     public List<Station> stations = new ArrayList<>();
-
+    /** The list of all edges in the database. */
     public List<EdgeTransport> edges = new ArrayList<>();
+    /** The list of all lines in the database with their starting times. */
     public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
     /**
@@ -111,6 +112,14 @@ public class Parser extends ParserFactory {
 
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
     // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+    /**
+     * Parses a file containing information about stations, lines and their connections, and creates
+     * a network graph representation of this data. This method reads a CSV file, with each line
+     * containing information about a connection between two stations.
+     *
+     * @param file the CSV file containing the stations and connections information
+     * @throws Exception if there is an error reading or parsing the file
+     */
     public void parseStations(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
@@ -186,9 +195,14 @@ public class Parser extends ParserFactory {
         currentLine.setTerminalStationArrival(lastStation);
     }
 
-    /*
-     * Parse a file that has the following structure :
-     * Ligne;Terminus;Heure:Minutes;Variante
+    /**
+     * Parses a file containing information about the lines and their schedules, and fills in the
+     * schedule information for each station on each line. This method reads a CSV file, with each
+     * line containing information about a line's schedule.
+     *
+     * @param file the CSV file containing the lines and schedules information
+     * @throws Exception if there is an error reading or parsing the file, or if the data given
+     *     doesn't match
      */
     public void parseLines(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
@@ -224,6 +238,10 @@ public class Parser extends ParserFactory {
         this.fillStationsSchedulesFromTerminusLineStart();
     }
 
+    /**
+     * Fills in the schedule information for each station on each line, based on the start times and
+     * duration journeys between stations specified in the dataLine map.
+     */
     public void fillStationsSchedulesFromTerminusLineStart() {
         Time timeToFillStationsSchedules = null;
         int i = 0;

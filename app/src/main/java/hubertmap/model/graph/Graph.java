@@ -68,7 +68,7 @@ public class Graph {
     /**
      * Adds a new oriented edge to the graph
      *
-     * @param edge
+     * @param edge edge to add
      */
     public void addEdge(Edge edge) {
         adjacencyList.putIfAbsent(edge.getV1(), new ArrayList<>());
@@ -85,7 +85,7 @@ public class Graph {
     /**
      * adds a new vertex to the graph
      *
-     * @param vertex
+     * @param vertex vertex to add
      */
     public void addVertex(Vertex vertex) {
         adjacencyList.putIfAbsent(vertex, new ArrayList<>());

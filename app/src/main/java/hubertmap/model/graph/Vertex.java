@@ -9,7 +9,7 @@ public class Vertex {
     /**
      * Constructs a new vertex
      *
-     * @param label
+     * @param label label of the vertex
      */
     Vertex(String label) {
         this.label = label;
@@ -25,7 +25,7 @@ public class Vertex {
     /**
      * sets visited
      *
-     * @param visited
+     * @param visited the new value to set
      */
     protected void setVisited(boolean visited) {
         this.visited = visited;
@@ -39,7 +39,7 @@ public class Vertex {
     }
 
     /**
-     * @param distance
+     * @param distance the new distance to set
      */
     protected void setDistance(float distance) {
         this.distance = distance;

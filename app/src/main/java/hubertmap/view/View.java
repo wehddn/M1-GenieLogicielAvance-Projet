@@ -3,7 +3,6 @@ package hubertmap.view;
 import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
-import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

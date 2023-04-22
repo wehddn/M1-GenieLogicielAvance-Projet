@@ -8,7 +8,6 @@ import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
 import java.util.*;
 
 public class Parser extends ParserFactory {
@@ -54,12 +53,6 @@ public class Parser extends ParserFactory {
         return null;
     }
 
-    public static String stripAccents(String s) {
-        s = Normalizer.normalize(s, Normalizer.Form.NFD);
-        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-        return s;
-    }
-
     public Line lineAlreadyExist(String name) throws Exception {
 
         for (Map.Entry<Line, ArrayList<DurationJourney>> entry : dataLine.entrySet()) {
@@ -86,11 +79,9 @@ public class Parser extends ParserFactory {
             String[] values = line.split(";");
 
             String station1Name = values[0].trim();
-            station1Name = stripAccents(station1Name);
             float station1Lat = Float.parseFloat(values[1].trim().split(",")[0]);
             float station1Lon = Float.parseFloat(values[1].trim().split(",")[1]);
             String station2Name = values[2].trim();
-            station2Name = stripAccents(station2Name);
             float station2Lat = Float.parseFloat(values[3].trim().split(",")[0]);
             float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
             String lineName = values[4].trim();
@@ -160,7 +151,6 @@ public class Parser extends ParserFactory {
         while ((csvLine = reader.readLine()) != null) {
             String[] values = csvLine.split(";");
             String terminus = values[1];
-            terminus = stripAccents(terminus);
 
             String completeNameLine = values[0] + " variant " + values[3];
             Time start =

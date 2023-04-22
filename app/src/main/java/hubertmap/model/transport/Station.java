@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Station {
-    private String Name;
+    private String name;
     private Float x;
     private Float y;
     private ArrayList<String> allLines;
@@ -22,13 +22,13 @@ public class Station {
      * Constructs a new station with the given name, list of lines, and coordinates. If the list of
      * lines is null, an empty list is created.
      *
-     * @param Name the name of the station
+     * @param name the name of the station
      * @param allLines the list of all transportation lines that serve the station
      * @param x the x-coordinate of the station's location
      * @param y the y-coordinate of the station's location
      */
-    public Station(String Name, ArrayList<String> allLines, Float x, Float y) {
-        this.Name = Name;
+    public Station(String name, ArrayList<String> allLines, Float x, Float y) {
+        this.name = name;
         this.x = x;
         this.y = y;
         if (allLines != null) {
@@ -41,13 +41,13 @@ public class Station {
      * Constructs a new station with the given name, line, and coordinates. The station is served by
      * only one transportation line.
      *
-     * @param Name the name of the station
+     * @param name the name of the station
      * @param Line the transportation line that serves the station
      * @param x the x-coordinate of the station's location
      * @param y the y-coordinate of the station's location
      */
-    public Station(String Name, String Line, Float x, Float y) {
-        this.Name = Name;
+    public Station(String name, String Line, Float x, Float y) {
+        this.name = name;
         this.x = x;
         this.y = y;
         this.allLines = new ArrayList<String>();
@@ -61,14 +61,14 @@ public class Station {
      * @return the name of the station
      */
     public String getName() {
-        return Name;
+        return name;
     }
 
     /**
      * @param name the new name of station
      */
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
     /**
      * Returns the list of all transportation lines that serve the station.
@@ -112,7 +112,7 @@ public class Station {
      * @return true if this station is equal to the specified station, false otherwise
      */
     public boolean equals(Station station) {
-        if (this.Name == station.getName()
+        if (this.name == station.getName()
                 && this.x == station.getX()
                 && this.y == station.getY()) {
             return true;
@@ -127,7 +127,8 @@ public class Station {
      */
     @Override
     public String toString() {
-        return Name;
+        // TODO Auto-generated method stub
+        return name;
     }
 
     public void addSchedule(Line line, Time time) {

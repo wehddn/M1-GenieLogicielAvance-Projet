@@ -1,12 +1,14 @@
 package hubertmap.view;
 
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.awt.BasicStroke;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.JPopupMenu;
 import org.apache.commons.collections15.Transformer;
 
 /**
@@ -212,5 +215,29 @@ public class GraphDecorator {
             shortestPathStations.clear();
             shortestPathStations.addAll(set);
         }
+    }
+
+    public GraphMouseListener<Station> graphMouseListener() {
+        return new GraphMouseListener<Station>() {
+
+            @Override
+            public void graphClicked(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+                JPopupMenu popup = new CustomPopupMenu(v.getSchedules());
+                popup.show(me.getComponent(), me.getX(), me.getY());
+            }
+
+            @Override
+            public void graphPressed(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void graphReleased(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+
+            }
+        };
     }
 }

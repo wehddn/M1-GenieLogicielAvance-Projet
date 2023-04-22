@@ -22,8 +22,8 @@ public class Parser extends ParserFactory {
 
     public Parser() {
         try {
-            parseStations(openFile("src/main/java/hubertmap/model/map_data.csv"));
-            parseLines(openFile("src/main/java/hubertmap/model/timetables.csv"));
+            parseStations(openFile("ressource/map_data.csv"));
+            parseLines(openFile("ressource/timetables.csv"));
         } catch (FileNotFoundException e) {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
         } catch (Exception e) {

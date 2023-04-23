@@ -7,9 +7,12 @@ import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class CustomPopupMenu extends JPopupMenu {
 
@@ -63,8 +66,32 @@ public class CustomPopupMenu extends JPopupMenu {
                 }
         }
 
+        setUpModel(model, table);
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(200, 200));
         this.add(scrollPane, c);
+    }
+
+    private void setUpModel(DefaultTableModel model, JTable table) {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+
+        table.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+
+        Set<Object> uniqueValues = new HashSet<>();
+
+        // Iterate over the rows of the model
+        for (int i = model.getRowCount() - 1; i >= 0; i--) {
+            Object value = model.getValueAt(i, 1); // Get the value from the second column
+            if (uniqueValues.contains(value)) { // If the value is already in the Set
+                model.removeRow(i); // Remove the row from the model
+            } else {
+                uniqueValues.add(value); // Add the value to the Set
+            }
+        }
     }
 }

@@ -32,12 +32,6 @@ public class GraphData {
         this.graph = graph;
         this.lines = lines;
 
-        /*
-        for (Line line : lines) {
-            System.out.println(line.getName() + " -> " + line.getTerminalStationArrival());
-        }
-        */
-
         minimumLongitude = 180;
         maximumLongitude = -180;
         minimumLatitude = 90;

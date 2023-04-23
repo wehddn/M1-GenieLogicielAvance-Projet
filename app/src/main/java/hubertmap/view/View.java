@@ -5,9 +5,11 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.JFrame;
@@ -24,6 +26,9 @@ public class View {
 
     /** A List object to hold names of station for search. */
     private List<String> stationsNames;
+
+    /** A collection mapping station names without accents to their actual names */
+    private HashMap<String, String> actualStationsNames;
 
     /** A GraphPanelJung object for drawing the graph using the JUNG library. */
     GraphPanel graphPanel;
@@ -99,6 +104,14 @@ public class View {
                     public void actionPerformed(ActionEvent e) {
                         String station1Name = textAreaStationStart.getValue();
                         String station2Name = textAreaStationEnd.getValue();
+                        String s1 = actualStationsNames.get(station1Name);
+                        String s2 = actualStationsNames.get(station2Name);
+                        if (s1 != null) {
+                            station1Name = s1;
+                        }
+                        if (s2 != null) {
+                            station2Name = s2;
+                        }
                         Controller.setShortestPath(station1Name, station2Name);
                     }
                 };
@@ -112,8 +125,15 @@ public class View {
      */
     private void setData(Collection<Station> stations) {
         stationsNames = new ArrayList<>();
+        actualStationsNames = new HashMap<>();
         for (Station station : stations) {
-            stationsNames.add(station.getName().toLowerCase());
+            String n1 = station.getName().toLowerCase();
+            String n2 = stripAccents(n1);
+            stationsNames.add(n1);
+            if (!(n1.equals(n2))) {
+                stationsNames.add(n2);
+                actualStationsNames.put(n2, n1);
+            }
         }
         Collections.sort(stationsNames);
     }
@@ -126,5 +146,15 @@ public class View {
     public void setShortestPath(List<EdgeTransport> shortestPath) {
         graphPanel.getDecorator().setShortestPath(shortestPath);
         graphPanel.repaint();
+    }
+
+    /**
+     * @param s a character string
+     * @return s with accents replaced with ascii characters
+     */
+    private String stripAccents(String s) {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
     }
 }

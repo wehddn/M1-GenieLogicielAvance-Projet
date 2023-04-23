@@ -8,7 +8,6 @@ import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
 import java.util.*;
 
 /** The Parser class parses the input CSV files */
@@ -30,8 +29,8 @@ public class Parser extends ParserFactory {
      */
     public Parser() {
         try {
-            parseStations(openFile("src/main/java/hubertmap/model/map_data.csv"));
-            parseLines(openFile("src/main/java/hubertmap/model/timetables.csv"));
+            parseStations(openFile("ressource/map_data.csv"));
+            parseLines(openFile("ressource/timetables.csv"));
         } catch (FileNotFoundException e) {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
         } catch (Exception e) {
@@ -134,11 +133,9 @@ public class Parser extends ParserFactory {
             String[] values = line.split(";");
 
             String station1Name = values[0].trim();
-            station1Name = stripAccents(station1Name);
             float station1Lat = Float.parseFloat(values[1].trim().split(",")[0]);
             float station1Lon = Float.parseFloat(values[1].trim().split(",")[1]);
             String station2Name = values[2].trim();
-            station2Name = stripAccents(station2Name);
             float station2Lat = Float.parseFloat(values[3].trim().split(",")[0]);
             float station2Lon = Float.parseFloat(values[3].trim().split(",")[1]);
             String lineName = values[4].trim();
@@ -213,7 +210,6 @@ public class Parser extends ParserFactory {
         while ((csvLine = reader.readLine()) != null) {
             String[] values = csvLine.split(";");
             String terminus = values[1];
-            terminus = stripAccents(terminus);
 
             String completeNameLine = values[0] + " variant " + values[3];
             Time start =

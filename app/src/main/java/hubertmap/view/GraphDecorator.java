@@ -235,7 +235,8 @@ public class GraphDecorator {
             @Override
             public void graphClicked(Station v, MouseEvent me) {
                 // TODO Auto-generated method stub
-                JPopupMenu popup = new CustomPopupMenu(v.getSchedules());
+                System.out.println(v);
+                JPopupMenu popup = new CustomPopupMenu(v);
                 popup.show(me.getComponent(), me.getX(), me.getY());
             }
 

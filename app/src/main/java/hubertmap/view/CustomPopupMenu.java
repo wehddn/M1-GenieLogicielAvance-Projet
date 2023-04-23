@@ -1,15 +1,16 @@
 package hubertmap.view;
 
+import hubertmap.controller.Controller;
 import hubertmap.model.Time;
+import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.*;
 
 public class CustomPopupMenu extends JPopupMenu {
 
-    public CustomPopupMenu(Map<String, ArrayList<Time>> schedules) {
+    public CustomPopupMenu(Station v) {
 
         GridBagConstraints c = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
@@ -23,9 +24,21 @@ public class CustomPopupMenu extends JPopupMenu {
         c.gridwidth = 1;
         c.gridy = 0;
         c.gridx = 0;
-        this.add(new JButton("Departure"));
+        JButton departure = new JButton("Departure");
+        this.add(departure);
         c.gridx = 1;
-        this.add(new JButton("Arrival "));
+        JButton arrival = new JButton("Arrival");
+        this.add(arrival);
+
+        departure.addActionListener(
+                e -> {
+                    Controller.setDeparture(v.getName());
+                });
+
+        arrival.addActionListener(
+                e -> {
+                    Controller.setArrival(v.getName());
+                });
 
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth = 2;
@@ -34,10 +47,11 @@ public class CustomPopupMenu extends JPopupMenu {
         c.gridx = 0;
         DefaultListModel<String> listModel = new DefaultListModel<>();
 
-        for (Entry<String, ArrayList<Time>> entry : schedules.entrySet()) {
-            for (Time time : entry.getValue()) {
-                listModel.addElement(time.toString());
-            }
+        for (Entry<String, ArrayList<Time>> entry : v.getSchedules().entrySet()) {
+            if (entry.getValue() != null)
+                for (Time time : entry.getValue()) {
+                    listModel.addElement(time.toString());
+                }
         }
 
         JList<String> jList = new JList<>(listModel);

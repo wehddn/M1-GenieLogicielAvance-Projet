@@ -37,4 +37,12 @@ public class Controller {
     public static void setShortestPath(String station1Name, String station2Name) {
         view.setShortestPath(network.shortestPath(station1Name, station2Name));
     }
+
+    public static void setDeparture(String name) {
+        view.setDeparture(name);
+    }
+
+    public static void setArrival(String name) {
+        view.setArrival(name);
+    }
 }

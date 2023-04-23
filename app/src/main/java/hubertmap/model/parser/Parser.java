@@ -10,15 +10,23 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/** The Parser class parses the input CSV files */
 public class Parser extends ParserFactory {
 
     Network network;
-    /** Parses the input CSV file and returns the network data as a tuple of Stations and Edges. */
+    /** The list of all stations in the database. */
     public List<Station> stations = new ArrayList<>();
-
+    /** The list of all edges in the database. */
     public List<EdgeTransport> edges = new ArrayList<>();
+    /** The list of all lines in the database with their starting times. */
     public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
+    /**
+     * The constructor of the Parser class. It calls the parseStations() and parseLines() methods to
+     * parse stations and lines from the CSV files. If the file is not found, it catches the
+     * FileNotFoundException and prints an error message. If any other exception occurs, it catches
+     * the Exception and prints an error message.
+     */
     public Parser() {
         try {
             parseStations(openFile("ressource/map_data.csv"));
@@ -29,11 +37,22 @@ public class Parser extends ParserFactory {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
-
-    public Network getNetwork() {
+    /**
+     * Returns the network edges.
+     *
+     * @return the network edges.
+     */
+    public Network getEdges() {
         return network;
     }
 
+    /**
+     * Opens the file at the given path and returns a File object. If the file is not found, it
+     * catches the Exception and prints an error message.
+     *
+     * @param path the path of the file to open.
+     * @return a File object of the file at the given path.
+     */
     public File openFile(String path) {
         try {
             File file = new File(path);
@@ -44,6 +63,14 @@ public class Parser extends ParserFactory {
         }
     }
 
+    /**
+     * Checks if a station with the given name and line already exists in the database. If it does,
+     * it returns the station object. If it doesn't, it returns null.
+     *
+     * @param name the name of the station to check.
+     * @param line the line of the station to check.
+     * @return the station object if it already exists, or null if it doesn't.
+     */
     public Station stationAlreadyExist(String name, String line) {
         for (int i = 0; i < stations.size(); i++) {
             if (stations.get(i).getName().equals(name)) {
@@ -53,6 +80,14 @@ public class Parser extends ParserFactory {
         return null;
     }
 
+    /**
+     * Checks if a line with the given name already exists in the database. If it does, it returns
+     * the line object. If it doesn't, it throws an Exception with an error message.
+     *
+     * @param name the name of the line to check.
+     * @return the line object if it already exists.
+     * @throws Exception if the line doesn't already exist in the database.
+     */
     public Line lineAlreadyExist(String name) throws Exception {
 
         for (Map.Entry<Line, ArrayList<DurationJourney>> entry : dataLine.entrySet()) {
@@ -65,6 +100,14 @@ public class Parser extends ParserFactory {
 
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
     // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
+    /**
+     * Parses a file containing information about stations, lines and their connections, and creates
+     * a network graph representation of this data. This method reads a CSV file, with each line
+     * containing information about a connection between two stations.
+     *
+     * @param file the CSV file containing the stations and connections information
+     * @throws Exception if there is an error reading or parsing the file
+     */
     public void parseStations(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
@@ -138,9 +181,14 @@ public class Parser extends ParserFactory {
         currentLine.setTerminalStationArrival(lastStation);
     }
 
-    /*
-     * Parse a file that has the following structure :
-     * Ligne;Terminus;Heure:Minutes;Variante
+    /**
+     * Parses a file containing information about the lines and their schedules, and fills in the
+     * schedule information for each station on each line. This method reads a CSV file, with each
+     * line containing information about a line's schedule.
+     *
+     * @param file the CSV file containing the lines and schedules information
+     * @throws Exception if there is an error reading or parsing the file, or if the data given
+     *     doesn't match
      */
     public void parseLines(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
@@ -175,6 +223,10 @@ public class Parser extends ParserFactory {
         this.fillStationsSchedulesFromTerminusLineStart();
     }
 
+    /**
+     * Fills in the schedule information for each station on each line, based on the start times and
+     * duration journeys between stations specified in the dataLine map.
+     */
     public void fillStationsSchedulesFromTerminusLineStart() {
         Time timeToFillStationsSchedules = null;
         int i = 0;

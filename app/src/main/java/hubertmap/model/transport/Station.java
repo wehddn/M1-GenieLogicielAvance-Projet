@@ -11,6 +11,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class represents a station in a transportation system. A station has a name, coordinates (x
+ * and y), and a list of all transportation lines that serve it.
+ */
 public class Station {
     private String name;
     private Float x;
@@ -131,6 +135,12 @@ public class Station {
         return name;
     }
 
+    /**
+     * Adds a schedule for the given line at this station.
+     *
+     * @param line the line to add the schedule for
+     * @param time the time to add to the schedule
+     */
     public void addSchedule(Line line, Time time) {
         if (schedules.get(line.getName()) == null) {
             schedules.put(line.getName(), new ArrayList<>());
@@ -141,6 +151,13 @@ public class Station {
     }
 
     // ! maybe not having to do this verification
+
+    /**
+     * Add a line to the station schedules. If the line already exists in the schedules, then this
+     * method does nothing.
+     *
+     * @param lineName the name of the line to add
+     */
     public void addLine(String lineName) {
         boolean exist = false;
         for (String line : schedules.keySet()) {

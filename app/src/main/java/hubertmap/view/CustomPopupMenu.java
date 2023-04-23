@@ -13,11 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class CustomPopupMenu extends JPopupMenu {
 
-    private HashMap<String, Line> lines;
-
     public CustomPopupMenu(Station v, HashMap<String, Line> lines) {
-
-        this.lines = lines;
 
         GridBagConstraints c = new GridBagConstraints();
         this.setLayout(new GridBagLayout());

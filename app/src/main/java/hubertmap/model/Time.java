@@ -120,4 +120,23 @@ public class Time {
     public String toString() {
         return String.format("%02d:%02d:%02d", hour, minute, seconde);
     }
+    /**
+     * Compares this Time object to the specified object to see if they are equal.
+     *
+     * @param obj the object to compare to
+     * @return true if the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Time)) {
+            return false;
+        }
+        Time other = (Time) obj;
+        return this.hour == other.hour
+                && this.minute == other.minute
+                && this.seconde == other.seconde;
+    }
 }

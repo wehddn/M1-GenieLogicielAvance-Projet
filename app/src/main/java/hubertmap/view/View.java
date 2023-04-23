@@ -157,4 +157,12 @@ public class View {
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;
     }
+
+    public void setDeparture(String name) {
+        textAreaStationStart.setText(name);
+    }
+
+    public void setArrival(String name) {
+        textAreaStationEnd.setText(name);
+    }
 }

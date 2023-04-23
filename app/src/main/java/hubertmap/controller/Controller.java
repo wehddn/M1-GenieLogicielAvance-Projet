@@ -46,4 +46,12 @@ public class Controller {
         */
         view.setShortestPath(shortestPath);
     }
+
+    public static void setDeparture(String name) {
+        view.setDeparture(name);
+    }
+
+    public static void setArrival(String name) {
+        view.setArrival(name);
+    }
 }

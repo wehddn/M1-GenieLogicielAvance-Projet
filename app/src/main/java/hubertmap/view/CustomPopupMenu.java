@@ -2,16 +2,22 @@ package hubertmap.view;
 
 import hubertmap.controller.Controller;
 import hubertmap.model.Time;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class CustomPopupMenu extends JPopupMenu {
 
-    public CustomPopupMenu(Station v) {
+    private HashMap<String, Line> lines;
+
+    public CustomPopupMenu(Station v, HashMap<String, Line> lines) {
+
+        this.lines = lines;
 
         GridBagConstraints c = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
@@ -69,7 +75,9 @@ public class CustomPopupMenu extends JPopupMenu {
             if (entry.getValue() != null)
                 for (Time time : entry.getValue()) {
                     listModel.addElement(time.toString());
-                    model.addRow(new String[] {entry.getKey(), time.toString()});
+                    Line line = lines.get(entry.getKey());
+                    Station terminalStation = line.getTerminalStationArrival();
+                    model.addRow(new String[] {terminalStation.getName(), time.toString()});
                 }
         }
 

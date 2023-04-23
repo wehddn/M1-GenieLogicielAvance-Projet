@@ -51,7 +51,7 @@ class GraphPanel extends JPanel {
 
         setUpCoords();
 
-        decorator = new GraphDecorator();
+        decorator = new GraphDecorator(graphView.getLines());
 
         vv.setGraphMouse(decorator.createGraphMouse());
         vv.addGraphMouseListener(decorator.graphMouseListener());

@@ -5,6 +5,7 @@ import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.awt.BasicStroke;
@@ -37,8 +38,11 @@ public class GraphDecorator {
     /** The list of stations in the shortest path of the graph. */
     List<Station> shortestPathStations;
 
+    private HashMap<String, Line> lines;
+
     /** Constructs a new GraphDecorator object with default settings. */
-    public GraphDecorator() {
+    public GraphDecorator(HashMap<String, Line> hashMap) {
+        this.lines = hashMap;
         scale = 0;
         lineColors = createLineColorsMap();
         shortestPathEdges = new ArrayList<>();
@@ -236,7 +240,7 @@ public class GraphDecorator {
             public void graphClicked(Station v, MouseEvent me) {
                 // TODO Auto-generated method stub
                 System.out.println(v);
-                JPopupMenu popup = new CustomPopupMenu(v);
+                JPopupMenu popup = new CustomPopupMenu(v, lines);
                 popup.show(me.getComponent(), me.getX(), me.getY());
             }
 

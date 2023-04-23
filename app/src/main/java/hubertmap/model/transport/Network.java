@@ -107,10 +107,20 @@ public class Network {
         else return null;
     }
 
+    /**
+     * Set the list of lines in the network with their duration.
+     *
+     * @param dataLine the list of lines with their duration
+     */
     public void setDataLine(Map<Line, ArrayList<DurationJourney>> dataLine) {
         this.datatLine = dataLine;
     }
 
+    /**
+     * Returns the list of lines in the network.
+     *
+     * @return the list of lines in the network
+     */
     public Set<Line> getLines() {
         return datatLine.keySet();
     }

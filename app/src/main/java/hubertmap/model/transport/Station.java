@@ -170,6 +170,11 @@ public class Station {
         schedules.put(lineName, null);
     }
 
+    /**
+     * This method returns a list of unique line numbers found in a list of strings.
+     *
+     * @return an ArrayList of unique line numbers in the list of strings
+     */
     public ArrayList<String> getLinesNumbers() {
         Set<String> linesNumbers = new HashSet<String>();
         for (int i = 0; i < allLines.size(); i++) {

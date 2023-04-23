@@ -48,19 +48,6 @@ public class CustomPopupMenu extends JPopupMenu {
         c.gridheight = GridBagConstraints.REMAINDER; // set to REMAINDER to span to bottom
         c.gridy = 1;
         c.gridx = 0;
-        DefaultListModel<String> listModel = new DefaultListModel<>();
-
-        for (Entry<String, ArrayList<Time>> entry : v.getSchedules().entrySet()) {
-            if (entry.getValue() != null)
-                for (Time time : entry.getValue()) {
-                    listModel.addElement(time.toString());
-                }
-        }
-
-        // JList<String> jList = new JList<>(listModel);
-
-        // JScrollPane scrollPane = new JScrollPane(jList);
-        // this.add(scrollPane, c);
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Direction");
@@ -70,7 +57,6 @@ public class CustomPopupMenu extends JPopupMenu {
         for (Entry<String, ArrayList<Time>> entry : v.getSchedules().entrySet()) {
             if (entry.getValue() != null)
                 for (Time time : entry.getValue()) {
-                    listModel.addElement(time.toString());
                     Line line = lines.get(entry.getKey());
                     Station terminalStation = line.getTerminalStationArrival();
                     model.addRow(new String[] {terminalStation.getName(), time.toString()});

@@ -81,17 +81,6 @@ public class Parser extends ParserFactory {
     }
 
     /**
-     * Removes accents from a given string.
-     *
-     * @param s the string to remove accents from.
-     * @return the string without accents.
-     */
-    public static String stripAccents(String s) {
-        s = Normalizer.normalize(s, Normalizer.Form.NFD);
-        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-        return s;
-    }
-    /**
      * Checks if a line with the given name already exists in the database. If it does, it returns
      * the line object. If it doesn't, it throws an Exception with an error message.
      *

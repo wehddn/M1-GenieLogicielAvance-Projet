@@ -3,10 +3,13 @@ package hubertmap.model.transport;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import hubertmap.model.DurationJourney;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represents a network of stations and edges between them, forming a transport network.
@@ -17,6 +20,7 @@ public class Network {
     List<EdgeTransport> shortestPath;
 
     DijkstraShortestPath<Station, EdgeTransport> distancePaths;
+    private Map<Line, ArrayList<DurationJourney>> datatLine;
 
     /**
      * Constructs a new Network object with the given collection of edges.
@@ -101,5 +105,13 @@ public class Network {
         if (stations.get(station1) != null && stations.get(station2) != null)
             return shortestPath(stations.get(station1), stations.get(station2));
         else return null;
+    }
+
+    public void setDataLine(Map<Line, ArrayList<DurationJourney>> dataLine) {
+        this.datatLine = dataLine;
+    }
+
+    public Set<Line> getLines() {
+        return datatLine.keySet();
     }
 }

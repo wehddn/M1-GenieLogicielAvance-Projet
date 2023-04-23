@@ -26,7 +26,7 @@ public class GraphData {
      * minimum longitude and latitude.
      *
      * @param graph the graph that will be used in View
-     * @param lines
+     * @param lines the lines that will be used in View
      */
     public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;
@@ -103,6 +103,11 @@ public class GraphData {
         return new CircleLayout<Station, EdgeTransport>(graph);
     }
 
+    /**
+     * Returns the lines of the graph
+     *
+     * @return the lines of the graph
+     */
     public Set<Line> getLines() {
         return lines;
     }

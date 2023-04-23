@@ -200,7 +200,11 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
     public String getValue() {
         return textArea.getText().trim().toLowerCase();
     }
-
+    /**
+     * Set the Text using the string parameter
+     *
+     * @param string the string used to set the text
+     */
     public void setText(String string) {
         textArea.setText(string);
     }

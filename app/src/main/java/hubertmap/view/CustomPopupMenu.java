@@ -5,6 +5,7 @@ import hubertmap.model.Time;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,8 +70,18 @@ public class CustomPopupMenu extends JPopupMenu {
         setUpModel(model, table);
 
         JScrollPane scrollPane = new JScrollPane(table);
+
+        int rowTime = getRowTime(table);
+
+        scrollToRow(table, scrollPane, rowTime);
+
         scrollPane.setPreferredSize(new Dimension(200, 200));
         this.add(scrollPane, c);
+    }
+
+    private void scrollToRow(JTable table, JScrollPane scrollPane, int rowTime) {
+        Rectangle cellBounds = table.getCellRect(rowTime, 0, true);
+        scrollPane.getViewport().scrollRectToVisible(cellBounds);
     }
 
     private void setUpModel(DefaultTableModel model, JTable table) {
@@ -93,5 +104,20 @@ public class CustomPopupMenu extends JPopupMenu {
                 uniqueValues.add(value); // Add the value to the Set
             }
         }
+    }
+
+    private int getRowTime(JTable table) {
+        LocalTime currentTime = LocalTime.now();
+
+        for (int i = 0; i < table.getRowCount(); i++) {
+            String timeString = (String) table.getValueAt(i, 1);
+            LocalTime rowTime = LocalTime.parse(timeString);
+
+            if (rowTime.isAfter(currentTime)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

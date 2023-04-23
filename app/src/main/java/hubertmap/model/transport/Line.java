@@ -118,4 +118,9 @@ public class Line {
                 "%s, Starting Station : %s, Terminus : %s, Time : %s",
                 name, terminalStationDeparture, terminalStationArrival, starts);
     }
+
+    public boolean equals(String lineName) {
+        // TODO Auto-generated method stub
+        return name.equals(lineName);
+    }
 }

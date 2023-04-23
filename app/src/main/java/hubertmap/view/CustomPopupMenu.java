@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class CustomPopupMenu extends JPopupMenu {
 
@@ -54,9 +55,26 @@ public class CustomPopupMenu extends JPopupMenu {
                 }
         }
 
-        JList<String> jList = new JList<>(listModel);
+        // JList<String> jList = new JList<>(listModel);
 
-        JScrollPane scrollPane = new JScrollPane(jList);
+        // JScrollPane scrollPane = new JScrollPane(jList);
+        // this.add(scrollPane, c);
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Direction");
+        model.addColumn("Time");
+        JTable table = new JTable(model);
+
+        for (Entry<String, ArrayList<Time>> entry : v.getSchedules().entrySet()) {
+            if (entry.getValue() != null)
+                for (Time time : entry.getValue()) {
+                    listModel.addElement(time.toString());
+                    model.addRow(new String[] {entry.getKey(), time.toString()});
+                }
+        }
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(200, 200));
         this.add(scrollPane, c);
     }
 }

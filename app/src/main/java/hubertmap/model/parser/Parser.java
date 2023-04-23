@@ -136,6 +136,7 @@ public class Parser extends ParserFactory {
         }
         reader.close();
         currentLine.setTerminalStationArrival(lastStation);
+        network.setDataLine(dataLine);
     }
 
     /*

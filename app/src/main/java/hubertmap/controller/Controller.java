@@ -24,7 +24,7 @@ public class Controller {
     public Controller() {
         Parser parser = new Parser();
         network = parser.getNetwork();
-        graphView = new GraphData(network.getGraph());
+        graphView = new GraphData(network.getGraph(), network.getLines());
         view = new View(graphView);
     }
 

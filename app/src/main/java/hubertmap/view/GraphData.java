@@ -4,8 +4,10 @@ import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Specific class to give access only to the necessary data from the graph, without having direct
@@ -17,15 +19,22 @@ public class GraphData {
     private double maximumLatitude;
     private double minimumLatitude;
     private double maximumLongitude;
+    private Set<Line> lines;
 
     /**
      * Constructs a new graphView instance and initializes its components. Calculates maximum and
      * minimum longitude and latitude.
      *
      * @param graph the graph that will be used in View
+     * @param lines
      */
-    public GraphData(Graph<Station, EdgeTransport> graph) {
+    public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;
+        this.lines = lines;
+
+        for (Line line : lines) {
+            System.out.println(line.getName() + " -> " + line.getTerminalStationArrival());
+        }
 
         minimumLongitude = 180;
         maximumLongitude = -180;
@@ -92,5 +101,9 @@ public class GraphData {
      */
     public Layout<Station, EdgeTransport> createLayout() {
         return new CircleLayout<Station, EdgeTransport>(graph);
+    }
+
+    public Set<Line> getLines() {
+        return lines;
     }
 }

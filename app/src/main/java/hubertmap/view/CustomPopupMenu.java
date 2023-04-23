@@ -53,7 +53,14 @@ public class CustomPopupMenu extends JPopupMenu {
         c.gridy = 1;
         c.gridx = 0;
 
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model =
+                new DefaultTableModel() {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        // All cells are non-editable
+                        return false;
+                    }
+                };
         model.addColumn("Direction");
         model.addColumn("Time");
         JTable table = new JTable(model);

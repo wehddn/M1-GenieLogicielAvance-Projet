@@ -38,11 +38,8 @@ public class GraphDecorator {
     /** The list of stations in the shortest path of the graph. */
     List<Station> shortestPathStations;
 
-    private HashMap<String, Line> lines;
-
     /** Constructs a new GraphDecorator object with default settings. */
     public GraphDecorator(HashMap<String, Line> hashMap) {
-        this.lines = hashMap;
         scale = 0;
         lineColors = createLineColorsMap();
         shortestPathEdges = new ArrayList<>();
@@ -60,12 +57,9 @@ public class GraphDecorator {
         Transformer<Station, Paint> vertexColor =
                 new Transformer<Station, Paint>() {
                     public Paint transform(Station input) {
-                        if (shortestPathStations.contains(input)) return Color.RED;
-                        else {
-                            ArrayList<String> lines = input.getLinesNumbers();
-                            if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
-                            else return Color.decode(lineColors.get(lines.get(0)));
-                        }
+                        ArrayList<String> lines = input.getLinesNumbers();
+                        if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
+                        else return Color.decode(lineColors.get(lines.get(0)));
                     }
                 };
         return vertexColor;
@@ -83,15 +77,11 @@ public class GraphDecorator {
                 new Transformer<EdgeTransport, Paint>() {
                     @Override
                     public Paint transform(EdgeTransport input) {
-                        if (shortestPathEdges.contains(input)) return Color.RED;
-                        else {
-                            ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
-                            ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
-                            lines1.retainAll(lines2);
-                            if (lines1.size() != 0)
-                                return Color.decode(lineColors.get(lines1.get(0)));
-                            else return Color.BLACK;
-                        }
+                        ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
+                        ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
+                        lines1.retainAll(lines2);
+                        if (lines1.size() != 0) return Color.decode(lineColors.get(lines1.get(0)));
+                        else return Color.BLACK;
                     }
                 };
         return edgeColor;
@@ -109,7 +99,7 @@ public class GraphDecorator {
                 new Transformer<EdgeTransport, Stroke>() {
                     @Override
                     public Stroke transform(EdgeTransport input) {
-                        if (shortestPathEdges.contains(input)) return new BasicStroke(2f);
+                        if (shortestPathEdges.contains(input)) return new BasicStroke(5f);
                         else return new BasicStroke(1.5f);
                     }
                 };

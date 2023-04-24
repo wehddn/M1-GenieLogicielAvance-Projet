@@ -15,10 +15,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class CustomPopupMenu extends JPopupMenu {
+public class SchedulesPanel extends JPanel {
 
-    public CustomPopupMenu(Station v, HashMap<String, Line> lines) {
-
+    public SchedulesPanel(Station v, HashMap<String, Line> lines) {
         GridBagConstraints c = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
         c.gridheight = 1;
@@ -39,6 +38,7 @@ public class CustomPopupMenu extends JPopupMenu {
 
         departure.addActionListener(
                 e -> {
+                    System.out.println(v);
                     Controller.setDeparture(v.getName());
                 });
 

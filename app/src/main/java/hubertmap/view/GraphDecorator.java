@@ -4,6 +4,7 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
@@ -17,7 +18,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JPopupMenu;
 import org.apache.commons.collections15.Transformer;
 
 /**
@@ -239,9 +239,7 @@ public class GraphDecorator {
             @Override
             public void graphClicked(Station v, MouseEvent me) {
                 // TODO Auto-generated method stub
-                System.out.println(v);
-                JPopupMenu popup = new CustomPopupMenu(v, lines);
-                popup.show(me.getComponent(), me.getX(), me.getY());
+                Controller.setSchedules(v);
             }
 
             @Override

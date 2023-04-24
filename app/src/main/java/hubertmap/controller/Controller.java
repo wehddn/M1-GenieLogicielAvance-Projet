@@ -2,6 +2,7 @@ package hubertmap.controller;
 
 import hubertmap.model.parser.Parser;
 import hubertmap.model.transport.Network;
+import hubertmap.model.transport.Station;
 import hubertmap.view.GraphData;
 import hubertmap.view.View;
 
@@ -44,5 +45,9 @@ public class Controller {
 
     public static void setArrival(String name) {
         view.setArrival(name);
+    }
+
+    public static void setSchedules(Station v) {
+        view.setSchedules(v);
     }
 }

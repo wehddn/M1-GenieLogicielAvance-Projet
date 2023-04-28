@@ -9,58 +9,31 @@ import hubertmap.model.DurationJourney;
 public class EdgeTransport {
 
     private DurationJourney durationJourney;
-    private Float Distance;
-    private Station StartingStation;
-    private Station EndingStation;
-
-    /**
-     * Creates a new EdgeTransport object with the given starting and ending stations.
-     *
-     * @param StartingStation the starting station of the transport edge
-     * @param EndingStation the ending station of the transport edge
-     */
-    public EdgeTransport(Station StartingStation, Station EndingStation) {
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
-    }
-    /**
-     * Creates a new EdgeTransport object with the given duration, distance, and starting and ending
-     * stations.
-     *
-     * @param durationJourney the duration of the journey between the starting and ending stations
-     * @param Distance the distance between the starting and ending stations
-     * @param StartingStation the starting station of the transport edge
-     * @param EndingStation the ending station of the transport edge
-     */
-    public EdgeTransport(
-            DurationJourney durationJourney,
-            Float Distance,
-            Station StartingStation,
-            Station EndingStation) {
-        this.durationJourney = durationJourney;
-        this.Distance = Distance;
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
-    }
+    private float distance;
+    private Station startingStation;
+    private Station endingStation;
+    private String lineName;
 
     /**
      * Creates a new EdgeTransport object with the given starting and ending stations, duration, and
      * distance.
      *
-     * @param StartingStation the starting station of the transport edge
-     * @param EndingStation the ending station of the transport edge
+     * @param startingStation the starting station of the transport edge
+     * @param endingStation the ending station of the transport edge
      * @param durationJourney the duration of the journey between the starting and ending stations
-     * @param Distance the distance between the starting and ending stations
+     * @param distance the distance between the starting and ending stations
      */
     public EdgeTransport(
-            Station StartingStation,
-            Station EndingStation,
+            Station startingStation,
+            Station endingStation,
             DurationJourney durationJourney,
-            Float Distance) {
-        this.StartingStation = StartingStation;
-        this.EndingStation = EndingStation;
+            float distance,
+            String lineName) {
+        this.startingStation = startingStation;
+        this.endingStation = endingStation;
         this.durationJourney = durationJourney;
-        this.Distance = Distance;
+        this.distance = distance;
+        this.lineName = lineName.split(" ")[0]; // variant is not important
     }
 
     /**
@@ -71,14 +44,23 @@ public class EdgeTransport {
      */
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return StartingStation
+        return startingStation
                 + " - "
-                + EndingStation
+                + endingStation
                 + "; durationJourney : "
                 + durationJourney
                 + "; distance : "
-                + Distance;
+                + distance
+                + "; line : "
+                + lineName;
+    }
+
+    /**
+     * @return a copy of current object
+     */
+    public EdgeTransport copy() {
+        return new EdgeTransport(
+                startingStation, endingStation, durationJourney.copy(), distance, lineName);
     }
 
     /**
@@ -87,7 +69,7 @@ public class EdgeTransport {
      * @return the starting station of the transport edge
      */
     public Station getStartingStation() {
-        return StartingStation;
+        return startingStation;
     }
     /**
      * Returns the ending station of the transport edge.
@@ -95,27 +77,50 @@ public class EdgeTransport {
      * @return the ending station of the transport edge
      */
     public Station getEndingStation() {
-        return EndingStation;
+        return endingStation;
     }
     /**
      * Returns the distance between the starting and ending stations.
      *
      * @return the distance between the starting and ending stations
      */
-    public Float getDistance() {
-        return Distance;
+    public float getDistance() {
+        return distance;
     }
 
-    /*public Edge(Station StartingStation, Float StartingStationLatitude, Float StartingStationLongitude, Station EndingStation, Float EndingStationLatitude, Float EndingStationLongitude,  String Line, String durationJourney, Float Distance){
-        this.StartingStation = StartingStation;
-        this.StartingStationLatitude = StartingStationLatitude;
-        this.StartingStationLongitude = StartingStationLongitude;
-        this.EndingStation = EndingStation;
-        this.EndingStationLatitude = EndingStationLatitude;
-        this.EndingStationLongitude = EndingStationLongitude;
-        this.Line = Line;
-        this.durationJourney = durationJourney;
-        this.Distance = Distance;
-    }*/
+    /**
+     * Returns the line name, which omits the variant
+     *
+     * @return line name
+     */
+    public String getLineName() {
+        return lineName;
+    }
 
+    /**
+     * Returns the durationJourney object corresponding to the duration of the journey
+     *
+     * @return durationJourney
+     */
+    public DurationJourney getDurationJourney() {
+        return durationJourney;
+    }
+
+    /**
+     * Returns an estimate of the weight used for shortest path calculations
+     *
+     * @return the weight of the edge
+     */
+    public float estimateWeight() {
+        // we could add extra time or distance
+        // when moving by foot
+        return durationJourney.toSeconds();
+    }
+
+    /** swaps startingStation and endingStation */
+    public void swapStations() {
+        Station tmp = endingStation;
+        endingStation = startingStation;
+        startingStation = tmp;
+    }
 }

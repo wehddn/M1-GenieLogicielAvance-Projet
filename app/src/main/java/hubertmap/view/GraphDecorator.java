@@ -72,22 +72,12 @@ public class GraphDecorator {
      *     its color.
      */
     public Transformer<EdgeTransport, Paint> edgeColor() {
-        Transformer<EdgeTransport, Paint> edgeColor =
-                new Transformer<EdgeTransport, Paint>() {
-                    @Override
-                    public Paint transform(EdgeTransport input) {
-                        if (shortestPathEdges.contains(input)) return Color.RED;
-                        else {
-                            ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
-                            ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
-                            lines1.retainAll(lines2);
-                            if (lines1.size() != 0)
-                                return Color.decode(lineColors.get(lines1.get(0)));
-                            else return Color.BLACK;
-                        }
-                    }
-                };
-        return edgeColor;
+        return new Transformer<EdgeTransport, Paint>() {
+            @Override
+            public Paint transform(EdgeTransport input) {
+                return Color.decode(lineColors.get(input.getLineName()));
+            }
+        };
     }
 
     /**
@@ -98,15 +88,13 @@ public class GraphDecorator {
      *     representing its stroke.
      */
     public Transformer<EdgeTransport, Stroke> edgeStroke() {
-        Transformer<EdgeTransport, Stroke> edgeStroke =
-                new Transformer<EdgeTransport, Stroke>() {
-                    @Override
-                    public Stroke transform(EdgeTransport input) {
-                        if (shortestPathEdges.contains(input)) return new BasicStroke(2f);
-                        else return new BasicStroke(1.5f);
-                    }
-                };
-        return edgeStroke;
+        return new Transformer<EdgeTransport, Stroke>() {
+            @Override
+            public Stroke transform(EdgeTransport input) {
+                if (shortestPathEdges.contains(input)) return new BasicStroke(6f);
+                else return new BasicStroke(1.5f);
+            }
+        };
     }
 
     /**

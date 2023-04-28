@@ -38,12 +38,7 @@ public class Network {
             }
         }
 
-        distancePaths =
-                new DijkstraShortestPath<Station, EdgeTransport>(
-                        graph,
-                        (EdgeTransport e) -> {
-                            return ((EdgeTransport) e).getDistance();
-                        });
+        distancePaths = new DijkstraShortestPath<>(graph, EdgeTransport::estimateWeight);
     }
     /** Constructs a new Network object with no edges. */
     public Network() {
@@ -85,12 +80,23 @@ public class Network {
      * Calculates the shortest path from station1 to station2 using the distance between two
      * stations as weight
      *
+     * <p>for each edge returned, swaps starting and ending stations if needed, corresponding with
+     * the direction taken
+     *
      * @param station1 starting station
      * @param station2 destination station
      * @return a list edges to visit in the correct order
      */
     public List<EdgeTransport> shortestPath(Station station1, Station station2) {
-        return distancePaths.getPath(station1, station2);
+        List<EdgeTransport> list = distancePaths.getPath(station1, station2);
+        Station s = station1;
+        for (EdgeTransport e : list) {
+            if (!e.getStartingStation().equals(s)) {
+                e.swapStations();
+            }
+            s = e.getEndingStation();
+        }
+        return list;
     }
 
     /**
@@ -123,5 +129,70 @@ public class Network {
      */
     public Set<Line> getLines() {
         return datatLine.keySet();
+    }
+
+    /**
+     * Uses the input path to create an abstracted vestion of it, were adjascent path on the same
+     * line are merged into a single path
+     *
+     * @param path list of EdgeTransport
+     * @return a new list of EdgeTransport
+     */
+    public List<EdgeTransport> simplifiedPath(List<EdgeTransport> path) {
+        List<EdgeTransport> simplePath = new ArrayList<>();
+        if (path.isEmpty()) {
+            return simplePath;
+        }
+
+        EdgeTransport prevEdge = path.get(0);
+        Station prevStation = prevEdge.getStartingStation();
+
+        float distance = prevEdge.getDistance();
+        DurationJourney duration = prevEdge.getDurationJourney().copy();
+
+        for (int i = 1; i < path.size() - 1; i++) {
+            EdgeTransport e = path.get(i);
+            if (!e.getLineName().equals(prevEdge.getLineName())) {
+                simplePath.add(
+                        new EdgeTransport(
+                                prevStation,
+                                e.getStartingStation(),
+                                duration,
+                                distance,
+                                prevEdge.getLineName()));
+                prevStation = e.getStartingStation();
+                prevEdge = e;
+                distance = e.getDistance();
+                duration = e.getDurationJourney().copy();
+            } else {
+                distance += e.getDistance();
+                duration.add(e.getDurationJourney());
+            }
+        }
+
+        EdgeTransport lastEdge = path.get(path.size() - 1);
+
+        if (lastEdge.getLineName().equals(prevEdge.getLineName())) {
+            distance += lastEdge.getDistance();
+            duration.add(lastEdge.getDurationJourney());
+            simplePath.add(
+                    new EdgeTransport(
+                            prevStation,
+                            lastEdge.getEndingStation(),
+                            duration,
+                            distance,
+                            lastEdge.getLineName()));
+        } else {
+            simplePath.add(
+                    new EdgeTransport(
+                            prevStation,
+                            lastEdge.getStartingStation(),
+                            duration,
+                            distance,
+                            prevEdge.getLineName()));
+            simplePath.add(lastEdge.copy());
+        }
+
+        return simplePath;
     }
 }

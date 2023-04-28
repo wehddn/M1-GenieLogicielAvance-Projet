@@ -35,6 +35,15 @@ public class Controller {
      * @param station2Name the name of the destination station
      */
     public static void setShortestPath(String station1Name, String station2Name) {
-        view.setShortestPath(network.shortestPath(station1Name, station2Name));
+        var shortestPath = network.shortestPath(station1Name, station2Name);
+        var simplifiedPath = network.simplifiedPath(shortestPath);
+        // TODO: use simplifiedPath for something
+        /*
+        uncommenting these lines helps to understand the function. to delete later
+        for (EdgeTransport e : simplifiedPath) {
+            System.out.println(e);
+        }
+        */
+        view.setShortestPath(shortestPath);
     }
 }

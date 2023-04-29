@@ -171,7 +171,7 @@ public class Parser extends ParserFactory {
             currentLine.addStationsIfNotAlreadyExist(station1);
             currentLine.addStationsIfNotAlreadyExist(station2);
 
-            EdgeTransport edge = new EdgeTransport(station1, station2, time, distance);
+            EdgeTransport edge = new EdgeTransport(station1, station2, time, distance, lineName);
             network.addEdge(edge, station1, station2);
             edges.add(edge);
 

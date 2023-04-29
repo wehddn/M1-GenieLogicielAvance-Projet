@@ -38,6 +38,14 @@ public class DurationJourney {
         }
     }
 
+    public DurationJourney(int seconds) {
+        if (seconds < 0) {
+            throw new IllegalArgumentException("seconds must be positive");
+        }
+        this.minute = seconds / 60;
+        this.seconde = seconds % 60;
+    }
+
     /**
      * Returns the seconde property
      *
@@ -82,5 +90,30 @@ public class DurationJourney {
     @Override
     public String toString() {
         return String.format("(minutes : %d, secondes : %d)", minute, seconde);
+    }
+
+    /**
+     * @return value of duration in seconds
+     */
+    public int toSeconds() {
+        return minute * 60 + seconde;
+    }
+
+    /**
+     * adds minutes and seconds of parameter to current object, and returns it
+     *
+     * @param d DurationJourney to add
+     * @return current object after the addition is done
+     */
+    public DurationJourney add(DurationJourney d) {
+        seconde += d.seconde;
+        minute += d.minute + (seconde / 60);
+        seconde %= 60;
+
+        return this;
+    }
+
+    public DurationJourney copy() {
+        return new DurationJourney(this.toSeconds());
     }
 }

@@ -15,9 +15,9 @@ class NetworkTest {
         Station b = new Station("B", "", 0.0f, 0.0f);
         Station c = new Station("C", "", 0.0f, 0.0f);
 
-        EdgeTransport ab = new EdgeTransport(new DurationJourney("00", "00"), 10.0f, a, b);
-        EdgeTransport bc = new EdgeTransport(new DurationJourney("00", "00"), 10.0f, b, c);
-        EdgeTransport ac = new EdgeTransport(new DurationJourney("00", "00"), 50.0f, a, c);
+        EdgeTransport ab = new EdgeTransport(a, b, new DurationJourney(10), 10.0f, "");
+        EdgeTransport bc = new EdgeTransport(b, c, new DurationJourney(10), 10.0f, "");
+        EdgeTransport ac = new EdgeTransport(a, c, new DurationJourney(50), 50.0f, "");
 
         ArrayList<EdgeTransport> edges = new ArrayList<>();
         edges.add(ab);
@@ -41,8 +41,8 @@ class NetworkTest {
         Station c = new Station("C", "", 0.0f, 0.0f);
         Station d = new Station("D", "", 0.0f, 0.0f);
         ArrayList<EdgeTransport> edges = new ArrayList<>();
-        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, a, b));
-        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, c, d));
+        edges.add(new EdgeTransport(a, b, new DurationJourney(1), 1.0f, ""));
+        edges.add(new EdgeTransport(c, d, new DurationJourney(1), 1.0f, ""));
         Network g = new Network(edges);
         List<EdgeTransport> path = g.shortestPath(a, c);
         assertTrue(path.isEmpty());
@@ -53,9 +53,11 @@ class NetworkTest {
         Station a = new Station("A", "", 0.0f, 0.0f);
         Station b = new Station("B", "", 0.0f, 0.0f);
         ArrayList<EdgeTransport> edges = new ArrayList<>();
-        edges.add(new EdgeTransport(new DurationJourney("00", "00"), 1.0f, a, b));
+        edges.add(new EdgeTransport(a, b, new DurationJourney(1), 1.0f, ""));
         Network g = new Network(edges);
         List<EdgeTransport> path = g.shortestPath(a, a);
         assertTrue(path.isEmpty());
     }
+
+    // todo: tests for simplifiedPath
 }

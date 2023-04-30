@@ -176,14 +176,29 @@ public class View {
         return s;
     }
 
+    /**
+     * Sets the name of the departure station to be displayed in the text area.
+     *
+     * @param name the name of the departure station to be displayed.
+     */
     public void setDeparture(String name) {
         textAreaStationStart.setText(name);
     }
 
+    /**
+     * Sets the name of the arrival station to be displayed in the text area.
+     *
+     * @param name the name of the arrival station to be displayed.
+     */
     public void setArrival(String name) {
         textAreaStationEnd.setText(name);
     }
 
+    /**
+     * Sets the schedules panel to display the schedules for the given station.
+     *
+     * @param v the station for which the schedules will be displayed.
+     */
     public void setSchedules(Station v) {
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
 

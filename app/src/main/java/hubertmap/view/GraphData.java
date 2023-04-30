@@ -27,7 +27,7 @@ public class GraphData {
      * minimum longitude and latitude.
      *
      * @param graph the graph that will be used in View
-     * @param lines
+     * @param lines the lines that will be used in View
      */
     public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;

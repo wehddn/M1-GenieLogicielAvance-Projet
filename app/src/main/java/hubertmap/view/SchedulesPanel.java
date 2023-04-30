@@ -15,8 +15,19 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+/**
+ * The SchedulesPanel class displays the schedules of a given station in a table format. It allows
+ * the user to select the departure or arrival station by clicking on a button. The schedules are
+ * sorted by time, with duplicates removed.
+ */
 public class SchedulesPanel extends JPanel {
 
+    /**
+     * Creates a new SchedulesPanel with the schedules of the given station and lines.
+     *
+     * @param v the station whose schedules will be displayed
+     * @param lines the lines that serve the station
+     */
     public SchedulesPanel(Station v, HashMap<String, Line> lines) {
         GridBagConstraints c = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
@@ -38,7 +49,6 @@ public class SchedulesPanel extends JPanel {
 
         departure.addActionListener(
                 e -> {
-                    System.out.println(v);
                     Controller.setDeparture(v.getName());
                 });
 
@@ -86,11 +96,25 @@ public class SchedulesPanel extends JPanel {
         this.add(scrollPane, c);
     }
 
+    /**
+     * Scrolls the given JScrollPane to the row with the given index in the given JTable.
+     *
+     * @param table the JTable to scroll to the row
+     * @param scrollPane the JScrollPane to be scrolled
+     * @param rowTime the index of the row to scroll to
+     */
     private void scrollToRow(JTable table, JScrollPane scrollPane, int rowTime) {
         Rectangle cellBounds = table.getCellRect(rowTime, 0, true);
         scrollPane.getViewport().scrollRectToVisible(cellBounds);
     }
 
+    /**
+     * Sets up the given DefaultTableModel for the given JTable, sorting it by time and removing
+     * duplicates.
+     *
+     * @param model the DefaultTableModel to set up
+     * @param table the JTable to set up
+     */
     private void setUpModel(DefaultTableModel model, JTable table) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
 
@@ -113,6 +137,14 @@ public class SchedulesPanel extends JPanel {
         }
     }
 
+    /**
+     * Returns the index of the first row in the given JTable that has a time after the current
+     * time. If there is no such row, returns -1.
+     *
+     * @param table the JTable to search
+     * @return the index of the first row with a time after the current time, or -1 if there is no
+     *     such row
+     */
     private int getRowTime(JTable table) {
         LocalTime currentTime = LocalTime.now();
 

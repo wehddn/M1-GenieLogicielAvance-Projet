@@ -27,11 +27,14 @@ public class GraphData {
      * minimum longitude and latitude.
      *
      * @param graph the graph that will be used in View
-     * @param lines the lines that will be used in View
+     * @param lines
      */
     public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;
-        this.lines = lines;
+        this.lines = new HashMap<>();
+        for (Line line : lines) {
+            this.lines.put(line.getName(), line);
+        }
 
         minimumLongitude = 180;
         maximumLongitude = -180;
@@ -105,7 +108,7 @@ public class GraphData {
      *
      * @return the lines of the graph
      */
-    public Set<Line> getLines() {
+    public HashMap<String, Line> getLines() {
         return lines;
     }
 }

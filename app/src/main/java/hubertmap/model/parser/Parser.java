@@ -180,16 +180,19 @@ public class Parser extends ParserFactory {
                 dataLine.put(currentLine, durationJourneys);
                 lastLineName = lineName;
             }
+
             durationJourneys.add(time);
 
-            currentLine.addStationsIfNotAlreadyExist(station1);
-            currentLine.addStationsIfNotAlreadyExist(station2);
+            if (station1 != station2) {
+                currentLine.addStationsIfNotAlreadyExist(station1);
+                currentLine.addStationsIfNotAlreadyExist(station2);
 
-            EdgeTransport edge = new EdgeTransport(station1, station2, time, distance, lineName);
-            network.addEdge(edge, station1, station2);
-            edges.add(edge);
-
-            lastStation = station2;
+                EdgeTransport edge =
+                        new EdgeTransport(station1, station2, time, distance, lineName);
+                network.addEdge(edge, station1, station2);
+                edges.add(edge);
+                lastStation = station2;
+            }
         }
         reader.close();
         currentLine.setTerminalStationArrival(lastStation);

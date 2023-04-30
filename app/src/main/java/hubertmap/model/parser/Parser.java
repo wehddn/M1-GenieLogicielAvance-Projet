@@ -98,6 +98,28 @@ public class Parser extends ParserFactory {
         throw new Exception("Line doesn't already exist in database");
     }
 
+    /**
+     * Creates a new Station object if it does not already exist, or adds a new line to an existing
+     * Station.
+     *
+     * @param stationName the name of the station.
+     * @param lineName the name of the line.
+     * @param lat the latitude of the station.
+     * @param lon the longitude of the station.
+     * @return the Station object created or updated.
+     */
+    public Station createStation(String stationName, String lineName, float lat, float lon) {
+        Station existStation = stationAlreadyExist(stationName, lineName);
+        if (existStation == null) {
+            Station newStation = new Station(stationName, lineName, lat, lon);
+            stations.add(newStation);
+            return newStation;
+        } else {
+            existStation.addLine(lineName);
+            return existStation;
+        }
+    }
+
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
     // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
     /**
@@ -137,17 +159,8 @@ public class Parser extends ParserFactory {
             Station station1;
             Station station2;
 
-            station1 = stationAlreadyExist(station1Name, lineName);
-            if (station1 == null) {
-                station1 = new Station(station1Name, lineName, station1Lat, station1Lon);
-                stations.add(station1);
-            } else station1.addLine(lineName);
-
-            station2 = stationAlreadyExist(station2Name, lineName);
-            if (station2 == null) {
-                station2 = new Station(station2Name, lineName, station2Lat, station2Lon);
-                stations.add(station2);
-            } else station2.addLine(lineName);
+            station1 = createStation(station1Name, lineName, station1Lat, station1Lon);
+            station2 = createStation(station2Name, lineName, station2Lat, station2Lon);
 
             if (lastStation == null) {
                 lastStation = station2;
@@ -158,16 +171,17 @@ public class Parser extends ParserFactory {
                 dataLine.put(currentLine, durationJourneys);
             }
 
-            if (!lastLineName.equals(lineName)) {
+            boolean isNewLine = !lastLineName.equals(lineName);
+            if (isNewLine) {
                 currentLine.setTerminalStationArrival(lastStation);
                 currentLine = new Line(lineName, station1);
                 durationJourneys.remove(durationJourneys.size() - 1);
-
                 durationJourneys = new ArrayList<>();
                 dataLine.put(currentLine, durationJourneys);
-                durationJourneys.add(time);
                 lastLineName = lineName;
             }
+            durationJourneys.add(time);
+
             currentLine.addStationsIfNotAlreadyExist(station1);
             currentLine.addStationsIfNotAlreadyExist(station2);
 

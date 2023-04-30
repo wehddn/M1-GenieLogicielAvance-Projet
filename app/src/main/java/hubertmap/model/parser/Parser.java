@@ -179,9 +179,8 @@ public class Parser extends ParserFactory {
                 durationJourneys = new ArrayList<>();
                 dataLine.put(currentLine, durationJourneys);
                 lastLineName = lineName;
+                durationJourneys.add(time);
             }
-
-            durationJourneys.add(time);
 
             if (station1 != station2) {
                 currentLine.addStationsIfNotAlreadyExist(station1);

@@ -1,7 +1,7 @@
 package hubertmap.model;
 
 /** The Time class represents a time of day in hours and minutes. */
-public class Time {
+public class Time implements Comparable<Time> {
     /** The hour component of the time. */
     private int hour;
 
@@ -145,23 +145,27 @@ public class Time {
     public String toString() {
         return String.format("%02d:%02d:%02d", hour, minute, seconde);
     }
+
     /**
-     * Compares this Time object to the specified object to see if they are equal.
+     * Compares this Time object with the specified Time object for order. Returns a negative
+     * integer, zero, or a positive integer as this object is less than, equal to, or greater than
+     * the specified object.
      *
-     * @param obj the object to compare to
-     * @return true if the objects are equal, false otherwise
+     * @param other the Time object to be compared
+     * @return a negative integer, zero, or a positive integer as this object is less than, equal
+     *     to, or greater than the specified object
      */
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
+    public int compareTo(Time other) {
+        if (this.hour != other.hour) {
+            return this.hour - other.hour;
         }
-        if (!(obj instanceof Time)) {
-            return false;
+        if (this.minute != other.minute) {
+            return this.minute - other.minute;
         }
-        Time other = (Time) obj;
-        return this.hour == other.hour
-                && this.minute == other.minute
-                && this.seconde == other.seconde;
+        if (this.seconde != other.seconde) {
+            return this.seconde - other.seconde;
+        }
+        return 0;
     }
 }

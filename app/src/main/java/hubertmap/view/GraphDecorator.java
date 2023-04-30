@@ -1,12 +1,15 @@
 package hubertmap.view;
 
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.GraphMouseListener;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.awt.BasicStroke;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -53,12 +56,9 @@ public class GraphDecorator {
         Transformer<Station, Paint> vertexColor =
                 new Transformer<Station, Paint>() {
                     public Paint transform(Station input) {
-                        if (shortestPathStations.contains(input)) return Color.RED;
-                        else {
-                            ArrayList<String> lines = input.getLinesNumbers();
-                            if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
-                            else return Color.decode(lineColors.get(lines.get(0)));
-                        }
+                        ArrayList<String> lines = input.getLinesNumbers();
+                        if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
+                        else return Color.decode(lineColors.get(lines.get(0)));
                     }
                 };
         return vertexColor;
@@ -72,12 +72,18 @@ public class GraphDecorator {
      *     its color.
      */
     public Transformer<EdgeTransport, Paint> edgeColor() {
-        return new Transformer<EdgeTransport, Paint>() {
-            @Override
-            public Paint transform(EdgeTransport input) {
-                return Color.decode(lineColors.get(input.getLineName()));
-            }
-        };
+        Transformer<EdgeTransport, Paint> edgeColor =
+                new Transformer<EdgeTransport, Paint>() {
+                    @Override
+                    public Paint transform(EdgeTransport input) {
+                        ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
+                        ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
+                        lines1.retainAll(lines2);
+                        if (lines1.size() != 0) return Color.decode(lineColors.get(lines1.get(0)));
+                        else return Color.BLACK;
+                    }
+                };
+        return edgeColor;
     }
 
     /**
@@ -212,5 +218,34 @@ public class GraphDecorator {
             shortestPathStations.clear();
             shortestPathStations.addAll(set);
         }
+    }
+
+    /**
+     * Returns a new GraphMouseListener for Stations, which listens for clicks on the graph, and
+     * calls the setSchedules method of the Controller class with the clicked Station.
+     *
+     * @return a new GraphMouseListener object for Stations.
+     */
+    public GraphMouseListener<Station> graphMouseListener() {
+        return new GraphMouseListener<Station>() {
+
+            @Override
+            public void graphClicked(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+                Controller.setSchedules(v);
+            }
+
+            @Override
+            public void graphPressed(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void graphReleased(Station v, MouseEvent me) {
+                // TODO Auto-generated method stub
+
+            }
+        };
     }
 }

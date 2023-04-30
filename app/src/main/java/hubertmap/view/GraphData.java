@@ -7,6 +7,7 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public class GraphData {
     private double maximumLatitude;
     private double minimumLatitude;
     private double maximumLongitude;
-    private Set<Line> lines;
+    private HashMap<String, Line> lines;
 
     /**
      * Constructs a new graphView instance and initializes its components. Calculates maximum and
@@ -30,13 +31,10 @@ public class GraphData {
      */
     public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;
-        this.lines = lines;
-
-        /*
+        this.lines = new HashMap<>();
         for (Line line : lines) {
-            System.out.println(line.getName() + " -> " + line.getTerminalStationArrival());
+            this.lines.put(line.getName(), line);
         }
-        */
 
         minimumLongitude = 180;
         maximumLongitude = -180;
@@ -110,7 +108,7 @@ public class GraphData {
      *
      * @return the lines of the graph
      */
-    public Set<Line> getLines() {
+    public HashMap<String, Line> getLines() {
         return lines;
     }
 }

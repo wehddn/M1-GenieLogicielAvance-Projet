@@ -2,7 +2,9 @@ package hubertmap.view;
 
 import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
+import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Normalizer;
@@ -14,6 +16,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 /**
  * The View class represents the graphical user interface of the application, and contains a Panel
@@ -38,6 +41,12 @@ public class View {
 
     /** TextArea with autocompletion to search end station */
     TextAreaDemo textAreaStationEnd;
+
+    JPanel leftPanel;
+
+    SchedulesPanel schedulesPanel;
+
+    private HashMap<String, Line> lines;
 
     /**
      * Constructs a new View instance and initializes its components. Creates a JFrame window and
@@ -64,13 +73,20 @@ public class View {
      */
     private JPanel createPanel(GraphData graphView) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         graphPanel = new GraphPanel(graphView);
+        graphPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+
+        this.lines = graphView.getLines();
 
         setData(graphView.getVertices());
+
         JPanel searchPanel = new JPanel();
-        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
+        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.Y_AXIS));
+        searchPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+
+        leftPanel = new JPanel(new BorderLayout());
 
         textAreaStationStart = new TextAreaDemo(stationsNames);
         textAreaStationStart.setText("Departure");
@@ -85,7 +101,9 @@ public class View {
         searchPanel.add(textAreaStationEnd);
         searchPanel.add(search);
 
-        panel.add(searchPanel);
+        leftPanel.add(searchPanel, BorderLayout.NORTH);
+
+        panel.add(leftPanel);
 
         panel.add(graphPanel);
 
@@ -156,5 +174,37 @@ public class View {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;
+    }
+
+    /**
+     * Sets the name of the departure station to be displayed in the text area.
+     *
+     * @param name the name of the departure station to be displayed.
+     */
+    public void setDeparture(String name) {
+        textAreaStationStart.setText(name);
+    }
+
+    /**
+     * Sets the name of the arrival station to be displayed in the text area.
+     *
+     * @param name the name of the arrival station to be displayed.
+     */
+    public void setArrival(String name) {
+        textAreaStationEnd.setText(name);
+    }
+
+    /**
+     * Sets the schedules panel to display the schedules for the given station.
+     *
+     * @param v the station for which the schedules will be displayed.
+     */
+    public void setSchedules(Station v) {
+        if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
+
+        schedulesPanel = new SchedulesPanel(v, lines);
+        leftPanel.add(schedulesPanel);
+
+        leftPanel.revalidate();
     }
 }

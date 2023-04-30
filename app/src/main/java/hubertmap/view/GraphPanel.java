@@ -54,6 +54,7 @@ class GraphPanel extends JPanel {
         decorator = new GraphDecorator();
 
         vv.setGraphMouse(decorator.createGraphMouse());
+        vv.addGraphMouseListener(decorator.graphMouseListener());
 
         vv.getRenderContext().setVertexFillPaintTransformer(decorator.vertexColor());
         vv.getRenderContext().setVertexShapeTransformer(decorator.vertexSize());

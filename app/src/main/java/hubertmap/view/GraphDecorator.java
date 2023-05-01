@@ -79,11 +79,17 @@ public class GraphDecorator {
                 new Transformer<EdgeTransport, Paint>() {
                     @Override
                     public Paint transform(EdgeTransport input) {
-                        ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
-                        ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
-                        lines1.retainAll(lines2);
-                        if (lines1.size() != 0) return Color.decode(lineColors.get(lines1.get(0)));
-                        else return Color.BLACK;
+                        ArrayList<String> lines1 = new ArrayList<>();
+                        ArrayList<String> lines2 = new ArrayList<>();
+                        if (input.getStartingStation() instanceof Station
+                                && input.getEndingStation() instanceof Station) {
+                            lines1 = input.getStartingStation().getLinesNumbers();
+                            lines2 = input.getEndingStation().getLinesNumbers();
+                            lines1.retainAll(lines2);
+                            if (lines1.size() != 0)
+                                return Color.decode(lineColors.get(lines1.get(0)));
+                            else return Color.BLACK;
+                        } else return null;
                     }
                 };
         return edgeColor;

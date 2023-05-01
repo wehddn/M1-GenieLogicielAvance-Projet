@@ -233,14 +233,13 @@ public class Network {
         float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         float distance = earthRadius * c;
 
-        return distance;
+        return distance * 10; // distance is in 10th of km
     }
 
     public static DurationJourney calculateDurationJourney(float distance) {
+        distance /= 10; // putting distance back in km
         int walkingSpeed = 5; // km/h
         int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
-        int minutes = walkingTimeInSeconds / 60;
-        int seconds = walkingTimeInSeconds % 60;
-        return new DurationJourney(String.valueOf(minutes), String.valueOf(seconds));
+        return new DurationJourney(walkingTimeInSeconds);
     }
 }

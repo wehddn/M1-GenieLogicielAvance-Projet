@@ -36,7 +36,7 @@ public class GraphDecorator {
     List<EdgeTransport> shortestPathEdges;
 
     /** The list of stations in the shortest path of the graph. */
-    List<Station> shortestPathStations;
+    List<VertexTransport> shortestPathStations;
 
     /** Constructs a new GraphDecorator object with default settings. */
     public GraphDecorator() {
@@ -83,8 +83,8 @@ public class GraphDecorator {
                         ArrayList<String> lines2 = new ArrayList<>();
                         if (input.getStartingStation() instanceof Station
                                 && input.getEndingStation() instanceof Station) {
-                            lines1 = input.getStartingStation().getLinesNumbers();
-                            lines2 = input.getEndingStation().getLinesNumbers();
+                            lines1 = ((Station) input.getStartingStation()).getLinesNumbers();
+                            lines2 = ((Station) input.getEndingStation()).getLinesNumbers();
                             lines1.retainAll(lines2);
                             if (lines1.size() != 0)
                                 return Color.decode(lineColors.get(lines1.get(0)));
@@ -218,12 +218,12 @@ public class GraphDecorator {
             this.shortestPathEdges = shortestPath;
             shortestPathStations.clear();
             for (EdgeTransport edgeTransport : shortestPath) {
-                Station station1 = edgeTransport.getStartingStation();
-                Station station2 = edgeTransport.getEndingStation();
+                VertexTransport station1 = edgeTransport.getStartingStation();
+                VertexTransport station2 = edgeTransport.getEndingStation();
                 shortestPathStations.add(station1);
                 shortestPathStations.add(station2);
             }
-            Set<Station> set = new HashSet<>(shortestPathStations);
+            Set<VertexTransport> set = new HashSet<>(shortestPathStations);
             shortestPathStations.clear();
             shortestPathStations.addAll(set);
         }

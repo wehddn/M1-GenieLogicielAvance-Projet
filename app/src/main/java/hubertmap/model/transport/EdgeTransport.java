@@ -68,18 +68,16 @@ public class EdgeTransport {
      *
      * @return the starting station of the transport edge
      */
-    public Station getStartingStation() {
-        if (startingStation instanceof Station) return (Station) startingStation;
-        else return null;
+    public VertexTransport getStartingStation() {
+        return startingStation;
     }
     /**
      * Returns the ending station of the transport edge.
      *
      * @return the ending station of the transport edge
      */
-    public Station getEndingStation() {
-        if (endingStation instanceof Station) return (Station) endingStation;
-        else return null;
+    public VertexTransport getEndingStation() {
+        return endingStation;
     }
     /**
      * Returns the distance between the starting and ending stations.

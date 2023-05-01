@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class Network {
     Graph<VertexTransport, EdgeTransport> graph;
-    HashMap<String, Station> stations;
+    HashMap<String, VertexTransport> stations;
     List<EdgeTransport> shortestPath;
 
     DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
@@ -48,14 +48,15 @@ public class Network {
      * Adds an edge to the network, connecting the given stations.
      *
      * @param edge the edge to add
-     * @param station1 the first station to connect
-     * @param station2 the second station to connect
+     * @param vertexTransport the first station to connect
+     * @param vertexTransport2 the second station to connect
      */
-    public void addEdge(EdgeTransport edge, Station station1, Station station2) {
-        graph.addEdge(edge, station1, station2);
+    public void addEdge(
+            EdgeTransport edge, VertexTransport vertexTransport, VertexTransport vertexTransport2) {
+        graph.addEdge(edge, vertexTransport, vertexTransport2);
 
-        stations.putIfAbsent(station1.getName().toLowerCase(), station1);
-        stations.putIfAbsent(station2.getName().toLowerCase(), station2);
+        stations.putIfAbsent(vertexTransport.getName().toLowerCase(), vertexTransport);
+        stations.putIfAbsent(vertexTransport2.getName().toLowerCase(), vertexTransport2);
     }
 
     /**
@@ -87,9 +88,9 @@ public class Network {
      * @param station2 destination station
      * @return a list edges to visit in the correct order
      */
-    public List<EdgeTransport> shortestPath(Station station1, Station station2) {
+    public List<EdgeTransport> shortestPath(VertexTransport station1, VertexTransport station2) {
         List<EdgeTransport> list = distancePaths.getPath(station1, station2);
-        Station s = station1;
+        VertexTransport s = station1;
         for (EdgeTransport e : list) {
             if (!e.getStartingStation().equals(s)) {
                 e.swapStations();
@@ -108,6 +109,7 @@ public class Network {
      * @return a list edges to visit in the correct order
      */
     public List<EdgeTransport> shortestPath(String station1, String station2) {
+        System.out.println(stations.get(station1) + " " + stations.get(station2));
         if (stations.get(station1) != null && stations.get(station2) != null)
             return shortestPath(stations.get(station1), stations.get(station2));
         else return null;
@@ -145,7 +147,7 @@ public class Network {
         }
 
         EdgeTransport prevEdge = path.get(0);
-        Station prevStation = prevEdge.getStartingStation();
+        VertexTransport prevStation = prevEdge.getStartingStation();
 
         float distance = prevEdge.getDistance();
         DurationJourney duration = prevEdge.getDurationJourney().copy();

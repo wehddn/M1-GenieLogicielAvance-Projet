@@ -122,7 +122,7 @@ public class SearchPanel extends JPanel {
                             String s2 = actualStationsNames.get(stringEnd);
                             if (s2 != null) {
                                 station2Name = s2;
-                            } else station2Name = stringStart;
+                            } else station2Name = stringEnd;
                         }
 
                         Controller.setShortestPath(station1Name, station2Name);

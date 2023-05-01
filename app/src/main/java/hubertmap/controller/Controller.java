@@ -29,16 +29,22 @@ public class Controller {
     public Controller() {
         Parser parser = new Parser();
         network = parser.getEdges();
+
         Point p = new Point("test", 2.3408628540691043f, 48.84205232329236f);
+
         VertexTransport s = null;
         for (VertexTransport v : network.getGraph().getVertices()) {
             if (v.getName().equals("Vavin")) s = v;
         }
+
         EdgeTransport e =
                 new EdgeTransport((VertexTransport) p, s, new DurationJourney("1", "1"), 0, "");
-        network.getGraph().addEdge(e, (VertexTransport) p, s);
+
+        network.addEdge(e, (VertexTransport) p, s);
+
         graphView = new GraphData(network.getGraph(), network.getLines());
         view = new View(graphView);
+        Controller.setShortestPath("test", "pernety");
     }
 
     /**
@@ -49,14 +55,14 @@ public class Controller {
      */
     public static void setShortestPath(String station1Name, String station2Name) {
         var shortestPath = network.shortestPath(station1Name, station2Name);
-        var simplifiedPath = network.simplifiedPath(shortestPath);
+        // var simplifiedPath = network.simplifiedPath(shortestPath);
         // TODO: use simplifiedPath for something
         /*
-        uncommenting these lines helps to understand the function. to delete later
-        for (EdgeTransport e : simplifiedPath) {
-            System.out.println(e);
-        }
-        */
+         * uncommenting these lines helps to understand the function. to delete later
+         * for (EdgeTransport e : simplifiedPath) {
+         * System.out.println(e);
+         * }
+         */
         view.setShortestPath(shortestPath);
     }
 

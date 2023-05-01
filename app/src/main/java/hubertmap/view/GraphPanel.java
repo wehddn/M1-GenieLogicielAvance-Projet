@@ -4,7 +4,7 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import hubertmap.model.transport.EdgeTransport;
-import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import javax.swing.*;
@@ -22,10 +22,10 @@ class GraphPanel extends JPanel {
     private int panelHeight;
 
     /** The layout used to arrange the stations and their edges. */
-    Layout<Station, EdgeTransport> layout;
+    Layout<VertexTransport, EdgeTransport> layout;
 
     /** The viewer used to display the graph. */
-    VisualizationViewer<Station, EdgeTransport> vv;
+    VisualizationViewer<VertexTransport, EdgeTransport> vv;
 
     /** The view containing the graph data. */
     GraphData graphView;
@@ -47,7 +47,7 @@ class GraphPanel extends JPanel {
 
         layout = graphView.createLayout();
         layout.setSize(new Dimension(panelWidth, panelHeight));
-        vv = new VisualizationViewer<Station, EdgeTransport>(layout);
+        vv = new VisualizationViewer<VertexTransport, EdgeTransport>(layout);
 
         setUpCoords();
 
@@ -83,7 +83,7 @@ class GraphPanel extends JPanel {
         double longitudeScale = panelWidth / longitudeDiff;
         double latitudeScale = panelHeight / latitudeDiff;
 
-        for (Station station : graphView.getVertices()) {
+        for (VertexTransport station : graphView.getVertices()) {
             int stationx = (int) Math.round((station.getX() - minimumLongitude) * longitudeScale);
             int stationy = (int) Math.round((maximumLatitude - station.getY()) * latitudeScale);
             layout.setLocation(station, new Point2D.Double(stationx, stationy));

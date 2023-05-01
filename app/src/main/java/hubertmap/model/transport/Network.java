@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents a network of stations and edges between them, forming a transport network.
+ * This class represents a network of vertex and edges between them, forming a transport network.
  */
 public class Network {
-    Graph<Station, EdgeTransport> graph;
+    Graph<VertexTransport, EdgeTransport> graph;
     HashMap<String, Station> stations;
     List<EdgeTransport> shortestPath;
 
-    DijkstraShortestPath<Station, EdgeTransport> distancePaths;
+    DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
     private Map<Line, ArrayList<DurationJourney>> datatLine;
 
     /**
@@ -72,7 +72,7 @@ public class Network {
      *
      * @return the graph representing the network
      */
-    public Graph<Station, EdgeTransport> getGraph() {
+    public Graph<VertexTransport, EdgeTransport> getGraph() {
         return graph;
     }
 

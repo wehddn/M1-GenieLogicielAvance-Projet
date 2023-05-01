@@ -4,6 +4,7 @@ import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -141,10 +142,10 @@ public class View {
      *
      * @param stations Collection of station used for search
      */
-    private void setData(Collection<Station> stations) {
+    private void setData(Collection<VertexTransport> stations) {
         stationsNames = new ArrayList<>();
         actualStationsNames = new HashMap<>();
-        for (Station station : stations) {
+        for (VertexTransport station : stations) {
             String n1 = station.getName().toLowerCase();
             String n2 = stripAccents(n1);
             stationsNames.add(n1);

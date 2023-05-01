@@ -15,10 +15,7 @@ import java.util.Set;
  * This class represents a station in a transportation system. A station has a name, coordinates (x
  * and y), and a list of all transportation lines that serve it.
  */
-public class Station {
-    private String name;
-    private Float x;
-    private Float y;
+public class Station extends VertexTransport {
     private ArrayList<String> allLines;
     private Map<String, ArrayList<Time>> schedules = new HashMap<>();
 
@@ -32,9 +29,7 @@ public class Station {
      * @param y the y-coordinate of the station's location
      */
     public Station(String name, ArrayList<String> allLines, Float x, Float y) {
-        this.name = name;
-        this.x = x;
-        this.y = y;
+        super(name, x, y);
         if (allLines != null) {
             this.allLines = allLines;
         } else {
@@ -51,29 +46,12 @@ public class Station {
      * @param y the y-coordinate of the station's location
      */
     public Station(String name, String Line, Float x, Float y) {
-        this.name = name;
-        this.x = x;
-        this.y = y;
+        super(name, x, y);
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
         schedules.put(Line, null);
     }
 
-    /**
-     * Returns the name of the station.
-     *
-     * @return the name of the station
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the new name of station
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
     /**
      * Returns the list of all transportation lines that serve the station.
      *
@@ -90,49 +68,6 @@ public class Station {
      */
     public Map<String, ArrayList<Time>> getSchedules() {
         return schedules;
-    }
-
-    /**
-     * Returns the x-coordinate of the station's location.
-     *
-     * @return the x-coordinate of the station's location
-     */
-    public Float getX() {
-        return x;
-    }
-    /**
-     * Returns the y-coordinate of the station's location.
-     *
-     * @return the y-coordinate of the station's location
-     */
-    public Float getY() {
-        return y;
-    }
-    /**
-     * Determines whether this station is equal to the specified station. Two stations are
-     * considered equal if they have the same name and location.
-     *
-     * @param station the station to compare this station to
-     * @return true if this station is equal to the specified station, false otherwise
-     */
-    public boolean equals(Station station) {
-        if (this.name == station.getName()
-                && this.x == station.getX()
-                && this.y == station.getY()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /**
-     * Returns the name of the station.
-     *
-     * @return the name of the station
-     */
-    @Override
-    public String toString() {
-        // TODO Auto-generated method stub
-        return name;
     }
 
     /**

@@ -5,7 +5,7 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
-import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.Set;
  * access.
  */
 public class GraphData {
-    Graph<Station, EdgeTransport> graph;
+    Graph<VertexTransport, EdgeTransport> graph;
     private double minimumLongitude;
     private double maximumLatitude;
     private double minimumLatitude;
@@ -29,7 +29,7 @@ public class GraphData {
      * @param graph the graph that will be used in View
      * @param lines the lines that will be used in View
      */
-    public GraphData(Graph<Station, EdgeTransport> graph, Set<Line> lines) {
+    public GraphData(Graph<VertexTransport, EdgeTransport> graph, Set<Line> lines) {
         this.graph = graph;
         this.lines = new HashMap<>();
         for (Line line : lines) {
@@ -41,7 +41,7 @@ public class GraphData {
         minimumLatitude = 90;
         maximumLatitude = -90;
 
-        for (Station station : graph.getVertices()) {
+        for (VertexTransport station : graph.getVertices()) {
             if (station.getX() < minimumLongitude) minimumLongitude = station.getX();
             if (station.getX() > maximumLongitude) maximumLongitude = station.getX();
             if (station.getY() < minimumLatitude) minimumLatitude = station.getY();
@@ -54,7 +54,7 @@ public class GraphData {
      *
      * @return Collection of vertices of graph
      */
-    public Collection<Station> getVertices() {
+    public Collection<VertexTransport> getVertices() {
         return graph.getVertices();
     }
 
@@ -99,8 +99,8 @@ public class GraphData {
      *
      * @return CircleLayout for the specified graph.
      */
-    public Layout<Station, EdgeTransport> createLayout() {
-        return new CircleLayout<Station, EdgeTransport>(graph);
+    public Layout<VertexTransport, EdgeTransport> createLayout() {
+        return new CircleLayout<VertexTransport, EdgeTransport>(graph);
     }
 
     /**

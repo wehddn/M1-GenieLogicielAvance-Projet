@@ -60,11 +60,13 @@ public class Controller {
         view.setSchedules(v);
     }
 
-    public static void createPoint(double x, double y) {
+    public static String createPoint(double x, double y) {
 
-        network.createPoint(x, y);
+        String pointName = network.createPoint(x, y);
 
         graphView = new GraphData(network.getGraph(), network.getLines());
         view.updateView(graphView);
+
+        return pointName;
     }
 }

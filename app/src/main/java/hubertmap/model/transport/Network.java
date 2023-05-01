@@ -22,6 +22,8 @@ public class Network {
     DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
     private Map<Line, ArrayList<DurationJourney>> datatLine;
 
+    int pointCount = 0;
+
     /**
      * Constructs a new Network object with the given collection of edges.
      *
@@ -197,8 +199,9 @@ public class Network {
         return simplePath;
     }
 
-    public void createPoint(double x, double y) {
-        Point p = new Point("test", x, y);
+    public String createPoint(double x, double y) {
+        Point p = new Point("point" + pointCount, x, y);
+        pointCount++;
         ArrayList<EdgeTransport> newEdges = new ArrayList<>();
         for (VertexTransport v : graph.getVertices()) {
             float distance = calculateDistance(p.getX(), p.getY(), v.getX(), v.getY());
@@ -210,9 +213,7 @@ public class Network {
             addEdge(edgeTransport);
         }
 
-        for (EdgeTransport edgeTransport : graph.getEdges()) {
-            System.out.println(edgeTransport);
-        }
+        return p.getName();
     }
 
     public static float calculateDistance(float x1, float y1, float x2, float y2) {

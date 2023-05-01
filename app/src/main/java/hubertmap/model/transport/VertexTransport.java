@@ -46,8 +46,8 @@ public abstract class VertexTransport {
     }
 
     /**
-     * Determines whether this vertex is equal to the specified vertex. Two vertexes are
-     * considered equal if they have the same name and location.
+     * Determines whether this vertex is equal to the specified vertex. Two vertexes are considered
+     * equal if they have the same name and location.
      *
      * @param vertex the vertex to compare this vertex to
      * @return true if this vertex is equal to the specified vertex, false otherwise

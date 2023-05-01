@@ -89,7 +89,8 @@ public class GraphDecorator {
                             if (lines1.size() != 0)
                                 return Color.decode(lineColors.get(lines1.get(0)));
                             else return Color.BLACK;
-                        } else return null;
+                        } else if (shortestPathEdges.contains(input)) return Color.BLACK;
+                        else return null;
                     }
                 };
         return edgeColor;

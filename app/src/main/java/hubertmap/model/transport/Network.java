@@ -109,7 +109,6 @@ public class Network {
      * @return a list edges to visit in the correct order
      */
     public List<EdgeTransport> shortestPath(String station1, String station2) {
-        System.out.println(stations.get(station1) + " " + stations.get(station2));
         if (stations.get(station1) != null && stations.get(station2) != null)
             return shortestPath(stations.get(station1), stations.get(station2));
         else return null;
@@ -196,5 +195,51 @@ public class Network {
         }
 
         return simplePath;
+    }
+
+    public void createPoint(double x, double y) {
+        Point p = new Point("test", x, y);
+        ArrayList<EdgeTransport> newEdges = new ArrayList<>();
+        for (VertexTransport v : graph.getVertices()) {
+            float distance = calculateDistance(p.getX(), p.getY(), v.getX(), v.getY());
+            DurationJourney durationJourney = calculateDurationJourney(distance);
+            newEdges.add(new EdgeTransport((VertexTransport) p, v, durationJourney, distance, ""));
+        }
+
+        for (EdgeTransport edgeTransport : newEdges) {
+            addEdge(edgeTransport);
+        }
+
+        for (EdgeTransport edgeTransport : graph.getEdges()) {
+            System.out.println(edgeTransport);
+        }
+    }
+
+    public static float calculateDistance(float x1, float y1, float x2, float y2) {
+        float earthRadius = 6371.0f; // Earth's radius in kilometers
+        float dLat = (float) Math.toRadians(x2 - x1);
+        float dLon = (float) Math.toRadians(y2 - y1);
+        float lat1 = (float) Math.toRadians(x1);
+        float lat2 = (float) Math.toRadians(x2);
+
+        float a =
+                (float)
+                        (Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                                + Math.sin(dLon / 2)
+                                        * Math.sin(dLon / 2)
+                                        * Math.cos(lat1)
+                                        * Math.cos(lat2));
+        float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        float distance = earthRadius * c;
+
+        return distance;
+    }
+
+    public static DurationJourney calculateDurationJourney(float distance) {
+        int walkingSpeed = 5; // km/h
+        int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
+        int minutes = walkingTimeInSeconds / 60;
+        int seconds = walkingTimeInSeconds % 60;
+        return new DurationJourney(String.valueOf(minutes), String.valueOf(seconds));
     }
 }

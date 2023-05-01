@@ -49,6 +49,8 @@ public class View {
 
     private HashMap<String, Line> lines;
 
+    private JFrame frame;
+
     /**
      * Constructs a new View instance and initializes its components. Creates a JFrame window and
      * adds the Panel to it.
@@ -58,7 +60,7 @@ public class View {
     public View(GraphData graphView) {
         panel = createPanel(graphView);
 
-        JFrame frame = new JFrame("Hubertmap");
+        frame = new JFrame("Hubertmap");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(panel);
         frame.pack();
@@ -207,5 +209,14 @@ public class View {
         leftPanel.add(schedulesPanel);
 
         leftPanel.revalidate();
+    }
+
+    public void updateView(GraphData graphView) {
+        frame.getContentPane().remove(panel);
+        panel = createPanel(graphView);
+        frame.getContentPane().add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        frame.requestFocusInWindow();
     }
 }

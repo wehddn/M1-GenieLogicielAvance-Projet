@@ -1,12 +1,8 @@
 package hubertmap.controller;
 
-import hubertmap.model.DurationJourney;
 import hubertmap.model.parser.Parser;
-import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Network;
-import hubertmap.model.transport.Point;
 import hubertmap.model.transport.Station;
-import hubertmap.model.transport.VertexTransport;
 import hubertmap.view.GraphData;
 import hubertmap.view.View;
 
@@ -23,28 +19,14 @@ public class Controller {
     /* The GUI of application. */
     static View view;
 
-    GraphData graphView;
+    static GraphData graphView;
 
     /** Constructs a new Controller instance, creates Network and View */
     public Controller() {
         Parser parser = new Parser();
         network = parser.getEdges();
-
-        Point p = new Point("test", 2.3408628540691043f, 48.84205232329236f);
-
-        VertexTransport s = null;
-        for (VertexTransport v : network.getGraph().getVertices()) {
-            if (v.getName().equals("Vavin")) s = v;
-        }
-
-        EdgeTransport e =
-                new EdgeTransport((VertexTransport) p, s, new DurationJourney("1", "1"), 0, "");
-
-        network.addEdge(e, (VertexTransport) p, s);
-
         graphView = new GraphData(network.getGraph(), network.getLines());
         view = new View(graphView);
-        Controller.setShortestPath("test", "pernety");
     }
 
     /**
@@ -76,5 +58,13 @@ public class Controller {
 
     public static void setSchedules(Station v) {
         view.setSchedules(v);
+    }
+
+    public static void createPoint(double x, double y) {
+
+        network.createPoint(x, y);
+
+        graphView = new GraphData(network.getGraph(), network.getLines());
+        view.updateView(graphView);
     }
 }

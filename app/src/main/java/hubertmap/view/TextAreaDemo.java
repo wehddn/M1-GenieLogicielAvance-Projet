@@ -59,7 +59,7 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
     };
 
     /** a list of words to use for autocomplete */
-    private final List<String> words;
+    private List<String> words;
 
     /** the current mode */
     private Mode mode = Mode.INSERT;
@@ -208,5 +208,9 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
      */
     public void setText(String string) {
         textArea.setText(string);
+    }
+
+    public void setData(List<String> data) {
+        words = data;
     }
 }

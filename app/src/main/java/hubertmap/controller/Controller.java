@@ -48,18 +48,40 @@ public class Controller {
         view.setShortestPath(shortestPath);
     }
 
+    /**
+     * Sets departure station to view
+     *
+     * @param name station name to set
+     */
     public static void setDeparture(String name) {
         view.setDeparture(name);
     }
 
+    /**
+     * Sets arrival station to view
+     *
+     * @param name station name to set
+     */
     public static void setArrival(String name) {
         view.setArrival(name);
     }
 
+    /**
+     * Sets schedules to view
+     *
+     * @param v station with schedules to set
+     */
     public static void setSchedules(Station v) {
         view.setSchedules(v);
     }
 
+    /**
+     * Creates a point defined by the coordinates provided by the user and updates view
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return name of created point
+     */
     public static String createPoint(double x, double y) {
 
         String pointName = network.createPoint(x, y);
@@ -70,6 +92,7 @@ public class Controller {
         return pointName;
     }
 
+    /** Deletes all user points from the graph. */
     public static void deleteUserPoints() {
         network.deleteUserPoints();
     }

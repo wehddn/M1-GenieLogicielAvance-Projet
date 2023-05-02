@@ -22,6 +22,7 @@ public class EdgeTransport {
      * @param endingStation the ending station of the transport edge
      * @param durationJourney the duration of the journey between the starting and ending stations
      * @param distance the distance between the starting and ending stations
+     * @param lineName name of the line of which the face is a part
      */
     public EdgeTransport(
             VertexTransport startingStation,

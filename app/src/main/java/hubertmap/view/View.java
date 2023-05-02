@@ -121,6 +121,11 @@ public class View {
         leftPanel.revalidate();
     }
 
+    /**
+     * Updates view with new data
+     *
+     * @param graphView GraphData to set in view
+     */
     public void updateView(GraphData graphView) {
         frame.getContentPane().remove(panel);
         panel = createPanel(graphView);

@@ -1,10 +1,21 @@
 package hubertmap.model.transport;
 
+/**
+ * This class represents a abstract Vertex used in a transportation system. A Vertex has a name and
+ * coordinates (x and y).
+ */
 public abstract class VertexTransport {
     private String name;
     private Float x;
     private Float y;
 
+    /**
+     * Constructs a new Vertex with the given name and coordinates.
+     *
+     * @param name the name of the station
+     * @param x the x-coordinate of the station's location
+     * @param y the y-coordinate of the station's location
+     */
     public VertexTransport(String name, Float x, Float y) {
         this.name = name;
         this.x = x;

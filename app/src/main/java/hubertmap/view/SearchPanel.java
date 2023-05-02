@@ -16,6 +16,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
+/**
+ * The SearchPanel class is responsible for the search interface that allows the user to search for
+ * the shortest path between two stations. It provides two text areas for the user to enter the
+ * names of the departure and arrival stations or their coordinates.
+ */
 public class SearchPanel extends JPanel {
 
     /** TextArea with autocompletion to search start station */
@@ -24,12 +29,11 @@ public class SearchPanel extends JPanel {
     /** TextArea with autocompletion to search end station */
     TextAreaDemo textAreaStationEnd;
 
+    /** HashMap to store station names with accents */
     private HashMap<String, String> actualStationsNames;
 
     /** A List object to hold names of station for search. */
     private List<String> stationsNames;
-
-    GraphPanel graphPanel;
 
     SearchPanel(GraphData graphView) {
 
@@ -134,6 +138,13 @@ public class SearchPanel extends JPanel {
         return al;
     }
 
+    /**
+     * Parses a string containing latitude and longitude coordinates in the format
+     * "latitude,longitude" and returns a Point2D.Float object representing the coordinates.
+     *
+     * @param str to parse
+     * @return Point2D.Float with latitude and longitude
+     */
     public Point2D.Float parseCoordinates(String str) {
         String[] parts = str.split(",");
         if (parts.length != 2) {

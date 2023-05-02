@@ -210,6 +210,11 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
         textArea.setText(string);
     }
 
+    /**
+     * Updates words with new data
+     *
+     * @param data the list of strings used to set in words
+     */
     public void setData(List<String> data) {
         words = data;
     }

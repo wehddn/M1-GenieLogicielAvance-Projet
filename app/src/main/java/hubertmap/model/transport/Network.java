@@ -44,10 +44,12 @@ public class Network {
 
         distancePaths = new DijkstraShortestPath<>(graph, EdgeTransport::estimateWeight);
     }
+
     /** Constructs a new Network object with no edges. */
     public Network() {
         this(null);
     }
+
     /**
      * Adds an edge to the network, connecting the given stations.
      *
@@ -201,6 +203,13 @@ public class Network {
         return simplePath;
     }
 
+    /**
+     * Creates a point defined by the coordinates provided by the user
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return name of created point
+     */
     public String createPoint(double x, double y) {
         Point p = new Point("point" + pointCount, x, y);
         pointCount++;
@@ -220,7 +229,16 @@ public class Network {
         return p.getName();
     }
 
-    public static float calculateDistance(float x1, float y1, float x2, float y2) {
+    /**
+     * Calculates the distance between two points on Earth using the Haversine formula.
+     *
+     * @param x1 the latitude of the first point in degrees
+     * @param y1 the longitude of the first point in degrees
+     * @param x2 the latitude of the second point in degrees
+     * @param y2 the longitude of the second point in degrees
+     * @return the distance between the two points in 10th of km
+     */
+    public float calculateDistance(float x1, float y1, float x2, float y2) {
         float earthRadius = 6371.0f; // Earth's radius in kilometers
         float dLat = (float) Math.toRadians(x2 - x1);
         float dLon = (float) Math.toRadians(y2 - y1);
@@ -240,13 +258,21 @@ public class Network {
         return distance * 10; // distance is in 10th of km
     }
 
-    public static DurationJourney calculateDurationJourney(float distance) {
+    /**
+     * Calculates the duration of a journey based on the given distance and a walking speed of 5
+     * km/h.
+     *
+     * @param distance the distance of the journey in 10th of km
+     * @return the duration of the journey as a {@link DurationJourney} object
+     */
+    public DurationJourney calculateDurationJourney(float distance) {
         distance /= 10; // putting distance back in km
         int walkingSpeed = 5; // km/h
         int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
         return new DurationJourney(walkingTimeInSeconds);
     }
 
+    /** Deletes all user points from the graph. */
     public void deleteUserPoints() {
         for (Point point : userPoints) {
             graph.removeVertex(point);

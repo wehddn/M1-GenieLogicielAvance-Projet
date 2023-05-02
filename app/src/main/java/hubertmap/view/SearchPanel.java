@@ -99,6 +99,9 @@ public class SearchPanel extends JPanel {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+
+                        Controller.deleteUserPoints();
+
                         String stringStart = textAreaStationStart.getValue();
                         String stringEnd = textAreaStationEnd.getValue();
 

@@ -18,6 +18,7 @@ public class Network {
     Graph<VertexTransport, EdgeTransport> graph;
     HashMap<String, VertexTransport> stations;
     List<EdgeTransport> shortestPath;
+    List<Point> userPoints;
 
     DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
     private Map<Line, ArrayList<DurationJourney>> datatLine;
@@ -33,6 +34,7 @@ public class Network {
         graph = new SparseGraph<>();
         stations = new HashMap<>();
         shortestPath = new ArrayList<>();
+        userPoints = new ArrayList<>();
 
         if (edges != null) {
             for (EdgeTransport e : edges) {
@@ -213,6 +215,8 @@ public class Network {
             addEdge(edgeTransport);
         }
 
+        userPoints.add(p);
+
         return p.getName();
     }
 
@@ -241,5 +245,12 @@ public class Network {
         int walkingSpeed = 5; // km/h
         int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
         return new DurationJourney(walkingTimeInSeconds);
+    }
+
+    public void deleteUserPoints() {
+        for (Point point : userPoints) {
+            graph.removeVertex(point);
+            stations.values().remove(point);
+        }
     }
 }

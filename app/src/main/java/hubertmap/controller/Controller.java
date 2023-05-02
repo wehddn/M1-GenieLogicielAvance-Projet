@@ -69,4 +69,8 @@ public class Controller {
 
         return pointName;
     }
+
+    public static void deleteUserPoints() {
+        network.deleteUserPoints();
+    }
 }

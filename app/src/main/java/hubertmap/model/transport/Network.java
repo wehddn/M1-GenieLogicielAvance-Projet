@@ -12,15 +12,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class represents a network of stations and edges between them, forming a transport network.
+ * This class represents a network of vertex and edges between them, forming a transport network.
  */
 public class Network {
-    Graph<Station, EdgeTransport> graph;
-    HashMap<String, Station> stations;
+    Graph<VertexTransport, EdgeTransport> graph;
+    HashMap<String, VertexTransport> stations;
     List<EdgeTransport> shortestPath;
+    List<Point> userPoints;
 
-    DijkstraShortestPath<Station, EdgeTransport> distancePaths;
+    DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
     private Map<Line, ArrayList<DurationJourney>> datatLine;
+
+    int pointCount = 0;
 
     /**
      * Constructs a new Network object with the given collection of edges.
@@ -31,6 +34,7 @@ public class Network {
         graph = new SparseGraph<>();
         stations = new HashMap<>();
         shortestPath = new ArrayList<>();
+        userPoints = new ArrayList<>();
 
         if (edges != null) {
             for (EdgeTransport e : edges) {
@@ -40,22 +44,25 @@ public class Network {
 
         distancePaths = new DijkstraShortestPath<>(graph, EdgeTransport::estimateWeight);
     }
+
     /** Constructs a new Network object with no edges. */
     public Network() {
         this(null);
     }
+
     /**
      * Adds an edge to the network, connecting the given stations.
      *
      * @param edge the edge to add
-     * @param station1 the first station to connect
-     * @param station2 the second station to connect
+     * @param vertexTransport the first station to connect
+     * @param vertexTransport2 the second station to connect
      */
-    public void addEdge(EdgeTransport edge, Station station1, Station station2) {
-        graph.addEdge(edge, station1, station2);
+    public void addEdge(
+            EdgeTransport edge, VertexTransport vertexTransport, VertexTransport vertexTransport2) {
+        graph.addEdge(edge, vertexTransport, vertexTransport2);
 
-        stations.putIfAbsent(station1.getName().toLowerCase(), station1);
-        stations.putIfAbsent(station2.getName().toLowerCase(), station2);
+        stations.putIfAbsent(vertexTransport.getName().toLowerCase(), vertexTransport);
+        stations.putIfAbsent(vertexTransport2.getName().toLowerCase(), vertexTransport2);
     }
 
     /**
@@ -72,7 +79,7 @@ public class Network {
      *
      * @return the graph representing the network
      */
-    public Graph<Station, EdgeTransport> getGraph() {
+    public Graph<VertexTransport, EdgeTransport> getGraph() {
         return graph;
     }
 
@@ -87,9 +94,9 @@ public class Network {
      * @param station2 destination station
      * @return a list edges to visit in the correct order
      */
-    public List<EdgeTransport> shortestPath(Station station1, Station station2) {
+    public List<EdgeTransport> shortestPath(VertexTransport station1, VertexTransport station2) {
         List<EdgeTransport> list = distancePaths.getPath(station1, station2);
-        Station s = station1;
+        VertexTransport s = station1;
         for (EdgeTransport e : list) {
             if (!e.getStartingStation().equals(s)) {
                 e.swapStations();
@@ -145,7 +152,7 @@ public class Network {
         }
 
         EdgeTransport prevEdge = path.get(0);
-        Station prevStation = prevEdge.getStartingStation();
+        VertexTransport prevStation = prevEdge.getStartingStation();
 
         float distance = prevEdge.getDistance();
         DurationJourney duration = prevEdge.getDurationJourney().copy();
@@ -194,5 +201,82 @@ public class Network {
         }
 
         return simplePath;
+    }
+
+    /**
+     * Creates a point defined by the coordinates provided by the user
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return name of created point
+     */
+    public String createPoint(double x, double y) {
+        Point p = new Point("point" + pointCount, x, y);
+        pointCount++;
+        ArrayList<EdgeTransport> newEdges = new ArrayList<>();
+        for (VertexTransport v : graph.getVertices()) {
+            float distance = calculateDistance(p.getX(), p.getY(), v.getX(), v.getY());
+            DurationJourney durationJourney = calculateDurationJourney(distance);
+            newEdges.add(new EdgeTransport((VertexTransport) p, v, durationJourney, distance, ""));
+        }
+
+        for (EdgeTransport edgeTransport : newEdges) {
+            addEdge(edgeTransport);
+        }
+
+        userPoints.add(p);
+
+        return p.getName();
+    }
+
+    /**
+     * Calculates the distance between two points on Earth using the Haversine formula.
+     *
+     * @param x1 the latitude of the first point in degrees
+     * @param y1 the longitude of the first point in degrees
+     * @param x2 the latitude of the second point in degrees
+     * @param y2 the longitude of the second point in degrees
+     * @return the distance between the two points in 10th of km
+     */
+    public float calculateDistance(float x1, float y1, float x2, float y2) {
+        float earthRadius = 6371.0f; // Earth's radius in kilometers
+        float dLat = (float) Math.toRadians(x2 - x1);
+        float dLon = (float) Math.toRadians(y2 - y1);
+        float lat1 = (float) Math.toRadians(x1);
+        float lat2 = (float) Math.toRadians(x2);
+
+        float a =
+                (float)
+                        (Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                                + Math.sin(dLon / 2)
+                                        * Math.sin(dLon / 2)
+                                        * Math.cos(lat1)
+                                        * Math.cos(lat2));
+        float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        float distance = earthRadius * c;
+
+        return distance * 10; // distance is in 10th of km
+    }
+
+    /**
+     * Calculates the duration of a journey based on the given distance and a walking speed of 5
+     * km/h.
+     *
+     * @param distance the distance of the journey in 10th of km
+     * @return the duration of the journey as a {@link DurationJourney} object
+     */
+    public DurationJourney calculateDurationJourney(float distance) {
+        distance /= 10; // putting distance back in km
+        int walkingSpeed = 5; // km/h
+        int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
+        return new DurationJourney(walkingTimeInSeconds);
+    }
+
+    /** Deletes all user points from the graph. */
+    public void deleteUserPoints() {
+        for (Point point : userPoints) {
+            graph.removeVertex(point);
+            stations.values().remove(point);
+        }
     }
 }

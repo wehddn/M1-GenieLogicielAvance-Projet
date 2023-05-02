@@ -7,6 +7,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import hubertmap.controller.Controller;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import java.awt.*;
 import java.awt.BasicStroke;
 import java.awt.event.MouseEvent;
@@ -35,7 +36,7 @@ public class GraphDecorator {
     List<EdgeTransport> shortestPathEdges;
 
     /** The list of stations in the shortest path of the graph. */
-    List<Station> shortestPathStations;
+    List<VertexTransport> shortestPathStations;
 
     /** Constructs a new GraphDecorator object with default settings. */
     public GraphDecorator() {
@@ -52,13 +53,15 @@ public class GraphDecorator {
      * @return a Transformer object that maps a Station object to a Paint object representing its
      *     color.
      */
-    public Transformer<Station, Paint> vertexColor() {
-        Transformer<Station, Paint> vertexColor =
-                new Transformer<Station, Paint>() {
-                    public Paint transform(Station input) {
-                        ArrayList<String> lines = input.getLinesNumbers();
-                        if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
-                        else return Color.decode(lineColors.get(lines.get(0)));
+    public Transformer<VertexTransport, Paint> vertexColor() {
+        Transformer<VertexTransport, Paint> vertexColor =
+                new Transformer<VertexTransport, Paint>() {
+                    public Paint transform(VertexTransport input) {
+                        if (input instanceof Station) {
+                            ArrayList<String> lines = ((Station) input).getLinesNumbers();
+                            if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
+                            else return Color.decode(lineColors.get(lines.get(0)));
+                        } else return Color.WHITE;
                     }
                 };
         return vertexColor;
@@ -76,11 +79,18 @@ public class GraphDecorator {
                 new Transformer<EdgeTransport, Paint>() {
                     @Override
                     public Paint transform(EdgeTransport input) {
-                        ArrayList<String> lines1 = input.getStartingStation().getLinesNumbers();
-                        ArrayList<String> lines2 = input.getEndingStation().getLinesNumbers();
-                        lines1.retainAll(lines2);
-                        if (lines1.size() != 0) return Color.decode(lineColors.get(lines1.get(0)));
-                        else return Color.BLACK;
+                        ArrayList<String> lines1 = new ArrayList<>();
+                        ArrayList<String> lines2 = new ArrayList<>();
+                        if (input.getStartingStation() instanceof Station
+                                && input.getEndingStation() instanceof Station) {
+                            lines1 = ((Station) input.getStartingStation()).getLinesNumbers();
+                            lines2 = ((Station) input.getEndingStation()).getLinesNumbers();
+                            lines1.retainAll(lines2);
+                            if (lines1.size() != 0)
+                                return Color.decode(lineColors.get(lines1.get(0)));
+                            else return Color.BLACK;
+                        } else if (shortestPathEdges.contains(input)) return Color.BLACK;
+                        else return null;
                     }
                 };
         return edgeColor;
@@ -128,11 +138,11 @@ public class GraphDecorator {
      * @return a Transformer object that maps a Station object to a Shape object representing its
      *     size.
      */
-    public Transformer<Station, Shape> vertexSize() {
-        Transformer<Station, Shape> vertexSize =
-                new Transformer<Station, Shape>() {
+    public Transformer<VertexTransport, Shape> vertexSize() {
+        Transformer<VertexTransport, Shape> vertexSize =
+                new Transformer<VertexTransport, Shape>() {
                     @Override
-                    public Shape transform(Station input) {
+                    public Shape transform(VertexTransport input) {
                         if (shortestPathStations.contains(input))
                             return new Ellipse2D.Float(-5, -5, 10, 10);
                         else {
@@ -153,11 +163,11 @@ public class GraphDecorator {
      * @return a ToStringLabeller object that maps a Station object to a String object representing
      *     its label.
      */
-    public ToStringLabeller<Station> toStringLabeller() {
-        ToStringLabeller<Station> labeller =
+    public ToStringLabeller<VertexTransport> toStringLabeller() {
+        ToStringLabeller<VertexTransport> labeller =
                 new ToStringLabeller<>() {
                     @Override
-                    public String transform(Station v) {
+                    public String transform(VertexTransport v) {
                         if (shortestPathStations.contains(v)) return super.transform(v);
                         else {
                             if (scale < 20) return "";
@@ -209,12 +219,12 @@ public class GraphDecorator {
             this.shortestPathEdges = shortestPath;
             shortestPathStations.clear();
             for (EdgeTransport edgeTransport : shortestPath) {
-                Station station1 = edgeTransport.getStartingStation();
-                Station station2 = edgeTransport.getEndingStation();
+                VertexTransport station1 = edgeTransport.getStartingStation();
+                VertexTransport station2 = edgeTransport.getEndingStation();
                 shortestPathStations.add(station1);
                 shortestPathStations.add(station2);
             }
-            Set<Station> set = new HashSet<>(shortestPathStations);
+            Set<VertexTransport> set = new HashSet<>(shortestPathStations);
             shortestPathStations.clear();
             shortestPathStations.addAll(set);
         }
@@ -226,23 +236,23 @@ public class GraphDecorator {
      *
      * @return a new GraphMouseListener object for Stations.
      */
-    public GraphMouseListener<Station> graphMouseListener() {
-        return new GraphMouseListener<Station>() {
+    public GraphMouseListener<VertexTransport> graphMouseListener() {
+        return new GraphMouseListener<VertexTransport>() {
 
             @Override
-            public void graphClicked(Station v, MouseEvent me) {
+            public void graphClicked(VertexTransport v, MouseEvent me) {
                 // TODO Auto-generated method stub
-                Controller.setSchedules(v);
+                if (v instanceof Station) Controller.setSchedules((Station) v);
             }
 
             @Override
-            public void graphPressed(Station v, MouseEvent me) {
+            public void graphPressed(VertexTransport v, MouseEvent me) {
                 // TODO Auto-generated method stub
 
             }
 
             @Override
-            public void graphReleased(Station v, MouseEvent me) {
+            public void graphReleased(VertexTransport v, MouseEvent me) {
                 // TODO Auto-generated method stub
 
             }

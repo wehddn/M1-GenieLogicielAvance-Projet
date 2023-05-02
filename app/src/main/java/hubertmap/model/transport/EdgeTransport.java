@@ -10,8 +10,8 @@ public class EdgeTransport {
 
     private DurationJourney durationJourney;
     private float distance;
-    private Station startingStation;
-    private Station endingStation;
+    private VertexTransport startingStation;
+    private VertexTransport endingStation;
     private String lineName;
 
     /**
@@ -22,10 +22,11 @@ public class EdgeTransport {
      * @param endingStation the ending station of the transport edge
      * @param durationJourney the duration of the journey between the starting and ending stations
      * @param distance the distance between the starting and ending stations
+     * @param lineName name of the line of which the face is a part
      */
     public EdgeTransport(
-            Station startingStation,
-            Station endingStation,
+            VertexTransport startingStation,
+            VertexTransport endingStation,
             DurationJourney durationJourney,
             float distance,
             String lineName) {
@@ -68,7 +69,7 @@ public class EdgeTransport {
      *
      * @return the starting station of the transport edge
      */
-    public Station getStartingStation() {
+    public VertexTransport getStartingStation() {
         return startingStation;
     }
     /**
@@ -76,7 +77,7 @@ public class EdgeTransport {
      *
      * @return the ending station of the transport edge
      */
-    public Station getEndingStation() {
+    public VertexTransport getEndingStation() {
         return endingStation;
     }
     /**
@@ -119,7 +120,7 @@ public class EdgeTransport {
 
     /** swaps startingStation and endingStation */
     public void swapStations() {
-        Station tmp = endingStation;
+        VertexTransport tmp = endingStation;
         endingStation = startingStation;
         startingStation = tmp;
     }

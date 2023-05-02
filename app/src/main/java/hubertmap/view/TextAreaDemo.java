@@ -59,7 +59,7 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
     };
 
     /** a list of words to use for autocomplete */
-    private final List<String> words;
+    private List<String> words;
 
     /** the current mode */
     private Mode mode = Mode.INSERT;
@@ -86,8 +86,8 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
         textArea.addFocusListener(
                 new FocusListener() {
                     public void focusGained(FocusEvent e) {
-                        if (textArea.getText() == "Departure" || textArea.getText() == "Arrival")
-                            textArea.setText("");
+                        if (textArea.getText().contains("Departure")
+                                || textArea.getText().contains("Arrival")) textArea.setText("");
                     }
 
                     public void focusLost(FocusEvent e) {}
@@ -208,5 +208,14 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
      */
     public void setText(String string) {
         textArea.setText(string);
+    }
+
+    /**
+     * Updates words with new data
+     *
+     * @param data the list of strings used to set in words
+     */
+    public void setData(List<String> data) {
+        words = data;
     }
 }

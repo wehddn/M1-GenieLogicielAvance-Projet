@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,9 +24,6 @@ import org.apache.commons.collections15.Transformer;
  * labels for vertices and edges.
  */
 public class GraphDecorator {
-
-    /** A map that stores the colors of the lines in the graph. */
-    private static HashMap<String, String> lineColors;
 
     /** The scale used to size the vertices of the graph. */
     private static int scale;
@@ -41,7 +37,6 @@ public class GraphDecorator {
     /** Constructs a new GraphDecorator object with default settings. */
     public GraphDecorator() {
         scale = 0;
-        lineColors = createLineColorsMap();
         shortestPathEdges = new ArrayList<>();
         shortestPathStations = new ArrayList<>();
     }
@@ -60,7 +55,7 @@ public class GraphDecorator {
                         if (input instanceof Station) {
                             ArrayList<String> lines = ((Station) input).getLinesNumbers();
                             if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
-                            else return Color.decode(lineColors.get(lines.get(0)));
+                            else return Color.decode(LineColor.getColor(lines.get(0)));
                         } else return Color.WHITE;
                     }
                 };
@@ -87,7 +82,7 @@ public class GraphDecorator {
                             lines2 = ((Station) input.getEndingStation()).getLinesNumbers();
                             lines1.retainAll(lines2);
                             if (lines1.size() != 0)
-                                return Color.decode(lineColors.get(lines1.get(0)));
+                                return Color.decode(LineColor.getColor(lines1.get(0)));
                             else return Color.BLACK;
                         } else if (shortestPathEdges.contains(input)) return Color.BLACK;
                         else return null;
@@ -177,36 +172,6 @@ public class GraphDecorator {
                     ;
                 };
         return labeller;
-    }
-
-    /**
-     * Creates a map that stores the colors of the lines in the graph.
-     *
-     * @return a HashMap object that stores the colors of the lines in the graph.
-     */
-    private HashMap<String, String> createLineColorsMap() {
-        lineColors = new HashMap<String, String>();
-        lineColors.put("1", "#FFCE00");
-        lineColors.put("2", "#0064B0");
-        lineColors.put("3", "#9F9825");
-        lineColors.put("3B", "#98D4E2");
-        lineColors.put("4", "#C04191");
-        lineColors.put("5", "#F28E42");
-        lineColors.put("6", "#83C491");
-        lineColors.put("7", "#F3A4BA");
-        lineColors.put("7B", "#83C491");
-        lineColors.put("8", "#CEADD2");
-        lineColors.put("9", "#D5C900");
-        lineColors.put("10", "#E3B32A");
-        lineColors.put("11", "#8D5E2A");
-        lineColors.put("12", "#00814F");
-        lineColors.put("13", "#98D4E2");
-        lineColors.put("14", "#662483");
-        lineColors.put("15", "#B90845");
-        lineColors.put("16", "#F3A4BA");
-        lineColors.put("17", "#D5C900");
-        lineColors.put("18", "#00A88F");
-        return lineColors;
     }
 
     /**

@@ -4,11 +4,16 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
@@ -27,6 +32,7 @@ public class View {
     JPanel leftPanel;
 
     SchedulesPanel schedulesPanel;
+    JPanel generalPanel;
 
     private HashMap<String, Line> lines;
 
@@ -87,6 +93,7 @@ public class View {
     public void setShortestPath(List<EdgeTransport> shortestPath) {
         graphPanel.getDecorator().setShortestPath(shortestPath);
         graphPanel.repaint();
+        setPathDetails(shortestPath);
     }
 
     /**
@@ -122,7 +129,102 @@ public class View {
     }
 
     /**
-     * Updates view with new data
+     * Creates panel with details of path
+     *
+     * @param shortestPath shortes path to output
+     */
+    public void setPathDetails(List<EdgeTransport> shortestPath) {
+        if (generalPanel != null) leftPanel.remove(generalPanel);
+
+        JPanel generalPanel = new JPanel();
+        generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
+        generalPanel.setLayout(new GridLayout(0, 1, 5, 5));
+
+        ArrayList<String[]> segments = getSegments(shortestPath);
+        for (int i = 0; i < segments.size(); i += 2) {
+            JPanel pathPanel =
+                    createPathPanel(segments.get(i)[0], segments.get(i)[1], segments.get(i + 1)[1]);
+
+            generalPanel.add(pathPanel);
+        }
+
+        leftPanel.add(generalPanel);
+
+        leftPanel.revalidate();
+    }
+
+    /**
+     * Creates a panel with details of path between 2 stations
+     *
+     * @param line line number of given path
+     * @param stationName1 first station of path
+     * @param stationName2 last station of path
+     */
+    private JPanel createPathPanel(String lineName, String stationName1, String stationName2) {
+        JPanel sectionPanel = new JPanel();
+        sectionPanel.setLayout(new BoxLayout(sectionPanel, BoxLayout.X_AXIS));
+
+        JPanel way = new JPanel();
+        way.setLayout(new BoxLayout(way, BoxLayout.Y_AXIS));
+        way.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.BLACK));
+
+        JPanel start = new JPanel();
+        start.setLayout(new BorderLayout());
+        start.setPreferredSize(new Dimension(240, 20));
+        JLabel start1L = new JLabel(stationName1);
+        start.add(start1L, BorderLayout.NORTH);
+
+        JPanel finish = new JPanel();
+        finish.setLayout(new BorderLayout());
+        finish.setPreferredSize(new Dimension(240, 20));
+        JLabel finishL = new JLabel(stationName2);
+        finish.add(finishL, BorderLayout.SOUTH);
+        way.add(start);
+        way.add(finish);
+
+        JPanel line = new JPanel();
+        JLabel lineL = new JLabel(lineName);
+        lineL.setForeground(Color.WHITE);
+        line.setPreferredSize(new Dimension(15, 40));
+        line.add(lineL);
+        Color color = Color.decode(LineColor.getColor(lineName));
+        line.setBackground(color);
+        line.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.BLACK));
+
+        sectionPanel.add(line);
+        sectionPanel.add(way);
+
+        return sectionPanel;
+    }
+
+    /**
+     * Divides EdgeTransport into an array of line - station values
+     *
+     * @param shortestPath list to divide
+     * @return array of line - station values
+     */
+    private ArrayList<String[]> getSegments(List<EdgeTransport> shortestPath) {
+        String currentLine = shortestPath.get(0).getLineName();
+        String lastStationOnSameLine = null;
+        ArrayList<String[]> segments = new ArrayList<>();
+        for (int i = 0; i < shortestPath.size(); i++) {
+            EdgeTransport edge = shortestPath.get(i);
+            if (i == 0)
+                segments.add(
+                        new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+            if (!edge.getLineName().equals(currentLine)) {
+                segments.add(new String[] {currentLine, lastStationOnSameLine});
+                segments.add(
+                        new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+                currentLine = edge.getLineName();
+            }
+            lastStationOnSameLine = edge.getEndingStation().getName();
+        }
+        segments.add(new String[] {currentLine, lastStationOnSameLine});
+        return segments;
+    }
+
+    /* Updates view with new data
      *
      * @param graphView GraphData to set in view
      */

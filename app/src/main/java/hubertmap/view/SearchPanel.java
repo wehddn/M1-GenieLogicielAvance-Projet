@@ -43,9 +43,9 @@ public class SearchPanel extends JPanel {
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
         textAreaStationStart = new TextAreaDemo(stationsNames);
-        textAreaStationStart.setText("Departure : station or coordinates");
+        textAreaStationStart.setText("departure : station or coordinates");
         textAreaStationEnd = new TextAreaDemo(stationsNames);
-        textAreaStationEnd.setText("Arrival : station or coordinates");
+        textAreaStationEnd.setText("arrival : station or coordinates");
 
         JPanel startPanel = new JPanel();
         startPanel.setLayout(new BoxLayout(startPanel, BoxLayout.X_AXIS));
@@ -166,6 +166,11 @@ public class SearchPanel extends JPanel {
      */
     public void setDeparture(String name) {
         textAreaStationStart.setText(name);
+        String end = stripAccents(textAreaStationEnd.getValue().toLowerCase());
+
+        if (end.equals(stripAccents(name.toLowerCase()))) {
+            setArrival("arrival : station or coordinates");
+        }
     }
 
     /**
@@ -175,5 +180,29 @@ public class SearchPanel extends JPanel {
      */
     public void setArrival(String name) {
         textAreaStationEnd.setText(name);
+
+        String start = stripAccents(textAreaStationStart.getValue().toLowerCase());
+
+        if (start.equals(stripAccents(name.toLowerCase()))) {
+            setDeparture("departure : station or coordinates");
+        }
+    }
+
+    /**
+     * Sets the test depending on the current values
+     *
+     * @param stationName name of station to set
+     */
+    public void setText(String stationName) {
+        String start = textAreaStationStart.getValue();
+        String end = textAreaStationEnd.getValue();
+
+        if ((start.equals("departure : station or coordinates")) || (start.equals(""))) {
+            setDeparture(stationName);
+        } else {
+            if ((end.equals("arrival : station or coordinates")) || (end.equals(""))) {
+                setArrival(stationName);
+            }
+        }
     }
 }

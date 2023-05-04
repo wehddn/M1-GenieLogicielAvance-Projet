@@ -121,6 +121,9 @@ public class View {
      */
     public void setSchedules(Station v) {
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
+        if (generalPanel != null) leftPanel.remove(generalPanel);
+
+        searchPanel.setText(v.getName());
 
         schedulesPanel = new SchedulesPanel(v, lines);
         leftPanel.add(schedulesPanel);
@@ -135,8 +138,9 @@ public class View {
      */
     public void setPathDetails(List<EdgeTransport> shortestPath) {
         if (generalPanel != null) leftPanel.remove(generalPanel);
+        if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
 
-        JPanel generalPanel = new JPanel();
+        generalPanel = new JPanel();
         generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
         generalPanel.setLayout(new GridLayout(0, 1, 5, 5));
 
@@ -164,35 +168,37 @@ public class View {
         JPanel sectionPanel = new JPanel();
         sectionPanel.setLayout(new BoxLayout(sectionPanel, BoxLayout.X_AXIS));
 
-        JPanel way = new JPanel();
-        way.setLayout(new BoxLayout(way, BoxLayout.Y_AXIS));
-        way.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.BLACK));
+        JPanel startEndPanel = new JPanel();
+        startEndPanel.setLayout(new BoxLayout(startEndPanel, BoxLayout.Y_AXIS));
+        startEndPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.BLACK));
 
-        JPanel start = new JPanel();
-        start.setLayout(new BorderLayout());
-        start.setPreferredSize(new Dimension(240, 20));
-        JLabel start1L = new JLabel(stationName1);
-        start.add(start1L, BorderLayout.NORTH);
+        JPanel startPanel = new JPanel();
+        startPanel.setLayout(new BorderLayout());
+        startPanel.setPreferredSize(new Dimension(240, 20));
+        JLabel startLabel = new JLabel(stationName1);
+        startPanel.add(startLabel, BorderLayout.NORTH);
 
-        JPanel finish = new JPanel();
-        finish.setLayout(new BorderLayout());
-        finish.setPreferredSize(new Dimension(240, 20));
-        JLabel finishL = new JLabel(stationName2);
-        finish.add(finishL, BorderLayout.SOUTH);
-        way.add(start);
-        way.add(finish);
+        JPanel finishPanel = new JPanel();
+        finishPanel.setLayout(new BorderLayout());
+        finishPanel.setPreferredSize(new Dimension(240, 20));
+        JLabel finishLabel = new JLabel(stationName2);
+        finishPanel.add(finishLabel, BorderLayout.SOUTH);
 
-        JPanel line = new JPanel();
-        JLabel lineL = new JLabel(lineName);
-        lineL.setForeground(Color.WHITE);
-        line.setPreferredSize(new Dimension(15, 40));
-        line.add(lineL);
+        JPanel linePanel = new JPanel();
         Color color = Color.decode(LineColor.getColor(lineName));
-        line.setBackground(color);
-        line.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.BLACK));
+        linePanel.setBackground(color);
+        linePanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 0, Color.BLACK));
 
-        sectionPanel.add(line);
-        sectionPanel.add(way);
+        JLabel lineLabel = new JLabel(lineName);
+        lineLabel.setForeground(Color.WHITE);
+        linePanel.setPreferredSize(new Dimension(15, 40));
+
+        linePanel.add(lineLabel);
+
+        startEndPanel.add(startPanel);
+        startEndPanel.add(finishPanel);
+        sectionPanel.add(linePanel);
+        sectionPanel.add(startEndPanel);
 
         return sectionPanel;
     }
@@ -224,7 +230,8 @@ public class View {
         return segments;
     }
 
-    /* Updates view with new data
+    /**
+     * Updates view with new data
      *
      * @param graphView GraphData to set in view
      */

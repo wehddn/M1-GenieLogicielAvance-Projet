@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /** The Parser class parses the input CSV files */
-public class Parser extends ParserFactory {
+public class Parser {
 
     Network network;
     /** The list of all stations in the database. */

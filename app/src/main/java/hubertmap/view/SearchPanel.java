@@ -58,12 +58,12 @@ public class SearchPanel extends JPanel {
         JButton searchTime = new JButton("Search by time");
         searchTime.addActionListener(search("time"));
 
-        JButton searchChanges = new JButton("Search by changes");
+        JButton searchChanges = new JButton("Search");
         searchChanges.addActionListener(search("changes"));
 
         this.add(startPanel);
         this.add(endPanel);
-        this.add(searchTime);
+        // this.add(searchTime);
         this.add(searchChanges);
     }
 

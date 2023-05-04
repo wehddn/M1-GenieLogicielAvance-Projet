@@ -124,4 +124,10 @@ public class EdgeTransport {
         endingStation = startingStation;
         startingStation = tmp;
     }
+
+    public VertexTransport getOtherStation(VertexTransport current) {
+        if (current == startingStation) return endingStation;
+        else if (current == endingStation) return startingStation;
+        else return null;
+    }
 }

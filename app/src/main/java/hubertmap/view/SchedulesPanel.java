@@ -7,11 +7,10 @@ import hubertmap.model.transport.Station;
 import java.awt.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.SortedSet;
 import javax.swing.*;
 
 /**
@@ -75,7 +74,7 @@ public class SchedulesPanel extends JPanel {
         PlanPanel.setLayout(new GridLayout(0, 2, 2, 2));
 
         ArrayList<String[]> data = new ArrayList<>();
-        for (Entry<String, ArrayList<Time>> entry : v.getSchedules().entrySet()) {
+        for (Entry<String, SortedSet<Time>> entry : v.getSchedules().entrySet()) {
             if (entry.getValue() != null)
                 for (Time time : entry.getValue()) {
                     Line line = lines.get(entry.getKey());
@@ -95,13 +94,6 @@ public class SchedulesPanel extends JPanel {
                 i++;
             }
         }
-        Collections.sort(
-                data,
-                new Comparator<String[]>() {
-                    public int compare(String[] arr1, String[] arr2) {
-                        return arr1[1].compareTo(arr2[1]);
-                    }
-                });
 
         int startIndex = 0;
         int endIndex = getRowTime(data) - 5;

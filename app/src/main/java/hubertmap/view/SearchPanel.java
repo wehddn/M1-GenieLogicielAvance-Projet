@@ -188,6 +188,11 @@ public class SearchPanel extends JPanel {
         }
     }
 
+    /**
+     * Sets the test depending on the current values
+     *
+     * @param stationName name of station to set
+     */
     public void setText(String stationName) {
         String start = textAreaStationStart.getValue();
         String end = textAreaStationEnd.getValue();

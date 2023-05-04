@@ -12,18 +12,18 @@ public class Dijkstra {
             VertexTransport source,
             VertexTransport destination) {
 
-        Map<VertexTransport, Integer> distances = new HashMap<>();
+        Map<VertexTransport, Integer> weights = new HashMap<>();
         Map<VertexTransport, EdgeTransport> previousEdges = new HashMap<>();
 
         PriorityQueue<VertexTransport> pq =
                 new PriorityQueue<>(
                         (n1, n2) ->
-                                distances.getOrDefault(n1, Integer.MAX_VALUE)
-                                        - distances.getOrDefault(n2, Integer.MAX_VALUE));
+                                weights.getOrDefault(n1, Integer.MAX_VALUE)
+                                        - weights.getOrDefault(n2, Integer.MAX_VALUE));
 
         Set<VertexTransport> visited = new HashSet<>();
 
-        distances.put(source, 0);
+        weights.put(source, 0);
         pq.add(source);
 
         while (!pq.isEmpty()) {
@@ -32,16 +32,21 @@ public class Dijkstra {
 
             for (EdgeTransport edge : graph.getIncidentEdges(current)) {
                 VertexTransport neighbor = edge.getOtherStation(current);
-                int distance =
-                        distances.getOrDefault(current, Integer.MAX_VALUE)
+                int weight =
+                        weights.getOrDefault(current, Integer.MAX_VALUE)
                                 + edge.getDurationJourney().toSeconds();
+
+                if (previousEdges.get(current) != null)
+                    if (!edge.getLineName().equals(previousEdges.get(current).getLineName())) {
+                        weight += 300; // add 5 minutes to distance if weight don't match
+                    }
 
                 if (!visited.contains(neighbor)) {
                     pq.add(neighbor);
                 }
 
-                if (distance < distances.getOrDefault(neighbor, Integer.MAX_VALUE)) {
-                    distances.put(neighbor, distance);
+                if (weight < weights.getOrDefault(neighbor, Integer.MAX_VALUE)) {
+                    weights.put(neighbor, weight);
                     previousEdges.put(neighbor, edge);
                 }
             }

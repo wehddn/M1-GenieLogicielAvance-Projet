@@ -16,8 +16,6 @@ public class Parser extends ParserFactory {
     Network network;
     /** The list of all stations in the database. */
     public List<Station> stations = new ArrayList<>();
-    /** The list of all edges in the database. */
-    public List<EdgeTransport> edges = new ArrayList<>();
     /** The list of all lines in the database with their starting times. */
     public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
@@ -53,7 +51,7 @@ public class Parser extends ParserFactory {
      * @param path the path of the file to open.
      * @return a File object of the file at the given path.
      */
-    public File openFile(String path) {
+    private File openFile(String path) {
         try {
             File file = new File(path);
             return file;
@@ -61,23 +59,6 @@ public class Parser extends ParserFactory {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
             return null;
         }
-    }
-
-    /**
-     * Checks if a station with the given name and line already exists in the database. If it does,
-     * it returns the station object. If it doesn't, it returns null.
-     *
-     * @param name the name of the station to check.
-     * @param line the line of the station to check.
-     * @return the station object if it already exists, or null if it doesn't.
-     */
-    public Station stationAlreadyExist(String name, String line) {
-        for (int i = 0; i < stations.size(); i++) {
-            if (stations.get(i).getName().equals(name)) {
-                return stations.get(i);
-            }
-        }
-        return null;
     }
 
     /**
@@ -108,16 +89,39 @@ public class Parser extends ParserFactory {
      * @param lon the longitude of the station.
      * @return the Station object created or updated.
      */
-    public Station createStation(String stationName, String lineName, float lat, float lon) {
-        Station existStation = stationAlreadyExist(stationName, lineName);
-        if (existStation == null) {
-            Station newStation = new Station(stationName, lineName, lat, lon);
-            stations.add(newStation);
-            return newStation;
-        } else {
-            existStation.addLine(lineName);
-            return existStation;
+    private Station createStation(String stationName, String lineName, float lat, float lon) {
+        Object[] sameStations =
+                stations.stream()
+                        .filter(station -> station.getName().equals(stationName))
+                        .toArray();
+        Station ret = null;
+        if (sameStations.length > 0) {
+            ret = (Station) (sameStations[0]);
+            lat = ret.getX();
+            lon = ret.getY();
+            ret.addLine(lineName);
         }
+        for (Object st : sameStations) {
+            if (((Station) st).getLineName().equals(lineName.split(" ")[0])) {
+                return (Station) st;
+            }
+        }
+        Station newStation = new Station(stationName, lineName, lat, lon);
+        for (Object st : sameStations) {
+            EdgeTransport e =
+                    new EdgeTransport(
+                            newStation,
+                            (Station) st,
+                            new DurationJourney(5 * 60),
+                            5,
+                            "line change");
+            network.addEdge(e, newStation, (Station) st);
+        }
+        stations.add(newStation);
+        if (ret == null) {
+            ret = newStation;
+        }
+        return ret;
     }
 
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
@@ -189,7 +193,6 @@ public class Parser extends ParserFactory {
                 EdgeTransport edge =
                         new EdgeTransport(station1, station2, time, distance, lineName);
                 network.addEdge(edge, station1, station2);
-                edges.add(edge);
                 lastStation = station2;
             }
         }

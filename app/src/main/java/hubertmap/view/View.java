@@ -1,5 +1,8 @@
 package hubertmap.view;
 
+import edu.uci.ics.jung.graph.util.Pair;
+import hubertmap.controller.Controller;
+import hubertmap.model.Time;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
@@ -39,6 +42,8 @@ public class View {
     private JFrame frame;
 
     SearchPanel searchPanel;
+
+    private Time currentTime;
 
     /**
      * Constructs a new View instance and initializes its components. Creates a JFrame window and
@@ -145,9 +150,16 @@ public class View {
         generalPanel.setLayout(new GridLayout(0, 1, 5, 5));
 
         ArrayList<String[]> segments = getSegments(shortestPath);
+
+        currentTime = new Time(10, 10, 10); // TODO
+
         for (int i = 0; i < segments.size(); i += 2) {
             JPanel pathPanel =
-                    createPathPanel(segments.get(i)[0], segments.get(i)[1], segments.get(i + 1)[1]);
+                    createPathPanel(
+                            shortestPath,
+                            segments.get(i)[0],
+                            segments.get(i)[1],
+                            segments.get(i + 1)[1]);
 
             generalPanel.add(pathPanel);
         }
@@ -160,11 +172,24 @@ public class View {
     /**
      * Creates a panel with details of path between 2 stations
      *
+     * @param shortestPath
      * @param line line number of given path
      * @param stationName1 first station of path
      * @param stationName2 last station of path
      */
-    private JPanel createPathPanel(String lineName, String stationName1, String stationName2) {
+    private JPanel createPathPanel(
+            List<EdgeTransport> shortestPath,
+            String lineName,
+            String stationName1,
+            String stationName2) {
+
+        Pair<Time> time = null;
+        if (currentTime != null) {
+            time = Controller.getTimes(shortestPath, stationName1, stationName2, currentTime);
+            System.out.println(time);
+            currentTime = time.getSecond();
+        }
+
         JPanel sectionPanel = new JPanel();
         sectionPanel.setLayout(new BoxLayout(sectionPanel, BoxLayout.X_AXIS));
 
@@ -175,13 +200,21 @@ public class View {
         JPanel startPanel = new JPanel();
         startPanel.setLayout(new BorderLayout());
         startPanel.setPreferredSize(new Dimension(240, 20));
-        JLabel startLabel = new JLabel(stationName1);
+        String startLabelText = "";
+        if (time != null) {
+            startLabelText = time.getFirst().toString() + " - ";
+        }
+        JLabel startLabel = new JLabel(startLabelText + stationName1);
         startPanel.add(startLabel, BorderLayout.NORTH);
 
         JPanel finishPanel = new JPanel();
         finishPanel.setLayout(new BorderLayout());
         finishPanel.setPreferredSize(new Dimension(240, 20));
-        JLabel finishLabel = new JLabel(stationName2);
+        String finishLabelText = "";
+        if (time != null) {
+            finishLabelText = time.getSecond().toString() + " - ";
+        }
+        JLabel finishLabel = new JLabel(finishLabelText + stationName2);
         finishPanel.add(finishLabel, BorderLayout.SOUTH);
 
         JPanel linePanel = new JPanel();

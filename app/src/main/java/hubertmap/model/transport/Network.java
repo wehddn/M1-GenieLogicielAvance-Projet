@@ -3,7 +3,10 @@ package hubertmap.model.transport;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.Pair;
 import hubertmap.model.DurationJourney;
+import hubertmap.model.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -320,7 +323,7 @@ public class Network {
 
                 if (previousEdges.get(current) != null)
                     if (!edge.getLineName().equals(previousEdges.get(current).getLineName())) {
-                        weight += 300; // add 5 minutes to distance if weight don't match
+                        weight += 120; // add 2 minutes to distance if weight don't match
                     }
 
                 if (!visited.contains(neighbor)) {
@@ -343,6 +346,127 @@ public class Network {
         }
         Collections.reverse(path);
 
+        VertexTransport currentSort = source;
+        for (EdgeTransport edge : path) {
+            if (edge.getStartingStation() != currentSort) edge.swapStations();
+            currentSort = edge.getEndingStation();
+        }
+
         return path;
+    }
+
+    public Pair<Time> getTimes(
+            List<EdgeTransport> shortestPath,
+            String stationName1,
+            String stationName2,
+            Time currentTime) {
+
+        // Check if both vertices are stations
+        if (stations.get(stationName1.toLowerCase()) instanceof Station
+                && stations.get(stationName2.toLowerCase()) instanceof Station) {
+            Station station1 = (Station) stations.get(stationName1.toLowerCase());
+            Station station2 = (Station) stations.get(stationName2.toLowerCase());
+
+            // Get common variants for both stations
+            Set<String> commonLines = new HashSet<>(station1.getSchedules().keySet());
+            commonLines.retainAll(station2.getSchedules().keySet());
+
+            // If there are common options, find the time of departure
+            if (commonLines.size() > 0) {
+                Time departTime = new Time(0, 0, 0);
+                for (String lineName : commonLines) {
+                    // Check if the departure station is after the arrival station (stations stored
+                    // in lines should be sorted)
+                    if (endAfterStart(lineName, station1, station2)) {
+                        // Find the nearest departure time and the variant to which it belongs
+                        Time time = nextDepart(lineName, station1, currentTime);
+                        if (time != null && time.compareTo(departTime) >= 0) {
+                            departTime = time;
+                        }
+                    }
+                }
+
+                // To find the arrival time, add to the departure time the travel time and 2 minutes
+                // for the transfer
+                Time arrivalTime = null;
+                if (!departTime.equals(new Time(0, 0, 0))) {
+                    arrivalTime = calculatePathTime(departTime, shortestPath, station1, station2);
+                    if (arrivalTime != null) {
+                        arrivalTime.increaseByMinute(2);
+                        return new Pair<Time>(departTime, arrivalTime);
+                    }
+                }
+            }
+        }
+        // One of the vertices is a point, return the walking time
+        else {
+            Time departTime = currentTime;
+            VertexTransport v1 = stations.get(stationName1.toLowerCase());
+            VertexTransport v2 = stations.get(stationName2.toLowerCase());
+            if (v1 != null && v2 != null) {
+                Time arrivalTime = calculatePathTime(departTime, shortestPath, v1, v2);
+                return new Pair<Time>(departTime, arrivalTime);
+            } else return null;
+        }
+
+        return null;
+    }
+
+    private Time calculatePathTime(
+            Time departTime,
+            List<EdgeTransport> shortestPath,
+            VertexTransport vertexTransport,
+            VertexTransport vertexTransport2) {
+        Time time = new Time(departTime);
+        VertexTransport currentStation = vertexTransport;
+        for (EdgeTransport edgeTransport : shortestPath) {
+            if (edgeTransport.getStartingStation().equals(currentStation)) {
+                currentStation = edgeTransport.getEndingStation();
+                System.out.println(edgeTransport);
+                System.out.println(edgeTransport.getDurationJourney());
+                time = time.increaseWithADurationJourney(edgeTransport.getDurationJourney());
+            }
+
+            if (edgeTransport.getEndingStation().equals(currentStation)) {
+                return time;
+            }
+        }
+        return null;
+    }
+
+    private Time nextDepart(String lineName, Station station1, Time currentTime) {
+        Set<Time> stationTimes = station1.getSchedules().get(lineName);
+        if (stationTimes != null) {
+            for (Time time : stationTimes) {
+                String timeString = time.toString();
+                LocalTime stationTime = LocalTime.parse(timeString);
+                LocalTime timeToCheck = LocalTime.parse(currentTime.toString());
+                if (stationTime.isAfter(timeToCheck)) {
+                    return time;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean endAfterStart(String lineName, Station station1, Station station2) {
+        Line currentLine = getLineByName(getLines(), lineName);
+        if (currentLine != null) {
+            ArrayList<Station> lineStations = currentLine.getAllStations();
+            int index1 = lineStations.indexOf(station1);
+            int index2 = lineStations.indexOf(station2);
+            if (index1 < index2) return true;
+            else return false;
+        }
+        return false;
+    }
+
+    public Line getLineByName(Set<Line> lines, String name) {
+        for (Line line : lines) {
+            if (line.getName().equals(name)) {
+                return line;
+            }
+        }
+        return null;
     }
 }

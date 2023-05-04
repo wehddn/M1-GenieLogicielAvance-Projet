@@ -3,20 +3,22 @@ package hubertmap.model.transport;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
-import hubertmap.model.Dijkstra;
 import hubertmap.model.DurationJourney;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
  * This class represents a network of vertex and edges between them, forming a transport network.
  */
 public class Network {
-    Graph<VertexTransport, EdgeTransport> graph;
+    static Graph<VertexTransport, EdgeTransport> graph;
     HashMap<String, VertexTransport> stations;
     List<EdgeTransport> shortestPath;
     List<Point> userPoints;
@@ -96,8 +98,7 @@ public class Network {
      * @return a list edges to visit in the correct order
      */
     public List<EdgeTransport> shortestPath(VertexTransport station1, VertexTransport station2) {
-        // List<EdgeTransport> list = distancePaths.getPath(station1, station2);
-        List<EdgeTransport> list = Dijkstra.shortestPath(graph, station1, station2);
+        List<EdgeTransport> list = distancePaths.getPath(station1, station2);
         VertexTransport s = station1;
         for (EdgeTransport e : list) {
             if (!e.getStartingStation().equals(s)) {
@@ -116,9 +117,13 @@ public class Network {
      * @param station2 name of the destination station
      * @return a list edges to visit in the correct order
      */
-    public List<EdgeTransport> shortestPath(String station1, String station2) {
+    public List<EdgeTransport> shortestPath(String type, String station1, String station2) {
         if (stations.get(station1) != null && stations.get(station2) != null)
-            return shortestPath(stations.get(station1), stations.get(station2));
+            if (type.equals("time"))
+                return shortestPath(stations.get(station1), stations.get(station2));
+            else if (type.equals("changes"))
+                return shortestPathChanges(stations.get(station1), stations.get(station2));
+            else return null;
         else return null;
     }
 
@@ -280,5 +285,60 @@ public class Network {
             graph.removeVertex(point);
             stations.values().remove(point);
         }
+    }
+
+    public static List<EdgeTransport> shortestPathChanges(
+            VertexTransport source, VertexTransport destination) {
+
+        Map<VertexTransport, Integer> weights = new HashMap<>();
+        Map<VertexTransport, EdgeTransport> previousEdges = new HashMap<>();
+
+        PriorityQueue<VertexTransport> pq =
+                new PriorityQueue<>(
+                        (n1, n2) ->
+                                weights.getOrDefault(n1, Integer.MAX_VALUE)
+                                        - weights.getOrDefault(n2, Integer.MAX_VALUE));
+
+        Set<VertexTransport> visited = new HashSet<>();
+
+        weights.put(source, 0);
+        pq.add(source);
+
+        while (!pq.isEmpty()) {
+            VertexTransport current = pq.poll();
+            visited.add(current);
+
+            for (EdgeTransport edge : graph.getIncidentEdges(current)) {
+                VertexTransport neighbor = edge.getOtherStation(current);
+                int weight =
+                        weights.getOrDefault(current, Integer.MAX_VALUE)
+                                + edge.getDurationJourney().toSeconds();
+
+                if (previousEdges.get(current) != null)
+                    if (!edge.getLineName().equals(previousEdges.get(current).getLineName())) {
+                        weight += 300; // add 5 minutes to distance if weight don't match
+                    }
+
+                if (!visited.contains(neighbor)) {
+                    pq.add(neighbor);
+                }
+
+                if (weight < weights.getOrDefault(neighbor, Integer.MAX_VALUE)) {
+                    weights.put(neighbor, weight);
+                    previousEdges.put(neighbor, edge);
+                }
+            }
+        }
+
+        List<EdgeTransport> path = new ArrayList<>();
+        VertexTransport current = destination;
+        while (current != null && previousEdges.containsKey(current)) {
+            EdgeTransport previousEdge = previousEdges.get(current);
+            path.add(previousEdge);
+            current = previousEdge.getOtherStation(current);
+        }
+        Collections.reverse(path);
+
+        return path;
     }
 }

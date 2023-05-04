@@ -35,8 +35,8 @@ public class Controller {
      * @param station1Name the name of the starting station
      * @param station2Name the name of the destination station
      */
-    public static void setShortestPath(String station1Name, String station2Name) {
-        var shortestPath = network.shortestPath(station1Name, station2Name);
+    public static void setShortestPath(String type, String station1Name, String station2Name) {
+        var shortestPath = network.shortestPath(type, station1Name, station2Name);
         // var simplifiedPath = network.simplifiedPath(shortestPath);
         // TODO: use simplifiedPath for something
         /*

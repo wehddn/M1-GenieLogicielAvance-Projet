@@ -1,10 +1,14 @@
 package hubertmap.controller;
 
+import edu.uci.ics.jung.graph.util.Pair;
+import hubertmap.model.Time;
 import hubertmap.model.parser.Parser;
+import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
 import hubertmap.view.GraphData;
 import hubertmap.view.View;
+import java.util.List;
 
 /**
  * The Controller class is responsible for managing the interaction between the Model and the View
@@ -37,6 +41,7 @@ public class Controller {
      */
     public static void setShortestPath(String type, String station1Name, String station2Name) {
         var shortestPath = network.shortestPath(type, station1Name, station2Name);
+
         // var simplifiedPath = network.simplifiedPath(shortestPath);
         // TODO: use simplifiedPath for something
         /*
@@ -95,5 +100,10 @@ public class Controller {
     /** Deletes all user points from the graph. */
     public static void deleteUserPoints() {
         network.deleteUserPoints();
+    }
+
+    public static Pair<Time> getTimes(
+            List<EdgeTransport> shortestPath, String station1, String station2, Time currentTime) {
+        return network.getTimes(shortestPath, station1, station2, currentTime);
     }
 }

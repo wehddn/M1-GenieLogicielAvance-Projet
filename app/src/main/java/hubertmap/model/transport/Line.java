@@ -118,4 +118,8 @@ public class Line {
                 "%s, Starting Station : %s, Terminus : %s, Time : %s",
                 name, terminalStationDeparture, terminalStationArrival, starts);
     }
+
+    public ArrayList<Station> getAllStations() {
+        return allStations;
+    }
 }

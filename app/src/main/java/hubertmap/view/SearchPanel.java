@@ -55,12 +55,16 @@ public class SearchPanel extends JPanel {
         endPanel.setLayout(new BoxLayout(endPanel, BoxLayout.X_AXIS));
         endPanel.add(textAreaStationEnd);
 
-        JButton search = new JButton("Search");
-        search.addActionListener(search());
+        JButton searchTime = new JButton("Search by time");
+        searchTime.addActionListener(search("time"));
+
+        JButton searchChanges = new JButton("Search by changes");
+        searchChanges.addActionListener(search("changes"));
 
         this.add(startPanel);
         this.add(endPanel);
-        this.add(search);
+        this.add(searchTime);
+        this.add(searchChanges);
     }
 
     /**
@@ -98,44 +102,35 @@ public class SearchPanel extends JPanel {
      *
      * @return ActionListener that executes a search for the shortest path
      */
-    private ActionListener search() {
-        ActionListener al =
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+    private ActionListener search(String type) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Controller.deleteUserPoints();
 
-                        Controller.deleteUserPoints();
+                String stringStart = textAreaStationStart.getValue();
+                String stringEnd = textAreaStationEnd.getValue();
 
-                        String stringStart = textAreaStationStart.getValue();
-                        String stringEnd = textAreaStationEnd.getValue();
+                String station1Name = getCoordsFromString(stringStart);
+                String station2Name = getCoordsFromString(stringEnd);
 
-                        String station1Name;
-                        String station2Name;
+                Controller.setShortestPath(station1Name, station2Name);
+            }
 
-                        Point2D.Float coords1 = parseCoordinates(stringStart);
-                        if (coords1 != null)
-                            station1Name = Controller.createPoint(coords1.getX(), coords1.getY());
-                        else {
-                            String s1 = actualStationsNames.get(stringStart);
-                            if (s1 != null) {
-                                station1Name = s1;
-                            } else station1Name = stringStart;
-                        }
-
-                        Point2D.Float coords2 = parseCoordinates(stringEnd);
-                        if (coords2 != null)
-                            station2Name = Controller.createPoint(coords2.getX(), coords2.getY());
-                        else {
-                            String s2 = actualStationsNames.get(stringEnd);
-                            if (s2 != null) {
-                                station2Name = s2;
-                            } else station2Name = stringEnd;
-                        }
-
-                        Controller.setShortestPath(station1Name, station2Name);
-                    }
-                };
-        return al;
+            private String getCoordsFromString(String stringStart) {
+                String station1Name;
+                Point2D.Float coords1 = parseCoordinates(stringStart);
+                if (coords1 != null)
+                    station1Name = Controller.createPoint(coords1.getX(), coords1.getY());
+                else {
+                    String s1 = actualStationsNames.get(stringStart);
+                    if (s1 != null) {
+                        station1Name = s1;
+                    } else station1Name = stringStart;
+                }
+                return station1Name;
+            }
+        };
     }
 
     /**

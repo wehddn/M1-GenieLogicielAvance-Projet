@@ -123,16 +123,7 @@ public class View {
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
         if (generalPanel != null) leftPanel.remove(generalPanel);
 
-        String start = searchPanel.DepartureGetText();
-        String end = searchPanel.ArrivalGetText();
-
-        if ((start.equals("departure : station or coordinates")) || (start.equals(""))) {
-            searchPanel.setDeparture(v.toString());
-        } else {
-            if ((end.equals("arrival : station or coordinates")) || (end.equals(""))) {
-                searchPanel.setArrival(v.toString());
-            }
-        }
+        searchPanel.setText(v.getName());
 
         schedulesPanel = new SchedulesPanel(v, lines);
         leftPanel.add(schedulesPanel);

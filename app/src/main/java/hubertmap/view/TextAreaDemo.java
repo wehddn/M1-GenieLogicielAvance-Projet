@@ -86,8 +86,8 @@ public class TextAreaDemo extends JPanel implements DocumentListener {
         textArea.addFocusListener(
                 new FocusListener() {
                     public void focusGained(FocusEvent e) {
-                        if (textArea.getText().contains("Departure")
-                                || textArea.getText().contains("Arrival")) textArea.setText("");
+                        if (textArea.getText().contains("departure")
+                                || textArea.getText().contains("arrival")) textArea.setText("");
                     }
 
                     public void focusLost(FocusEvent e) {}

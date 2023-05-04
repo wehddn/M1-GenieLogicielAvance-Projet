@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * This class represents a station in a transportation system. A station has a name, coordinates (x
@@ -17,7 +19,7 @@ import java.util.Set;
  */
 public class Station extends VertexTransport {
     private ArrayList<String> allLines;
-    private Map<String, ArrayList<Time>> schedules = new HashMap<>();
+    private Map<String, SortedSet<Time>> schedules = new HashMap<>();
     private String simpleLineName; // line name without variant
     private boolean multiLine; // used for the view
 
@@ -67,7 +69,7 @@ public class Station extends VertexTransport {
      *
      * @return the list of all transportation lines that serve the station
      */
-    public Map<String, ArrayList<Time>> getSchedules() {
+    public Map<String, SortedSet<Time>> getSchedules() {
         return schedules;
     }
 
@@ -79,9 +81,9 @@ public class Station extends VertexTransport {
      */
     public void addSchedule(Line line, Time time) {
         if (schedules.get(line.getName()) == null) {
-            schedules.put(line.getName(), new ArrayList<>());
+            schedules.put(line.getName(), new TreeSet<>());
         }
-        ArrayList<Time> times = schedules.get(line.getName());
+        SortedSet<Time> times = schedules.get(line.getName());
         times.add(time);
         schedules.put(line.getName(), times);
     }

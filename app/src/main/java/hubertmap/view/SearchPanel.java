@@ -166,6 +166,19 @@ public class SearchPanel extends JPanel {
      */
     public void setDeparture(String name) {
         textAreaStationStart.setText(name);
+        String end = stripAccents(ArrivalGetText().toLowerCase());
+
+        if (end.equals(stripAccents(name.toLowerCase()))) {
+            setArrival("arrival : station or coordinates");
+        }
+    }
+
+    public String DepartureGetText() {
+        return textAreaStationStart.getValue();
+    }
+
+    public String ArrivalGetText() {
+        return textAreaStationEnd.getValue();
     }
 
     /**
@@ -175,5 +188,11 @@ public class SearchPanel extends JPanel {
      */
     public void setArrival(String name) {
         textAreaStationEnd.setText(name);
+
+        String start = stripAccents(DepartureGetText().toLowerCase());
+
+        if (start.equals(stripAccents(name.toLowerCase()))) {
+            setDeparture("departure : station or coordinates");
+        }
     }
 }

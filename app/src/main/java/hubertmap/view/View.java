@@ -121,6 +121,7 @@ public class View {
      */
     public void setSchedules(Station v) {
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
+        if (generalPanel != null) leftPanel.remove(generalPanel);
 
         String start = searchPanel.DepartureGetText();
         String end = searchPanel.ArrivalGetText();
@@ -148,7 +149,7 @@ public class View {
         if (generalPanel != null) leftPanel.remove(generalPanel);
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
 
-        JPanel generalPanel = new JPanel();
+        generalPanel = new JPanel();
         generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
         generalPanel.setLayout(new GridLayout(0, 1, 5, 5));
 

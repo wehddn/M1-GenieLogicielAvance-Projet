@@ -4,7 +4,6 @@ import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.graph.util.Pair;
-import hubertmap.model.Dijkstra;
 import hubertmap.model.DurationJourney;
 import hubertmap.model.Time;
 import java.time.LocalTime;
@@ -102,8 +101,7 @@ public class Network {
      * @return a list edges to visit in the correct order
      */
     public List<EdgeTransport> shortestPath(VertexTransport station1, VertexTransport station2) {
-        // List<EdgeTransport> list = distancePaths.getPath(station1, station2);
-        List<EdgeTransport> list = Dijkstra.shortestPath(graph, station1, station2);
+        List<EdgeTransport> list = distancePaths.getPath(station1, station2);
         VertexTransport s = station1;
         for (EdgeTransport e : list) {
             if (!e.getStartingStation().equals(s)) {

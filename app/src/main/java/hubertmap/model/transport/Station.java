@@ -18,24 +18,8 @@ import java.util.Set;
 public class Station extends VertexTransport {
     private ArrayList<String> allLines;
     private Map<String, ArrayList<Time>> schedules = new HashMap<>();
+    private String lineName;
 
-    /**
-     * Constructs a new station with the given name, list of lines, and coordinates. If the list of
-     * lines is null, an empty list is created.
-     *
-     * @param name the name of the station
-     * @param allLines the list of all transportation lines that serve the station
-     * @param x the x-coordinate of the station's location
-     * @param y the y-coordinate of the station's location
-     */
-    public Station(String name, ArrayList<String> allLines, Float x, Float y) {
-        super(name, x, y);
-        if (allLines != null) {
-            this.allLines = allLines;
-        } else {
-            this.allLines = new ArrayList<String>();
-        }
-    }
     /**
      * Constructs a new station with the given name, line, and coordinates. The station is served by
      * only one transportation line.
@@ -50,6 +34,7 @@ public class Station extends VertexTransport {
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
         schedules.put(Line, null);
+        this.lineName = Line.split(" ")[0];
     }
 
     /**
@@ -59,6 +44,10 @@ public class Station extends VertexTransport {
      */
     public ArrayList<String> getAllLines() {
         return allLines;
+    }
+
+    public String getLineName() {
+        return lineName;
     }
 
     /**

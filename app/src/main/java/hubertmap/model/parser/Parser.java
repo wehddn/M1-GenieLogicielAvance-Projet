@@ -80,8 +80,8 @@ public class Parser extends ParserFactory {
     }
 
     /**
-     * Creates a new Station object if it does not already exist, or adds a new line to an existing
-     * Station.
+     * Creates a new Station object if it does not already exist for the first part of the line
+     * name, or adds a new line to an existing Station.
      *
      * @param stationName the name of the station.
      * @param lineName the name of the line.
@@ -90,38 +90,39 @@ public class Parser extends ParserFactory {
      * @return the Station object created or updated.
      */
     private Station createStation(String stationName, String lineName, float lat, float lon) {
+        String simplelineName = lineName.split(" ")[0];
         Object[] sameStations =
                 stations.stream()
                         .filter(station -> station.getName().equals(stationName))
                         .toArray();
-        Station ret = null;
+
         if (sameStations.length > 0) {
-            ret = (Station) (sameStations[0]);
-            lat = ret.getX();
-            lon = ret.getY();
-            ret.addLine(lineName);
+            Station s = (Station) (sameStations[0]);
+            lat = s.getX();
+            lon = s.getY();
         }
+
         for (Object st : sameStations) {
-            if (((Station) st).getLineName().equals(lineName.split(" ")[0])) {
+            if (((Station) st).getSimpleLineName().equals(simplelineName)) {
                 return (Station) st;
             }
         }
-        Station newStation = new Station(stationName, lineName, lat, lon);
-        for (Object st : sameStations) {
+
+        Station newStation = new Station(stationName, simplelineName, lat, lon);
+
+        for (Object obj : sameStations) {
+            Station st = (Station) obj;
+            st.setMultiLine(true);
+            newStation.setMultiLine(true);
+            st.addLine(simplelineName);
+            newStation.addLine(st.getSimpleLineName());
             EdgeTransport e =
-                    new EdgeTransport(
-                            newStation,
-                            (Station) st,
-                            new DurationJourney(5 * 60),
-                            5,
-                            "line change");
-            network.addEdge(e, newStation, (Station) st);
+                    new EdgeTransport(newStation, st, new DurationJourney(2 * 60), 5, "CHANGE");
+            network.addEdge(e, newStation, st);
         }
+
         stations.add(newStation);
-        if (ret == null) {
-            ret = newStation;
-        }
-        return ret;
+        return newStation;
     }
 
     // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
@@ -186,7 +187,7 @@ public class Parser extends ParserFactory {
                 durationJourneys.add(time);
             }
 
-            if (station1 != station2) {
+            if (!station1.equals(station2)) {
                 currentLine.addStationsIfNotAlreadyExist(station1);
                 currentLine.addStationsIfNotAlreadyExist(station2);
 

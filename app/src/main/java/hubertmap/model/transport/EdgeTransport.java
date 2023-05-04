@@ -115,7 +115,7 @@ public class EdgeTransport {
     public float estimateWeight() {
         // we could add extra time or distance
         // when moving by foot
-        return durationJourney.toSeconds();
+        return durationJourney.toSeconds() + 20.0f; // avg waiting at a station
     }
 
     /** swaps startingStation and endingStation */

@@ -19,6 +19,7 @@ public class Station extends VertexTransport {
     private ArrayList<String> allLines;
     private Map<String, ArrayList<Time>> schedules = new HashMap<>();
     private String lineName;
+    private boolean multiLine = false; // used for the view
 
     /**
      * Constructs a new station with the given name, line, and coordinates. The station is served by
@@ -34,7 +35,7 @@ public class Station extends VertexTransport {
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
         schedules.put(Line, null);
-        this.lineName = Line.split(" ")[0];
+        this.lineName = Line;
     }
 
     /**
@@ -46,8 +47,23 @@ public class Station extends VertexTransport {
         return allLines;
     }
 
+    /** returns line name with variant */
     public String getLineName() {
         return lineName;
+    }
+
+    /** returns line name without variant */
+    public String getSimpleLineName() {
+        return lineName.split(" ")[0];
+    }
+
+    /** returns true if there are more than one station with the same name */
+    public boolean isMultiLine() {
+        return multiLine;
+    }
+
+    public void setMultiLine(boolean multiLine) {
+        this.multiLine = multiLine;
     }
 
     /**

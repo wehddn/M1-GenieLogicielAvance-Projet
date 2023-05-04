@@ -6,7 +6,6 @@ package hubertmap.model;
  ** In this file we're not going to worry about tenths of a second
  ** because user doesn't need to have such precision
  */
-// TODO can be improved with better understanding of the time format
 /** The DurationJourney class represents a duration in minutes and secondes */
 public class DurationJourney {
 
@@ -36,6 +35,8 @@ public class DurationJourney {
                             String.valueOf(leftTimeOperator.charAt(0))
                                     .concat(String.valueOf(rightTimeOperator.charAt(0))));
         }
+        this.minute += this.seconde / 60;
+        this.seconde %= 60;
     }
 
     public DurationJourney(int seconds) {

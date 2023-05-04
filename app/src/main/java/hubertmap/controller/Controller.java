@@ -45,7 +45,7 @@ public class Controller {
          * System.out.println(e);
          * }
          */
-        view.setShortestPath(shortestPath);
+        if (shortestPath != null && shortestPath.size() != 0) view.setShortestPath(shortestPath);
     }
 
     /**

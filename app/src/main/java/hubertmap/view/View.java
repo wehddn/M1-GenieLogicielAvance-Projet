@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,7 +152,12 @@ public class View {
 
         ArrayList<String[]> segments = getSegments(shortestPath);
 
-        currentTime = new Time(10, 10, 10); // TODO
+        LocalTime currentLocalTime = LocalTime.now();
+        currentTime =
+                new Time(
+                        currentLocalTime.getHour(),
+                        currentLocalTime.getMinute(),
+                        currentLocalTime.getSecond()); // TODO
 
         for (int i = 0; i < segments.size(); i += 2) {
             JPanel pathPanel =

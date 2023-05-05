@@ -6,15 +6,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.text.Normalizer;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DateFormatter;
 
 /**
  * The SearchPanel class is responsible for the search interface that allows the user to search for
@@ -34,6 +42,9 @@ public class SearchPanel extends JPanel {
 
     /** A List object to hold names of station for search. */
     private List<String> stationsNames;
+
+    /** Start time of travel */
+    private LocalTime time;
 
     SearchPanel(GraphData graphView) {
 
@@ -55,13 +66,52 @@ public class SearchPanel extends JPanel {
         endPanel.setLayout(new BoxLayout(endPanel, BoxLayout.X_AXIS));
         endPanel.add(textAreaStationEnd);
 
+        JSpinner spinner = createSpinner();
+        spinner.addChangeListener(
+                new ChangeListener() {
+
+                    @Override
+                    public void stateChanged(ChangeEvent e) {
+                        Date date = (Date) spinner.getValue();
+                        time =
+                                LocalTime.ofInstant(
+                                        Instant.ofEpochMilli(date.getTime()),
+                                        ZoneId.systemDefault());
+                    }
+                });
+
         JButton searchChanges = new JButton("Search");
         searchChanges.addActionListener(search());
 
         this.add(startPanel);
         this.add(endPanel);
-        // this.add(searchTime);
-        this.add(searchChanges);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.add(searchChanges);
+        panel.add(spinner);
+        this.add(panel);
+    }
+
+    private JSpinner createSpinner() {
+        Calendar calendar = Calendar.getInstance();
+        LocalTime currentTime = LocalTime.now();
+        time = currentTime;
+        calendar.set(Calendar.HOUR_OF_DAY, currentTime.getHour());
+        calendar.set(Calendar.MINUTE, currentTime.getMinute());
+        calendar.set(Calendar.SECOND, 00);
+
+        SpinnerDateModel model = new SpinnerDateModel();
+        model.setValue(calendar.getTime());
+
+        JSpinner spinner = new JSpinner(model);
+
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm:ss");
+        DateFormatter formatter = (DateFormatter) editor.getTextField().getFormatter();
+        formatter.setAllowsInvalid(false);
+        formatter.setOverwriteMode(true);
+
+        spinner.setEditor(editor);
+        return spinner;
     }
 
     /**
@@ -111,7 +161,7 @@ public class SearchPanel extends JPanel {
                 String station1Name = getCoordsFromString(stringStart);
                 String station2Name = getCoordsFromString(stringEnd);
 
-                Controller.setShortestPath(station1Name, station2Name);
+                Controller.setShortestPath(time, station1Name, station2Name);
             }
 
             private String getCoordsFromString(String stringStart) {

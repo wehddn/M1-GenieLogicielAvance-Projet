@@ -95,12 +95,13 @@ public class View {
     /**
      * Sets the list of edges in the View that make up the shortest path
      *
+     * @param time start time of travel
      * @param shortestPath List of edges to set in View
      */
-    public void setShortestPath(List<EdgeTransport> shortestPath) {
+    public void setShortestPath(LocalTime time, List<EdgeTransport> shortestPath) {
         graphPanel.getDecorator().setShortestPath(shortestPath);
         graphPanel.repaint();
-        setPathDetails(shortestPath);
+        setPathDetails(time, shortestPath);
     }
 
     /**
@@ -141,9 +142,10 @@ public class View {
     /**
      * Creates panel with details of path
      *
+     * @param time start time of travel
      * @param shortestPath shortes path to output
      */
-    public void setPathDetails(List<EdgeTransport> shortestPath) {
+    public void setPathDetails(LocalTime time, List<EdgeTransport> shortestPath) {
         if (generalPanel != null) leftPanel.remove(generalPanel);
         if (schedulesPanel != null) leftPanel.remove(schedulesPanel);
 
@@ -153,12 +155,7 @@ public class View {
 
         List<CustomPair> segments = getSegments(shortestPath);
 
-        LocalTime currentLocalTime = LocalTime.now();
-        currentTime =
-                new Time(
-                        currentLocalTime.getHour(),
-                        currentLocalTime.getMinute(),
-                        currentLocalTime.getSecond()); // TODO
+        currentTime = new Time(time.getHour(), time.getMinute(), time.getSecond()); // TODO
 
         for (int i = 0; i < segments.size(); i += 2) {
             JPanel pathPanel =

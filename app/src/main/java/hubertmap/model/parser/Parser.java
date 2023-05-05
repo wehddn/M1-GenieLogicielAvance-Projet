@@ -15,11 +15,9 @@ public class Parser {
 
     Network network;
     /** The list of all stations in the database. */
-    public List<Station> stations = new ArrayList<>();
-    /** The list of all edges in the database. */
-    public List<EdgeTransport> edges = new ArrayList<>();
+    private List<Station> stations = new ArrayList<>();
     /** The list of all lines in the database with their starting times. */
-    public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
+    private Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
     /**
      * The constructor of the Parser class. It calls the parseStations() and parseLines() methods to
@@ -41,13 +39,26 @@ public class Parser {
             }
         }
     }
+
+    Network getNetwork() {
+        return network;
+    }
+
+    private void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    List<Station> getStations() {
+        return stations;
+    }
+
     /**
      * Returns the network edges.
      *
      * @return the network edges.
      */
     public Network getEdges() {
-        return network;
+        return getNetwork();
     }
 
     /**
@@ -75,8 +86,7 @@ public class Parser {
      * @return the line object if it already exists.
      * @throws Exception if the line doesn't already exist in the database.
      */
-    public Line lineAlreadyExist(String name) throws Exception {
-
+    private Line lineAlreadyExist(String name) throws Exception {
         for (Map.Entry<Line, ArrayList<DurationJourney>> entry : dataLine.entrySet()) {
             if (entry.getKey().getName().equals(name)) {
                 return entry.getKey();
@@ -98,7 +108,7 @@ public class Parser {
     private Station createStation(String stationName, String lineName, float lat, float lon) {
         String simplelineName = lineName.split(" ")[0];
         Object[] sameStations =
-                stations.stream()
+                getStations().stream()
                         .filter(station -> station.getName().equals(stationName))
                         .toArray();
 
@@ -124,10 +134,10 @@ public class Parser {
             newStation.setMultiLine(true);
             EdgeTransport e =
                     new EdgeTransport(newStation, st, new DurationJourney(2 * 60), 5, "CHANGE");
-            network.addEdge(e, newStation, st);
+            getNetwork().addEdge(e, newStation, st);
         }
 
-        stations.add(newStation);
+        getStations().add(newStation);
         return newStation;
     }
 
@@ -139,12 +149,12 @@ public class Parser {
      * @param file the CSV file containing the stations and connections information
      * @throws Exception if there is an error reading or parsing the file
      */
-    public void parseStations(File file) throws Exception {
+    void parseStations(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(isr);
         String line;
-        network = new Network();
+        setNetwork(new Network());
         ArrayList<DurationJourney> durationJourneys = new ArrayList<>();
         String lastLineName = null;
         Station lastStation = null;
@@ -197,13 +207,13 @@ public class Parser {
 
                 EdgeTransport edge =
                         new EdgeTransport(station1, station2, time, distance, lineName);
-                network.addEdge(edge, station1, station2);
+                getNetwork().addEdge(edge, station1, station2);
                 lastStation = station2;
             }
         }
         reader.close();
         currentLine.setTerminalStationArrival(lastStation);
-        network.setDataLine(dataLine);
+        getNetwork().setDataLine(dataLine);
     }
 
     /**
@@ -215,36 +225,37 @@ public class Parser {
      * @throws Exception if there is an error reading or parsing the file, or if the data given
      *     doesn't match
      */
-    public void parseLines(File file) throws Exception {
+    void parseLines(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-        BufferedReader reader = new BufferedReader(isr);
-        String csvLine;
+        try (BufferedReader reader = new BufferedReader(isr)) {
+            String csvLine;
 
-        while ((csvLine = reader.readLine()) != null) {
-            String[] values = csvLine.split(";");
-            String terminus = values[1];
+            while ((csvLine = reader.readLine()) != null) {
+                String[] values = csvLine.split(";");
+                String terminus = values[1];
 
-            String completeNameLine = values[0] + " variant " + values[3];
-            Time start =
-                    new Time(
-                            Integer.parseInt(values[2].split(":")[0]),
-                            Integer.parseInt(values[2].split(":")[1]),
-                            0);
+                String completeNameLine = values[0] + " variant " + values[3];
+                Time start =
+                        new Time(
+                                Integer.parseInt(values[2].split(":")[0]),
+                                Integer.parseInt(values[2].split(":")[1]),
+                                0);
 
-            Line currentLine = lineAlreadyExist(completeNameLine);
-            if (!terminus.equals(currentLine.getTerminalStationDeparture().getName())) {
-                throw new Exception(
-                        "Data given doesn't match\nThis line had "
-                                + currentLine.getTerminalStationDeparture().getName()
-                                + " as terminus start. The file has given "
-                                + terminus
-                                + " as terminus start station");
-            } else {
-                currentLine.addStart(start);
+                Line currentLine = lineAlreadyExist(completeNameLine);
+                if (!terminus.equals(currentLine.getTerminalStationDeparture().getName())) {
+                    throw new Exception(
+                            "Data given doesn't match\nThis line had "
+                                    + currentLine.getTerminalStationDeparture().getName()
+                                    + " as terminus start. The file has given "
+                                    + terminus
+                                    + " as terminus start station");
+                } else {
+                    currentLine.addStart(start);
+                }
             }
+            reader.close();
         }
-        reader.close();
         this.fillStationsSchedulesFromTerminusLineStart();
     }
 
@@ -252,7 +263,7 @@ public class Parser {
      * Fills in the schedule information for each station on each line, based on the start times and
      * duration journeys between stations specified in the dataLine map.
      */
-    public void fillStationsSchedulesFromTerminusLineStart() {
+    private void fillStationsSchedulesFromTerminusLineStart() {
         Time timeToFillStationsSchedules = null;
         int i = 0;
         for (Line line : dataLine.keySet()) {
@@ -272,7 +283,7 @@ public class Parser {
         }
     }
 
-    public Map<Line, ArrayList<DurationJourney>> getDataLine() {
+    Map<Line, ArrayList<DurationJourney>> getDataLine() {
         return dataLine;
     }
 }

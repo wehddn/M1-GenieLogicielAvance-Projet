@@ -197,21 +197,14 @@ public class GraphDecorator {
 
             @Override
             public void graphClicked(VertexTransport v, MouseEvent me) {
-                // TODO Auto-generated method stub
                 if (v instanceof Station) Controller.setSchedules((Station) v);
             }
 
             @Override
-            public void graphPressed(VertexTransport v, MouseEvent me) {
-                // TODO Auto-generated method stub
-
-            }
+            public void graphPressed(VertexTransport v, MouseEvent me) {}
 
             @Override
-            public void graphReleased(VertexTransport v, MouseEvent me) {
-                // TODO Auto-generated method stub
-
-            }
+            public void graphReleased(VertexTransport v, MouseEvent me) {}
         };
     }
 }

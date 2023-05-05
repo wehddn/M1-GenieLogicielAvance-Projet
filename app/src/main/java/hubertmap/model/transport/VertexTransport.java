@@ -76,7 +76,6 @@ public abstract class VertexTransport {
      */
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return name;
     }
 }

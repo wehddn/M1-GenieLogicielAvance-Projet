@@ -155,7 +155,7 @@ public class View {
 
         List<CustomPair> segments = getSegments(shortestPath);
 
-        currentTime = new Time(time.getHour(), time.getMinute(), time.getSecond()); // TODO
+        currentTime = new Time(time.getHour(), time.getMinute(), time.getSecond());
 
         for (int i = 0; i < segments.size(); i += 2) {
             JPanel pathPanel =

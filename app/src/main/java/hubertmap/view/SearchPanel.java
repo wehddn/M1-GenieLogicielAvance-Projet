@@ -55,11 +55,8 @@ public class SearchPanel extends JPanel {
         endPanel.setLayout(new BoxLayout(endPanel, BoxLayout.X_AXIS));
         endPanel.add(textAreaStationEnd);
 
-        JButton searchTime = new JButton("Search by time");
-        searchTime.addActionListener(search("time"));
-
         JButton searchChanges = new JButton("Search");
-        searchChanges.addActionListener(search("changes"));
+        searchChanges.addActionListener(search());
 
         this.add(startPanel);
         this.add(endPanel);
@@ -102,7 +99,7 @@ public class SearchPanel extends JPanel {
      *
      * @return ActionListener that executes a search for the shortest path
      */
-    private ActionListener search(String type) {
+    private ActionListener search() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,7 +111,7 @@ public class SearchPanel extends JPanel {
                 String station1Name = getCoordsFromString(stringStart);
                 String station2Name = getCoordsFromString(stringEnd);
 
-                Controller.setShortestPath(type, station1Name, station2Name);
+                Controller.setShortestPath(station1Name, station2Name);
             }
 
             private String getCoordsFromString(String stringStart) {

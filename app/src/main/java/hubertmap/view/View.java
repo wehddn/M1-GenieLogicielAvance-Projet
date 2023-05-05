@@ -192,7 +192,8 @@ public class View {
         Pair<Time> time = null;
         if (currentTime != null) {
             time = Controller.getTimes(shortestPath, stationName1, stationName2, currentTime);
-            currentTime = time.getSecond();
+            if (time != null) currentTime = time.getSecond();
+            else currentTime = null;
         }
 
         JPanel sectionPanel = new JPanel();

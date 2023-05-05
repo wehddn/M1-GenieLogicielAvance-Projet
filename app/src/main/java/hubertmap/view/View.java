@@ -11,10 +11,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -57,6 +61,14 @@ public class View {
         panel = createPanel(graphView);
 
         frame = new JFrame("Hubertmap");
+
+        String imagePath = "ressource/Hubert.png";
+        try {
+            BufferedImage icon = ImageIO.read(new File(imagePath));
+            frame.setIconImage(icon);
+        } catch (IOException e) {
+        }
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(panel);
         frame.pack();

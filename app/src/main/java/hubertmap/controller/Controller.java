@@ -1,10 +1,15 @@
 package hubertmap.controller;
 
+import edu.uci.ics.jung.graph.util.Pair;
+import hubertmap.model.Time;
 import hubertmap.model.parser.Parser;
+import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Network;
 import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import hubertmap.view.GraphData;
 import hubertmap.view.View;
+import java.util.List;
 
 /**
  * The Controller class is responsible for managing the interaction between the Model and the View
@@ -87,5 +92,23 @@ public class Controller {
     /** Deletes all user points from the graph. */
     public static void deleteUserPoints() {
         network.deleteUserPoints();
+    }
+
+    /**
+     * Calculates the departure and arrival time for two vetrexes.
+     *
+     * @param shortestPath Shortest path.
+     * @param vertexTransport1 The name of the starting vetrex.
+     * @param vertexTransport2 The name of the ending vetrex.
+     * @param currentTime The current time as a Time object.
+     * @return A Pair object containing the departure time and the arrival time as Time objects, or
+     *     null if the calculation failed.
+     */
+    public static Pair<Time> getTimes(
+            List<EdgeTransport> shortestPath,
+            VertexTransport vertexTransport1,
+            VertexTransport vertexTransport2,
+            Time currentTime) {
+        return network.getTimes(shortestPath, vertexTransport1, vertexTransport2, currentTime);
     }
 }

@@ -16,8 +16,10 @@ public class Parser {
     Network network;
     /** The list of all stations in the database. */
     public List<Station> stations = new ArrayList<>();
+    /** The list of all edges in the database. */
+    public List<EdgeTransport> edges = new ArrayList<>();
     /** The list of all lines in the database with their starting times. */
-    private Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
+    public Map<Line, ArrayList<DurationJourney>> dataLine = new HashMap<>();
 
     /**
      * The constructor of the Parser class. It calls the parseStations() and parseLines() methods to

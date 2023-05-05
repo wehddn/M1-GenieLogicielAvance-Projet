@@ -3,10 +3,14 @@ package hubertmap.model.transport;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.Pair;
 import hubertmap.model.DurationJourney;
+import hubertmap.model.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +19,7 @@ import java.util.Set;
  * This class represents a network of vertex and edges between them, forming a transport network.
  */
 public class Network {
-    Graph<VertexTransport, EdgeTransport> graph;
+    static Graph<VertexTransport, EdgeTransport> graph;
     HashMap<String, VertexTransport> stations;
     List<EdgeTransport> shortestPath;
     List<Point> userPoints;
@@ -286,5 +290,169 @@ public class Network {
             graph.removeVertex(point);
             stations.values().remove(point);
         }
+    }
+
+    /**
+     * Gets the times of departure and arrival for a given path between two stations or a station
+     * and a point.
+     *
+     * @param shortestPath The list of edges that represents the shortest path.
+     * @param vertexTransport1 The name of the first vetrex.
+     * @param vertexTransport2 The name of the second vetrex.
+     * @param currentTime The current time at which the user wants to travel.
+     * @return A pair of times, the first representing the departure time and the second the arrival
+     *     time. If there is no possible path, it returns null.
+     */
+    public Pair<Time> getTimes(
+            List<EdgeTransport> shortestPath,
+            VertexTransport vertexTransport1,
+            VertexTransport vertexTransport2,
+            Time currentTime) {
+
+        // If the vetrexes are equal, return the transfer time
+        if (vertexTransport1.equals(vertexTransport2)) {
+            Time arrivalTime = new Time(currentTime);
+            arrivalTime.increaseByMinute(2);
+            return new Pair<Time>(currentTime, arrivalTime);
+        }
+        // Check if both vetrexes are stations
+        else if (vertexTransport1 instanceof Station && vertexTransport2 instanceof Station) {
+            Station station1 = (Station) vertexTransport1;
+            Station station2 = (Station) vertexTransport2;
+
+            // Get common variants for both stations
+            Set<String> commonLines = new HashSet<>(station1.getSchedules().keySet());
+            commonLines.retainAll(station2.getSchedules().keySet());
+
+            // If there are common options, find the time of departure
+            if (commonLines.size() > 0) {
+                Time departTime = new Time(0, 0, 0);
+                for (String lineName : commonLines) {
+                    // Check if the departure station is after the arrival station (stations stored
+                    // in lines should be sorted)
+                    if (endAfterStart(lineName, station1, station2)) {
+                        // Find the nearest departure time and the variant to which it belongs
+                        Time time = nextDepart(lineName, station1, currentTime);
+                        if (time != null && time.compareTo(departTime) >= 0) {
+                            departTime = time;
+                        }
+                    }
+                }
+
+                // To find the arrival time, add to the departure time the travel time and 2 minutes
+                // for the transfer
+                Time arrivalTime = null;
+                if (!departTime.equals(new Time(0, 0, 0))) {
+                    arrivalTime = calculatePathTime(departTime, shortestPath, station1, station2);
+                    if (arrivalTime != null) {
+                        return new Pair<Time>(departTime, arrivalTime);
+                    }
+                }
+            }
+        }
+        // One of the vertices is a point, return the walking time
+        else {
+            Time departTime = currentTime;
+            if (vertexTransport1 != null && vertexTransport2 != null) {
+                Time arrivalTime =
+                        calculatePathTime(
+                                departTime, shortestPath, vertexTransport1, vertexTransport2);
+                return new Pair<Time>(departTime, arrivalTime);
+            } else return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculates the total time of a path given the departure time, the path and the two vertices
+     * of the path.
+     *
+     * @param departTime The departure time from the first vertex.
+     * @param shortestPath The list of edges that represents the path.
+     * @param vertexTransport The starting vertex of the path.
+     * @param vertexTransport2 The ending vertex of the path.
+     * @return The arrival time at the end of the path. If there is no possible path, it returns
+     *     null.
+     */
+    private Time calculatePathTime(
+            Time departTime,
+            List<EdgeTransport> shortestPath,
+            VertexTransport vertexTransport,
+            VertexTransport vertexTransport2) {
+        Time time = new Time(departTime);
+        VertexTransport currentStation = vertexTransport;
+        for (EdgeTransport edgeTransport : shortestPath) {
+            if (edgeTransport.getStartingStation().equals(currentStation)) {
+                currentStation = edgeTransport.getEndingStation();
+                time = time.increaseWithADurationJourney(edgeTransport.getDurationJourney());
+            }
+
+            if (edgeTransport.getEndingStation().equals(currentStation)) {
+                return time;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the next departure time for a given line at a given station.
+     *
+     * @param lineName The name of the line.
+     * @param station1 The station where the user wants to take the line.
+     * @param currentTime The current time at which the user wants to travel.
+     * @return The next departure time after the current time. If there is no possible departure
+     *     time, it returns null.
+     */
+    private Time nextDepart(String lineName, Station station1, Time currentTime) {
+        Set<Time> stationTimes = station1.getSchedules().get(lineName);
+        if (stationTimes != null) {
+            for (Time time : stationTimes) {
+                String timeString = time.toString();
+                LocalTime stationTime = LocalTime.parse(timeString);
+                LocalTime timeToCheck = LocalTime.parse(currentTime.toString());
+                if (stationTime.isAfter(timeToCheck)) {
+                    return time;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if the second station is after the first station on a given line.
+     *
+     * @param lineName The name of the line.
+     * @param station1 The first station.
+     * @param station2 The second station.
+     * @return True if the second station is after the first station, false otherwise.
+     */
+    private boolean endAfterStart(String lineName, Station station1, Station station2) {
+        Line currentLine = getLineByName(getLines(), lineName);
+        if (currentLine != null) {
+            ArrayList<Station> lineStations = currentLine.getAllStations();
+            int index1 = lineStations.indexOf(station1);
+            int index2 = lineStations.indexOf(station2);
+            if (index1 < index2) return true;
+            else return false;
+        }
+        return false;
+    }
+
+    /**
+     * Returns the line with the given name.
+     *
+     * @param lines The set of lines to search.
+     * @param name The name of the line.
+     * @return The line with the given name. If there is no line with the given name, it returns
+     *     null.
+     */
+    public Line getLineByName(Set<Line> lines, String name) {
+        for (Line line : lines) {
+            if (line.getName().equals(name)) {
+                return line;
+            }
+        }
+        return null;
     }
 }

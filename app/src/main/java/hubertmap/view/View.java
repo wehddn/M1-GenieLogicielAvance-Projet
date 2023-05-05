@@ -1,12 +1,17 @@
 package hubertmap.view;
 
+import edu.uci.ics.jung.graph.util.Pair;
+import hubertmap.controller.Controller;
+import hubertmap.model.Time;
 import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
+import hubertmap.model.transport.VertexTransport;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +44,8 @@ public class View {
     private JFrame frame;
 
     SearchPanel searchPanel;
+
+    private Time currentTime;
 
     /**
      * Constructs a new View instance and initializes its components. Creates a JFrame window and
@@ -144,10 +151,22 @@ public class View {
         generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
         generalPanel.setLayout(new GridLayout(0, 1, 5, 5));
 
-        ArrayList<String[]> segments = getSegments(shortestPath);
+        List<CustomPair> segments = getSegments(shortestPath);
+
+        LocalTime currentLocalTime = LocalTime.now();
+        currentTime =
+                new Time(
+                        currentLocalTime.getHour(),
+                        currentLocalTime.getMinute(),
+                        currentLocalTime.getSecond()); // TODO
+
         for (int i = 0; i < segments.size(); i += 2) {
             JPanel pathPanel =
-                    createPathPanel(segments.get(i)[0], segments.get(i)[1], segments.get(i + 1)[1]);
+                    createPathPanel(
+                            shortestPath,
+                            segments.get(i).getFirst(),
+                            segments.get(i).getSecond(),
+                            segments.get(i + 1).getSecond());
 
             generalPanel.add(pathPanel);
         }
@@ -160,11 +179,26 @@ public class View {
     /**
      * Creates a panel with details of path between 2 stations
      *
+     * @param shortestPath
      * @param line line number of given path
-     * @param stationName1 first station of path
-     * @param stationName2 last station of path
+     * @param vertexTransport first station of path
+     * @param vertexTransport2 last station of path
      */
-    private JPanel createPathPanel(String lineName, String stationName1, String stationName2) {
+    private JPanel createPathPanel(
+            List<EdgeTransport> shortestPath,
+            String lineName,
+            VertexTransport vertexTransport,
+            VertexTransport vertexTransport2) {
+
+        Pair<Time> time = null;
+        if (currentTime != null) {
+            time =
+                    Controller.getTimes(
+                            shortestPath, vertexTransport, vertexTransport2, currentTime);
+            if (time != null) currentTime = time.getSecond();
+            else currentTime = null;
+        }
+
         JPanel sectionPanel = new JPanel();
         sectionPanel.setLayout(new BoxLayout(sectionPanel, BoxLayout.X_AXIS));
 
@@ -175,13 +209,21 @@ public class View {
         JPanel startPanel = new JPanel();
         startPanel.setLayout(new BorderLayout());
         startPanel.setPreferredSize(new Dimension(240, 20));
-        JLabel startLabel = new JLabel(stationName1);
+        String startLabelText = "";
+        if (time != null) {
+            startLabelText = time.getFirst().toString() + " - ";
+        }
+        JLabel startLabel = new JLabel(startLabelText + vertexTransport);
         startPanel.add(startLabel, BorderLayout.NORTH);
 
         JPanel finishPanel = new JPanel();
         finishPanel.setLayout(new BorderLayout());
         finishPanel.setPreferredSize(new Dimension(240, 20));
-        JLabel finishLabel = new JLabel(stationName2);
+        String finishLabelText = "";
+        if (time != null) {
+            finishLabelText = time.getSecond().toString() + " - ";
+        }
+        JLabel finishLabel = new JLabel(finishLabelText + vertexTransport2);
         finishPanel.add(finishLabel, BorderLayout.SOUTH);
 
         JPanel linePanel = new JPanel();
@@ -209,25 +251,37 @@ public class View {
      * @param shortestPath list to divide
      * @return array of line - station values
      */
-    private ArrayList<String[]> getSegments(List<EdgeTransport> shortestPath) {
+    private List<CustomPair> getSegments(List<EdgeTransport> shortestPath) {
         String currentLine = shortestPath.get(0).getLineName();
         String lastStationOnSameLine = null;
+        VertexTransport lastStation = null;
         ArrayList<String[]> segments = new ArrayList<>();
+        List<CustomPair> edges = new ArrayList<>();
         for (int i = 0; i < shortestPath.size(); i++) {
             EdgeTransport edge = shortestPath.get(i);
-            if (i == 0)
+
+            if (i == 0) {
                 segments.add(
                         new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+                edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
+            }
+
             if (!edge.getLineName().equals(currentLine)) {
                 segments.add(new String[] {currentLine, lastStationOnSameLine});
+                edges.add(new CustomPair(currentLine, lastStation));
                 segments.add(
                         new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+                edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
                 currentLine = edge.getLineName();
             }
             lastStationOnSameLine = edge.getEndingStation().getName();
+            lastStation = edge.getEndingStation();
         }
+
         segments.add(new String[] {currentLine, lastStationOnSameLine});
-        return segments;
+        edges.add(new CustomPair(currentLine, lastStation));
+
+        return edges;
     }
 
     /**
@@ -242,5 +296,23 @@ public class View {
         frame.pack();
         frame.setVisible(true);
         frame.requestFocusInWindow();
+    }
+}
+
+class CustomPair {
+    private String first;
+    private VertexTransport second;
+
+    public CustomPair(String first, VertexTransport second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public String getFirst() {
+        return first;
+    }
+
+    public VertexTransport getSecond() {
+        return second;
     }
 }

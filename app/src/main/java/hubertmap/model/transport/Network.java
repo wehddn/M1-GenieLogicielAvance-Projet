@@ -297,23 +297,28 @@ public class Network {
      * and a point.
      *
      * @param shortestPath The list of edges that represents the shortest path.
-     * @param stationName1 The name of the first station or point.
-     * @param stationName2 The name of the second station or point.
+     * @param vertexTransport1 The name of the first vetrex.
+     * @param vertexTransport2 The name of the second vetrex.
      * @param currentTime The current time at which the user wants to travel.
      * @return A pair of times, the first representing the departure time and the second the arrival
      *     time. If there is no possible path, it returns null.
      */
     public Pair<Time> getTimes(
             List<EdgeTransport> shortestPath,
-            String stationName1,
-            String stationName2,
+            VertexTransport vertexTransport1,
+            VertexTransport vertexTransport2,
             Time currentTime) {
 
-        // Check if both vertices are stations
-        if (stations.get(stationName1.toLowerCase()) instanceof Station
-                && stations.get(stationName2.toLowerCase()) instanceof Station) {
-            Station station1 = (Station) stations.get(stationName1.toLowerCase());
-            Station station2 = (Station) stations.get(stationName2.toLowerCase());
+        // If the vetrexes are equal, return the transfer time
+        if (vertexTransport1.equals(vertexTransport2)) {
+            Time arrivalTime = new Time(currentTime);
+            arrivalTime.increaseByMinute(2);
+            return new Pair<Time>(currentTime, arrivalTime);
+        }
+        // Check if both vetrexes are stations
+        else if (vertexTransport1 instanceof Station && vertexTransport2 instanceof Station) {
+            Station station1 = (Station) vertexTransport1;
+            Station station2 = (Station) vertexTransport2;
 
             // Get common variants for both stations
             Set<String> commonLines = new HashSet<>(station1.getSchedules().keySet());
@@ -340,7 +345,6 @@ public class Network {
                 if (!departTime.equals(new Time(0, 0, 0))) {
                     arrivalTime = calculatePathTime(departTime, shortestPath, station1, station2);
                     if (arrivalTime != null) {
-                        arrivalTime.increaseByMinute(2);
                         return new Pair<Time>(departTime, arrivalTime);
                     }
                 }
@@ -349,10 +353,10 @@ public class Network {
         // One of the vertices is a point, return the walking time
         else {
             Time departTime = currentTime;
-            VertexTransport v1 = stations.get(stationName1.toLowerCase());
-            VertexTransport v2 = stations.get(stationName2.toLowerCase());
-            if (v1 != null && v2 != null) {
-                Time arrivalTime = calculatePathTime(departTime, shortestPath, v1, v2);
+            if (vertexTransport1 != null && vertexTransport2 != null) {
+                Time arrivalTime =
+                        calculatePathTime(
+                                departTime, shortestPath, vertexTransport1, vertexTransport2);
                 return new Pair<Time>(departTime, arrivalTime);
             } else return null;
         }

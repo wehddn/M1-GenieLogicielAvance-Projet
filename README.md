@@ -1,6 +1,6 @@
 # projet-gl-avance-groupe-lithium
 
-## Vidéo de présentation du projet
+## Video presentation
 
 https://www.youtube.com/watch?v=ABO1gZ98Icc
 

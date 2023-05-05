@@ -256,23 +256,25 @@ public class View {
         List<CustomPair> edges = new ArrayList<>();
         for (int i = 0; i < shortestPath.size(); i++) {
             EdgeTransport edge = shortestPath.get(i);
+            if (!edge.getLineName().equals("CHANGE")) {
 
-            if (i == 0) {
-                segments.add(
-                        new String[] {edge.getLineName(), edge.getStartingStation().getName()});
-                edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
-            }
+                if (i == 0) {
+                    segments.add(
+                            new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+                    edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
+                }
 
-            if (!edge.getLineName().equals(currentLine)) {
-                segments.add(new String[] {currentLine, lastStationOnSameLine});
-                edges.add(new CustomPair(currentLine, lastStation));
-                segments.add(
-                        new String[] {edge.getLineName(), edge.getStartingStation().getName()});
-                edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
-                currentLine = edge.getLineName();
+                if (!edge.getLineName().equals(currentLine)) {
+                    segments.add(new String[] {currentLine, lastStationOnSameLine});
+                    edges.add(new CustomPair(currentLine, lastStation));
+                    segments.add(
+                            new String[] {edge.getLineName(), edge.getStartingStation().getName()});
+                    edges.add(new CustomPair(edge.getLineName(), edge.getStartingStation()));
+                    currentLine = edge.getLineName();
+                }
+                lastStationOnSameLine = edge.getEndingStation().getName();
+                lastStation = edge.getEndingStation();
             }
-            lastStationOnSameLine = edge.getEndingStation().getName();
-            lastStation = edge.getEndingStation();
         }
 
         segments.add(new String[] {currentLine, lastStationOnSameLine});

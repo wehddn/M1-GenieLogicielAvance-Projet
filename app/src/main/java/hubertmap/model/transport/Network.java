@@ -151,71 +151,6 @@ public class Network {
     }
 
     /**
-     * Uses the input path to create an abstracted version of it, were adjacent path on the same
-     * line are merged into a single path
-     *
-     * @param path list of EdgeTransport
-     * @return a new list of EdgeTransport
-     */
-    public List<EdgeTransport> simplifiedPath(List<EdgeTransport> path) {
-        List<EdgeTransport> simplePath = new ArrayList<>();
-        if (path.isEmpty()) {
-            return simplePath;
-        }
-
-        EdgeTransport prevEdge = path.get(0);
-        VertexTransport prevStation = prevEdge.getStartingStation();
-
-        float distance = prevEdge.getDistance();
-        DurationJourney duration = prevEdge.getDurationJourney().copy();
-
-        for (int i = 1; i < path.size() - 1; i++) {
-            EdgeTransport e = path.get(i);
-            if (!e.getLineName().equals(prevEdge.getLineName())) {
-                simplePath.add(
-                        new EdgeTransport(
-                                prevStation,
-                                e.getStartingStation(),
-                                duration,
-                                distance,
-                                prevEdge.getLineName()));
-                prevStation = e.getStartingStation();
-                prevEdge = e;
-                distance = e.getDistance();
-                duration = e.getDurationJourney().copy();
-            } else {
-                distance += e.getDistance();
-                duration.add(e.getDurationJourney());
-            }
-        }
-
-        EdgeTransport lastEdge = path.get(path.size() - 1);
-
-        if (lastEdge.getLineName().equals(prevEdge.getLineName())) {
-            distance += lastEdge.getDistance();
-            duration.add(lastEdge.getDurationJourney());
-            simplePath.add(
-                    new EdgeTransport(
-                            prevStation,
-                            lastEdge.getEndingStation(),
-                            duration,
-                            distance,
-                            lastEdge.getLineName()));
-        } else {
-            simplePath.add(
-                    new EdgeTransport(
-                            prevStation,
-                            lastEdge.getStartingStation(),
-                            duration,
-                            distance,
-                            prevEdge.getLineName()));
-            simplePath.add(lastEdge.copy());
-        }
-
-        return simplePath;
-    }
-
-    /**
      * Creates a point defined by the coordinates provided by the user
      *
      * @param x x coordinate
@@ -385,10 +320,12 @@ public class Network {
         for (EdgeTransport edgeTransport : shortestPath) {
             if (edgeTransport.getStartingStation().equals(currentStation)) {
                 currentStation = edgeTransport.getEndingStation();
-                time = time.increaseWithADurationJourney(edgeTransport.getDurationJourney());
+                // we add 15 seconds to take stops into account
+                DurationJourney d = new DurationJourney(15).add(edgeTransport.getDurationJourney());
+                time = time.increaseWithADurationJourney(d);
             }
 
-            if (edgeTransport.getEndingStation().equals(currentStation)) {
+            if (edgeTransport.getEndingStation().equals(vertexTransport2)) {
                 return time;
             }
         }

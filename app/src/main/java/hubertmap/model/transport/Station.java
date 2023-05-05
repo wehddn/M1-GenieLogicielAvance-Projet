@@ -50,16 +50,29 @@ public class Station extends VertexTransport {
         return allLines;
     }
 
-    /** returns line name without variant */
+    /**
+     * returns line name without variant
+     *
+     * @return String line name without variant
+     */
     public String getSimpleLineName() {
         return simpleLineName;
     }
 
-    /** returns true if there are more than one station with the same name */
+    /**
+     * Returns true if there are more than one station with the same name
+     *
+     * @return True if there are
+     */
     public boolean isMultiLine() {
         return multiLine;
     }
 
+    /**
+     * Indicates that there are more than one station with the same name
+     *
+     * @param multiLine boolean value for set multiLine
+     */
     public void setMultiLine(boolean multiLine) {
         this.multiLine = multiLine;
     }

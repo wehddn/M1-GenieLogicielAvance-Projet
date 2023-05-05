@@ -19,15 +19,14 @@ import java.util.Set;
  * This class represents a network of vertex and edges between them, forming a transport network.
  */
 public class Network {
-    static Graph<VertexTransport, EdgeTransport> graph;
-    HashMap<String, VertexTransport> stations;
-    List<EdgeTransport> shortestPath;
-    List<Point> userPoints;
+    private static Graph<VertexTransport, EdgeTransport> graph;
+    private HashMap<String, VertexTransport> stations;
+    private List<Point> userPoints;
 
-    DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
+    private DijkstraShortestPath<VertexTransport, EdgeTransport> distancePaths;
     private Map<Line, ArrayList<DurationJourney>> datatLine;
 
-    int pointCount = 0;
+    private int pointCount = 0;
 
     /**
      * Constructs a new Network object with the given collection of edges.
@@ -37,7 +36,6 @@ public class Network {
     public Network(Collection<EdgeTransport> edges) {
         graph = new SparseGraph<>();
         stations = new HashMap<>();
-        shortestPath = new ArrayList<>();
         userPoints = new ArrayList<>();
 
         if (edges != null) {
@@ -151,71 +149,6 @@ public class Network {
     }
 
     /**
-     * Uses the input path to create an abstracted version of it, were adjacent path on the same
-     * line are merged into a single path
-     *
-     * @param path list of EdgeTransport
-     * @return a new list of EdgeTransport
-     */
-    public List<EdgeTransport> simplifiedPath(List<EdgeTransport> path) {
-        List<EdgeTransport> simplePath = new ArrayList<>();
-        if (path.isEmpty()) {
-            return simplePath;
-        }
-
-        EdgeTransport prevEdge = path.get(0);
-        VertexTransport prevStation = prevEdge.getStartingStation();
-
-        float distance = prevEdge.getDistance();
-        DurationJourney duration = prevEdge.getDurationJourney().copy();
-
-        for (int i = 1; i < path.size() - 1; i++) {
-            EdgeTransport e = path.get(i);
-            if (!e.getLineName().equals(prevEdge.getLineName())) {
-                simplePath.add(
-                        new EdgeTransport(
-                                prevStation,
-                                e.getStartingStation(),
-                                duration,
-                                distance,
-                                prevEdge.getLineName()));
-                prevStation = e.getStartingStation();
-                prevEdge = e;
-                distance = e.getDistance();
-                duration = e.getDurationJourney().copy();
-            } else {
-                distance += e.getDistance();
-                duration.add(e.getDurationJourney());
-            }
-        }
-
-        EdgeTransport lastEdge = path.get(path.size() - 1);
-
-        if (lastEdge.getLineName().equals(prevEdge.getLineName())) {
-            distance += lastEdge.getDistance();
-            duration.add(lastEdge.getDurationJourney());
-            simplePath.add(
-                    new EdgeTransport(
-                            prevStation,
-                            lastEdge.getEndingStation(),
-                            duration,
-                            distance,
-                            lastEdge.getLineName()));
-        } else {
-            simplePath.add(
-                    new EdgeTransport(
-                            prevStation,
-                            lastEdge.getStartingStation(),
-                            duration,
-                            distance,
-                            prevEdge.getLineName()));
-            simplePath.add(lastEdge.copy());
-        }
-
-        return simplePath;
-    }
-
-    /**
      * Creates a point defined by the coordinates provided by the user
      *
      * @param x x coordinate
@@ -250,7 +183,7 @@ public class Network {
      * @param y2 the longitude of the second point in degrees
      * @return the distance between the two points in 10th of km
      */
-    public float calculateDistance(float x1, float y1, float x2, float y2) {
+    private float calculateDistance(float x1, float y1, float x2, float y2) {
         float earthRadius = 6371.0f; // Earth's radius in kilometers
         float dLat = (float) Math.toRadians(x2 - x1);
         float dLon = (float) Math.toRadians(y2 - y1);
@@ -277,7 +210,7 @@ public class Network {
      * @param distance the distance of the journey in 10th of km
      * @return the duration of the journey as a {@link DurationJourney} object
      */
-    public DurationJourney calculateDurationJourney(float distance) {
+    private DurationJourney calculateDurationJourney(float distance) {
         distance /= 10; // putting distance back in km
         int walkingSpeed = 5; // km/h
         int walkingTimeInSeconds = (int) Math.round((distance / walkingSpeed) * 3600);
@@ -447,7 +380,7 @@ public class Network {
      * @return The line with the given name. If there is no line with the given name, it returns
      *     null.
      */
-    public Line getLineByName(Set<Line> lines, String name) {
+    private Line getLineByName(Set<Line> lines, String name) {
         for (Line line : lines) {
             if (line.getName().equals(name)) {
                 return line;

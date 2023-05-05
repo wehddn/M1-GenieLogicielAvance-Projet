@@ -1,5 +1,9 @@
 # projet-gl-avance-groupe-lithium
 
+## Vidéo de présentation du projet
+
+https://www.youtube.com/watch?v=ABO1gZ98Icc
+
 ## Configuration
 
 **Configure git hooks**

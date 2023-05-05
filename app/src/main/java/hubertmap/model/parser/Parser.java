@@ -102,20 +102,20 @@ public class Parser {
             lon = s.getY();
         }
 
-        for (Object st : sameStations) {
-            if (((Station) st).getSimpleLineName().equals(simplelineName)) {
-                return (Station) st;
+        for (Object obj : sameStations) {
+            Station st = (Station) obj;
+            if (st.getSimpleLineName().equals(simplelineName)) {
+                st.addLine(lineName);
+                return st;
             }
         }
 
-        Station newStation = new Station(stationName, simplelineName, lat, lon);
+        Station newStation = new Station(stationName, lineName, lat, lon);
 
         for (Object obj : sameStations) {
             Station st = (Station) obj;
             st.setMultiLine(true);
             newStation.setMultiLine(true);
-            st.addLine(simplelineName);
-            newStation.addLine(st.getSimpleLineName());
             EdgeTransport e =
                     new EdgeTransport(newStation, st, new DurationJourney(2 * 60), 5, "CHANGE");
             network.addEdge(e, newStation, st);
@@ -125,8 +125,6 @@ public class Parser {
         return newStation;
     }
 
-    // StartingStation; StartingStationLatitude; StartingStationLongitude; EndingStation;
-    // EndingStationLatitude; EndingStationLongitude; Line; Time; Distance;
     /**
      * Parses a file containing information about stations, lines and their connections, and creates
      * a network graph representation of this data. This method reads a CSV file, with each line

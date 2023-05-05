@@ -20,26 +20,9 @@ import java.util.TreeSet;
 public class Station extends VertexTransport {
     private ArrayList<String> allLines;
     private Map<String, SortedSet<Time>> schedules = new HashMap<>();
-    private String simpleLineName; // line name without variant
-    private boolean multiLine; // used for the view
+    private String lineName;
+    private boolean multiLine = false; // used for the view
 
-    /**
-     * Constructs a new station with the given name, list of lines, and coordinates. If the list of
-     * lines is null, an empty list is created.
-     *
-     * @param name the name of the station
-     * @param allLines the list of all transportation lines that serve the station
-     * @param x the x-coordinate of the station's location
-     * @param y the y-coordinate of the station's location
-     */
-    public Station(String name, ArrayList<String> allLines, Float x, Float y) {
-        super(name, x, y);
-        if (allLines != null) {
-            this.allLines = allLines;
-        } else {
-            this.allLines = new ArrayList<String>();
-        }
-    }
     /**
      * Constructs a new station with the given name, line, and coordinates. The station is served by
      * only one transportation line.
@@ -54,8 +37,7 @@ public class Station extends VertexTransport {
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
         schedules.put(Line, null);
-        this.simpleLineName = Line.split(" ")[0];
-        this.multiLine = false;
+        this.lineName = Line;
     }
 
     /**
@@ -67,9 +49,14 @@ public class Station extends VertexTransport {
         return allLines;
     }
 
+    /** returns line name with variant */
+    public String getLineName() {
+        return lineName;
+    }
+
     /** returns line name without variant */
     public String getSimpleLineName() {
-        return simpleLineName;
+        return lineName.split(" ")[0];
     }
 
     /** returns true if there are more than one station with the same name */

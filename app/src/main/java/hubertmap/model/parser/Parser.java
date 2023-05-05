@@ -53,7 +53,7 @@ public class Parser extends ParserFactory {
      * @param path the path of the file to open.
      * @return a File object of the file at the given path.
      */
-    public File openFile(String path) {
+    private File openFile(String path) {
         try {
             File file = new File(path);
             return file;
@@ -61,23 +61,6 @@ public class Parser extends ParserFactory {
             System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
             return null;
         }
-    }
-
-    /**
-     * Checks if a station with the given name and line already exists in the database. If it does,
-     * it returns the station object. If it doesn't, it returns null.
-     *
-     * @param name the name of the station to check.
-     * @param line the line of the station to check.
-     * @return the station object if it already exists, or null if it doesn't.
-     */
-    public Station stationAlreadyExist(String name, String line) {
-        for (int i = 0; i < stations.size(); i++) {
-            if (stations.get(i).getName().equals(name)) {
-                return stations.get(i);
-            }
-        }
-        return null;
     }
 
     /**
@@ -99,8 +82,8 @@ public class Parser extends ParserFactory {
     }
 
     /**
-     * Creates a new Station object if it does not already exist, or adds a new line to an existing
-     * Station.
+     * Creates a new Station object if it does not already exist for the first part of the line
+     * name, or adds a new line to an existing Station.
      *
      * @param stationName the name of the station.
      * @param lineName the name of the line.
@@ -108,16 +91,40 @@ public class Parser extends ParserFactory {
      * @param lon the longitude of the station.
      * @return the Station object created or updated.
      */
-    public Station createStation(String stationName, String lineName, float lat, float lon) {
-        Station existStation = stationAlreadyExist(stationName, lineName);
-        if (existStation == null) {
-            Station newStation = new Station(stationName, lineName, lat, lon);
-            stations.add(newStation);
-            return newStation;
-        } else {
-            existStation.addLine(lineName);
-            return existStation;
+    private Station createStation(String stationName, String lineName, float lat, float lon) {
+        String simplelineName = lineName.split(" ")[0];
+        Object[] sameStations =
+                stations.stream()
+                        .filter(station -> station.getName().equals(stationName))
+                        .toArray();
+
+        if (sameStations.length > 0) {
+            Station s = (Station) (sameStations[0]);
+            lat = s.getX();
+            lon = s.getY();
         }
+
+        for (Object st : sameStations) {
+            if (((Station) st).getSimpleLineName().equals(simplelineName)) {
+                return (Station) st;
+            }
+        }
+
+        Station newStation = new Station(stationName, simplelineName, lat, lon);
+
+        for (Object obj : sameStations) {
+            Station st = (Station) obj;
+            st.setMultiLine(true);
+            newStation.setMultiLine(true);
+            st.addLine(simplelineName);
+            newStation.addLine(st.getSimpleLineName());
+            EdgeTransport e =
+                    new EdgeTransport(newStation, st, new DurationJourney(2 * 60), 5, "CHANGE");
+            network.addEdge(e, newStation, st);
+        }
+
+        stations.add(newStation);
+        return newStation;
     }
 
     /**
@@ -180,14 +187,13 @@ public class Parser extends ParserFactory {
                 durationJourneys.add(time);
             }
 
-            if (station1 != station2) {
+            if (!station1.equals(station2)) {
                 currentLine.addStationsIfNotAlreadyExist(station1);
                 currentLine.addStationsIfNotAlreadyExist(station2);
 
                 EdgeTransport edge =
                         new EdgeTransport(station1, station2, time, distance, lineName);
                 network.addEdge(edge, station1, station2);
-                edges.add(edge);
                 lastStation = station2;
             }
         }

@@ -20,8 +20,8 @@ import java.util.TreeSet;
 public class Station extends VertexTransport {
     private ArrayList<String> allLines;
     private Map<String, SortedSet<Time>> schedules = new HashMap<>();
-    private String lineName;
     private boolean multiLine = false; // used for the view
+    private String simpleLineName; // line name without variant
 
     /**
      * Constructs a new station with the given name, line, and coordinates. The station is served by
@@ -37,7 +37,8 @@ public class Station extends VertexTransport {
         this.allLines = new ArrayList<String>();
         this.allLines.add(Line);
         schedules.put(Line, null);
-        this.lineName = Line;
+        this.simpleLineName = Line.split(" ")[0];
+        this.multiLine = false;
     }
 
     /**
@@ -49,14 +50,9 @@ public class Station extends VertexTransport {
         return allLines;
     }
 
-    /** returns line name with variant */
-    public String getLineName() {
-        return lineName;
-    }
-
     /** returns line name without variant */
     public String getSimpleLineName() {
-        return lineName.split(" ")[0];
+        return simpleLineName;
     }
 
     /** returns true if there are more than one station with the same name */

@@ -42,8 +42,7 @@ public class GraphDecorator {
     }
 
     /**
-     * Returns a transformer that used to set vertex colors. Sets specific color if vertex is in
-     * shortestPath.
+     * Returns a transformer that is used to set vertex colors.
      *
      * @return a Transformer object that maps a Station object to a Paint object representing its
      *     color.
@@ -53,9 +52,11 @@ public class GraphDecorator {
                 new Transformer<VertexTransport, Paint>() {
                     public Paint transform(VertexTransport input) {
                         if (input instanceof Station) {
-                            ArrayList<String> lines = ((Station) input).getLinesNumbers();
-                            if (lines.size() > 1 || lines.size() == 0) return Color.WHITE;
-                            else return Color.decode(LineColor.getColor(lines.get(0)));
+                            Station station = (Station) input;
+                            if (station.isMultiLine()) return Color.WHITE;
+                            else
+                                return Color.decode(
+                                        LineColor.getColor(station.getSimpleLineName()));
                         } else return Color.WHITE;
                     }
                 };
@@ -63,32 +64,22 @@ public class GraphDecorator {
     }
 
     /**
-     * Returns a transformer that used to set edges colors. Sets specific color if edge is in
-     * shortestPath.
+     * Returns a transformer that used to set edges colors. Sets no color if edge doesn't have a
+     * line name, unless it's part of the current shortest path
      *
      * @return a Transformer object that maps an EdgeTransport object to a Paint object representing
      *     its color.
      */
     public Transformer<EdgeTransport, Paint> edgeColor() {
-        Transformer<EdgeTransport, Paint> edgeColor =
-                new Transformer<EdgeTransport, Paint>() {
-                    @Override
-                    public Paint transform(EdgeTransport input) {
-                        ArrayList<String> lines1 = new ArrayList<>();
-                        ArrayList<String> lines2 = new ArrayList<>();
-                        if (input.getStartingStation() instanceof Station
-                                && input.getEndingStation() instanceof Station) {
-                            lines1 = ((Station) input.getStartingStation()).getLinesNumbers();
-                            lines2 = ((Station) input.getEndingStation()).getLinesNumbers();
-                            lines1.retainAll(lines2);
-                            if (lines1.size() != 0)
-                                return Color.decode(LineColor.getColor(lines1.get(0)));
-                            else return Color.BLACK;
-                        } else if (shortestPathEdges.contains(input)) return Color.BLACK;
-                        else return null;
-                    }
-                };
-        return edgeColor;
+        return (EdgeTransport input) -> {
+            String lineName = input.getLineName();
+            if ((!lineName.equals("CHANGE"))
+                    && (lineName.length() > 0 || shortestPathEdges.contains(input))) {
+                return Color.decode(LineColor.getColor(lineName));
+            } else {
+                return null;
+            }
+        };
     }
 
     /**

@@ -109,18 +109,13 @@ public class Parser {
         }
 
         Station newStation = new Station(stationName, simplelineName, lat, lon);
-        newStation.addLine(lineName);
 
         for (Object obj : sameStations) {
             Station st = (Station) obj;
             st.setMultiLine(true);
             newStation.setMultiLine(true);
             st.addLine(simplelineName);
-            st.addLine(lineName);
             newStation.addLine(st.getSimpleLineName());
-            for (String stLine : st.getAllLines()) {
-                newStation.addLine(stLine);
-            }
             EdgeTransport e =
                     new EdgeTransport(newStation, st, new DurationJourney(2 * 60), 5, "CHANGE");
             network.addEdge(e, newStation, st);

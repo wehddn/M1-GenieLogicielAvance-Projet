@@ -395,7 +395,7 @@ public class Network {
                 // To find the arrival time, add to the departure time the travel time and 2 minutes
                 // for the transfer
                 Time arrivalTime = null;
-                if (departTime.compareTo(new Time(0, 0, 0)) != 0) {
+                if (!departTime.equals(new Time(0, 0, 0))) {
                     arrivalTime = calculatePathTime(departTime, shortestPath, station1, station2);
                     if (arrivalTime != null) {
                         arrivalTime.increaseByMinute(2);

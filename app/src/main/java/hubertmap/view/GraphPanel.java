@@ -42,8 +42,8 @@ class GraphPanel extends JPanel {
 
         this.graphView = graphView;
 
-        panelWidth = 600;
-        panelHeight = 600;
+        panelWidth = 800;
+        panelHeight = 800;
 
         layout = graphView.createLayout();
         layout.setSize(new Dimension(panelWidth, panelHeight));

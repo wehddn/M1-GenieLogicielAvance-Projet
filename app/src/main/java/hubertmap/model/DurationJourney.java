@@ -106,6 +106,11 @@ public class DurationJourney {
         return minute * 60 + seconde;
     }
 
+    /**
+     * Creates of DurationJourney object
+     *
+     * @return DurationJourney new object
+     */
     public DurationJourney copy() {
         return new DurationJourney(this.toSeconds());
     }

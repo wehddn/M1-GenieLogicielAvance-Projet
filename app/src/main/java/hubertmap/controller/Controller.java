@@ -38,7 +38,7 @@ public class Controller {
     /**
      * Calculates the shortest path between two stations and updates the view accordingly.
      *
-     * @param time
+     * @param time start time of travel
      * @param station1Name the name of the starting station
      * @param station2Name the name of the destination station
      */

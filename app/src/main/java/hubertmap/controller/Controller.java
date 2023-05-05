@@ -9,6 +9,7 @@ import hubertmap.model.transport.Station;
 import hubertmap.model.transport.VertexTransport;
 import hubertmap.view.GraphData;
 import hubertmap.view.View;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -37,12 +38,13 @@ public class Controller {
     /**
      * Calculates the shortest path between two stations and updates the view accordingly.
      *
+     * @param time
      * @param station1Name the name of the starting station
      * @param station2Name the name of the destination station
      */
-    public static void setShortestPath(String station1Name, String station2Name) {
+    public static void setShortestPath(LocalTime time, String station1Name, String station2Name) {
         var shortestPath = network.shortestPath(station1Name, station2Name);
-        view.setShortestPath(shortestPath);
+        if (shortestPath != null) view.setShortestPath(time, shortestPath);
     }
 
     /**

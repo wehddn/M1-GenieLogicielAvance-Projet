@@ -58,6 +58,4 @@ class NetworkTest {
         List<EdgeTransport> path = g.shortestPath(a, a);
         assertTrue(path.isEmpty());
     }
-
-    // todo: tests for simplifiedPath
 }

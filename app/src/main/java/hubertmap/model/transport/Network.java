@@ -151,7 +151,7 @@ public class Network {
     }
 
     /**
-     * Uses the input path to create an abstracted vestion of it, were adjascent path on the same
+     * Uses the input path to create an abstracted version of it, were adjacent path on the same
      * line are merged into a single path
      *
      * @param path list of EdgeTransport

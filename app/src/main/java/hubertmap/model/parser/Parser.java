@@ -26,15 +26,19 @@ public class Parser {
      * parse stations and lines from the CSV files. If the file is not found, it catches the
      * FileNotFoundException and prints an error message. If any other exception occurs, it catches
      * the Exception and prints an error message.
+     *
+     * @param parseAtCreation if we want to parse files at instanciation
      */
-    public Parser() {
-        try {
-            parseStations(openFile("ressource/map_data.csv"));
-            parseLines(openFile("ressource/timetables.csv"));
-        } catch (FileNotFoundException e) {
-            System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur : " + e.getMessage());
+    public Parser(boolean parseAtCreation) {
+        if (parseAtCreation) {
+            try {
+                parseStations(openFile("ressource/map_data.csv"));
+                parseLines(openFile("ressource/timetables.csv"));
+            } catch (FileNotFoundException e) {
+                System.out.println("Le fichier n'a pas été trouvé : " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Erreur : " + e.getMessage());
+            }
         }
     }
     /**
@@ -266,5 +270,9 @@ public class Parser {
                 line.allStations.get(i).addSchedule(line, new Time(timeToFillStationsSchedules));
             }
         }
+    }
+
+    public Map<Line, ArrayList<DurationJourney>> getDataLine() {
+        return dataLine;
     }
 }

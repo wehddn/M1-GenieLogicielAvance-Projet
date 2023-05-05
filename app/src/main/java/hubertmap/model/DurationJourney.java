@@ -39,6 +39,12 @@ public class DurationJourney {
         this.seconde %= 60;
     }
 
+    /**
+     * Constructs a DurationJourney object with the specified seconde. It converts automatically the
+     * minutes
+     *
+     * @param seconds the seconde component
+     */
     public DurationJourney(int seconds) {
         if (seconds < 0) {
             throw new IllegalArgumentException("seconds must be positive");

@@ -130,8 +130,7 @@ class ParserTest {
     @Test
     void parseLinesCheckTimeAndDurationJourney() {
         // Here as parseLines usually uses data retrieved from parseStations we need to insert faked
-        // data to parser because we cannot assume that parserStations to prevent dependency between
-        // the tests
+        // data to parser because we have to prevent dependency between the tests
         Station lourmelStation = new Station("Lourmel", "8 variant 1", null, null);
         parser.stations.add(lourmelStation);
         parser.stations.add(new Station("Boucicaut", "8 variant 1", null, null));

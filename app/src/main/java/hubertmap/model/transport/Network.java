@@ -290,6 +290,14 @@ public class Network {
         }
     }
 
+    /**
+     * Calculates the shortest path between two VertexTransport objects taking into account the
+     * changes in transportation lines
+     *
+     * @param source the starting VertexTransport object
+     * @param destination the ending VertexTransport object
+     * @return a List of EdgeTransport objects representing the shortest path
+     */
     public static List<EdgeTransport> shortestPathChanges(
             VertexTransport source, VertexTransport destination) {
 
@@ -351,6 +359,17 @@ public class Network {
         return path;
     }
 
+    /**
+     * Gets the times of departure and arrival for a given path between two stations or a station
+     * and a point.
+     *
+     * @param shortestPath The list of edges that represents the shortest path.
+     * @param stationName1 The name of the first station or point.
+     * @param stationName2 The name of the second station or point.
+     * @param currentTime The current time at which the user wants to travel.
+     * @return A pair of times, the first representing the departure time and the second the arrival
+     *     time. If there is no possible path, it returns null.
+     */
     public Pair<Time> getTimes(
             List<EdgeTransport> shortestPath,
             String stationName1,
@@ -408,6 +427,17 @@ public class Network {
         return null;
     }
 
+    /**
+     * Calculates the total time of a path given the departure time, the path and the two vertices
+     * of the path.
+     *
+     * @param departTime The departure time from the first vertex.
+     * @param shortestPath The list of edges that represents the path.
+     * @param vertexTransport The starting vertex of the path.
+     * @param vertexTransport2 The ending vertex of the path.
+     * @return The arrival time at the end of the path. If there is no possible path, it returns
+     *     null.
+     */
     private Time calculatePathTime(
             Time departTime,
             List<EdgeTransport> shortestPath,
@@ -418,8 +448,6 @@ public class Network {
         for (EdgeTransport edgeTransport : shortestPath) {
             if (edgeTransport.getStartingStation().equals(currentStation)) {
                 currentStation = edgeTransport.getEndingStation();
-                System.out.println(edgeTransport);
-                System.out.println(edgeTransport.getDurationJourney());
                 time = time.increaseWithADurationJourney(edgeTransport.getDurationJourney());
             }
 
@@ -430,6 +458,15 @@ public class Network {
         return null;
     }
 
+    /**
+     * Returns the next departure time for a given line at a given station.
+     *
+     * @param lineName The name of the line.
+     * @param station1 The station where the user wants to take the line.
+     * @param currentTime The current time at which the user wants to travel.
+     * @return The next departure time after the current time. If there is no possible departure
+     *     time, it returns null.
+     */
     private Time nextDepart(String lineName, Station station1, Time currentTime) {
         Set<Time> stationTimes = station1.getSchedules().get(lineName);
         if (stationTimes != null) {
@@ -445,6 +482,14 @@ public class Network {
         return null;
     }
 
+    /**
+     * Checks if the second station is after the first station on a given line.
+     *
+     * @param lineName The name of the line.
+     * @param station1 The first station.
+     * @param station2 The second station.
+     * @return True if the second station is after the first station, false otherwise.
+     */
     private boolean endAfterStart(String lineName, Station station1, Station station2) {
         Line currentLine = getLineByName(getLines(), lineName);
         if (currentLine != null) {
@@ -457,6 +502,14 @@ public class Network {
         return false;
     }
 
+    /**
+     * Returns the line with the given name.
+     *
+     * @param lines The set of lines to search.
+     * @param name The name of the line.
+     * @return The line with the given name. If there is no line with the given name, it returns
+     *     null.
+     */
     public Line getLineByName(Set<Line> lines, String name) {
         for (Line line : lines) {
             if (line.getName().equals(name)) {

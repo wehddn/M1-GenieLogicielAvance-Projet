@@ -125,6 +125,13 @@ public class EdgeTransport {
         startingStation = tmp;
     }
 
+    /**
+     * Returns the other station connected to this edge given the current station.
+     *
+     * @param current the current station
+     * @return the other station connected to this edge, or null if the given station is not part of
+     *     the edge
+     */
     public VertexTransport getOtherStation(VertexTransport current) {
         if (current == startingStation) return endingStation;
         else if (current == endingStation) return startingStation;

@@ -119,6 +119,11 @@ public class Line {
                 name, terminalStationDeparture, terminalStationArrival, starts);
     }
 
+    /**
+     * Returns an ArrayList containing all the stations in this line.
+     *
+     * @return an ArrayList of Station objects representing all the stations in this line.
+     */
     public ArrayList<Station> getAllStations() {
         return allStations;
     }

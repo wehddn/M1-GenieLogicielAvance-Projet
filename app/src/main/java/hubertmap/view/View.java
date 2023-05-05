@@ -192,7 +192,6 @@ public class View {
         Pair<Time> time = null;
         if (currentTime != null) {
             time = Controller.getTimes(shortestPath, stationName1, stationName2, currentTime);
-            System.out.println(time);
             currentTime = time.getSecond();
         }
 

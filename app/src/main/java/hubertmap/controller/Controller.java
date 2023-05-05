@@ -102,6 +102,16 @@ public class Controller {
         network.deleteUserPoints();
     }
 
+    /**
+     * Calculates the departure and arrival time for two stations.
+     *
+     * @param shortestPath Shortest path.
+     * @param station1 The name of the starting station.
+     * @param station2 The name of the ending station.
+     * @param currentTime The current time as a Time object.
+     * @return A Pair object containing the departure time and the arrival time as Time objects, or
+     *     null if the calculation failed.
+     */
     public static Pair<Time> getTimes(
             List<EdgeTransport> shortestPath, String station1, String station2, Time currentTime) {
         return network.getTimes(shortestPath, station1, station2, currentTime);

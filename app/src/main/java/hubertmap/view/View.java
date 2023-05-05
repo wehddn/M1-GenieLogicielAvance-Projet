@@ -32,18 +32,18 @@ public class View {
     private JPanel panel;
 
     /** A GraphPanelJung object for drawing the graph using the JUNG library. */
-    GraphPanel graphPanel;
+    private GraphPanel graphPanel;
 
-    JPanel leftPanel;
+    private JPanel leftPanel;
 
-    SchedulesPanel schedulesPanel;
-    JPanel generalPanel;
+    private SchedulesPanel schedulesPanel;
+    private JPanel generalPanel;
 
     private HashMap<String, Line> lines;
 
     private JFrame frame;
 
-    SearchPanel searchPanel;
+    private SearchPanel searchPanel;
 
     private Time currentTime;
 

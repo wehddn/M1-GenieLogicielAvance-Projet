@@ -187,7 +187,7 @@ public class SearchPanel extends JPanel {
      * @param str to parse
      * @return Point2D.Float with latitude and longitude
      */
-    public Point2D.Float parseCoordinates(String str) {
+    private Point2D.Float parseCoordinates(String str) {
         String[] parts = str.split(",");
         if (parts.length != 2) {
             return null;

@@ -23,7 +23,7 @@ public class Controller {
 
     /** Constructs a new Controller instance, creates Network and View */
     public Controller() {
-        Parser parser = new Parser();
+        Parser parser = new Parser(true);
         network = parser.getEdges();
         graphView = new GraphData(network.getGraph(), network.getLines());
         view = new View(graphView);

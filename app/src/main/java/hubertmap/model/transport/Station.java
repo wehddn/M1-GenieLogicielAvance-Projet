@@ -86,8 +86,6 @@ public class Station extends VertexTransport {
         schedules.put(line.getName(), times);
     }
 
-    // ! maybe not having to do this verification
-
     /**
      * Add a line to the station schedules. If the line already exists in the schedules, then this
      * method does nothing.

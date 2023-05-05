@@ -120,13 +120,9 @@ public class Network {
      * @param station2 name of the destination station
      * @return a list edges to visit in the correct order
      */
-    public List<EdgeTransport> shortestPath(String type, String station1, String station2) {
+    public List<EdgeTransport> shortestPath(String station1, String station2) {
         if (stations.get(station1) != null && stations.get(station2) != null)
-            if (type.equals("time"))
-                return shortestPath(stations.get(station1), stations.get(station2));
-            else if (type.equals("changes"))
-                return shortestPathChanges(stations.get(station1), stations.get(station2));
-            else return null;
+            return shortestPathChanges(stations.get(station1), stations.get(station2));
         else return null;
     }
 

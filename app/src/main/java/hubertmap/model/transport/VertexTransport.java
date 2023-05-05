@@ -64,9 +64,11 @@ public abstract class VertexTransport {
      * @return true if this vertex is equal to the specified vertex, false otherwise
      */
     public boolean equals(VertexTransport vertex) {
-        return (this.name.equals(vertex.getName())
-                && this.x.equals(vertex.getX())
-                && this.y.equals(vertex.getY()));
+        if (this.name == vertex.getName() && this.x == vertex.getX() && this.y == vertex.getY()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

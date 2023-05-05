@@ -114,7 +114,7 @@ public class SearchPanel extends JPanel {
                 String station1Name = getCoordsFromString(stringStart);
                 String station2Name = getCoordsFromString(stringEnd);
 
-                Controller.setShortestPath(station1Name, station2Name);
+                Controller.setShortestPath(type, station1Name, station2Name);
             }
 
             private String getCoordsFromString(String stringStart) {

@@ -24,6 +24,23 @@ public class Station extends VertexTransport {
     private boolean multiLine; // used for the view
 
     /**
+     * Constructs a new station with the given name, list of lines, and coordinates. If the list of
+     * lines is null, an empty list is created.
+     *
+     * @param name the name of the station
+     * @param allLines the list of all transportation lines that serve the station
+     * @param x the x-coordinate of the station's location
+     * @param y the y-coordinate of the station's location
+     */
+    public Station(String name, ArrayList<String> allLines, Float x, Float y) {
+        super(name, x, y);
+        if (allLines != null) {
+            this.allLines = allLines;
+        } else {
+            this.allLines = new ArrayList<String>();
+        }
+    }
+    /**
      * Constructs a new station with the given name, line, and coordinates. The station is served by
      * only one transportation line.
      *

@@ -114,4 +114,19 @@ public class DurationJourney {
     public DurationJourney copy() {
         return new DurationJourney(this.toSeconds());
     }
+
+    /**
+     * adds minutes and seconds of parameter to current object, and returns it
+     *
+     * @param d DurationJourney to add
+     * @return current object after the addition is done
+     * @return DurationJourney new object
+     */
+    public DurationJourney add(DurationJourney d) {
+        seconde += d.seconde;
+        minute += d.minute + (seconde / 60);
+        seconde %= 60;
+
+        return this;
+    }
 }

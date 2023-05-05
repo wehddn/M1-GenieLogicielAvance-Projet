@@ -361,14 +361,8 @@ public class Network {
             String stationName2,
             Time currentTime) {
 
-        // If the names are equal, return the transfer time
-        if (stationName1.equals(stationName2)) {
-            Time arrivalTime = new Time(currentTime);
-            arrivalTime.increaseByMinute(2);
-            return new Pair<Time>(currentTime, arrivalTime);
-        }
         // Check if both vertices are stations
-        else if (stations.get(stationName1.toLowerCase()) instanceof Station
+        if (stations.get(stationName1.toLowerCase()) instanceof Station
                 && stations.get(stationName2.toLowerCase()) instanceof Station) {
             Station station1 = (Station) stations.get(stationName1.toLowerCase());
             Station station2 = (Station) stations.get(stationName2.toLowerCase());
@@ -428,6 +422,8 @@ public class Network {
         for (EdgeTransport edgeTransport : shortestPath) {
             if (edgeTransport.getStartingStation().equals(currentStation)) {
                 currentStation = edgeTransport.getEndingStation();
+                System.out.println(edgeTransport);
+                System.out.println(edgeTransport.getDurationJourney());
                 time = time.increaseWithADurationJourney(edgeTransport.getDurationJourney());
             }
 

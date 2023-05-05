@@ -47,7 +47,7 @@ class ParserTest {
                     new File("src/test/java/hubertmap/model/parser/resources/map_data_test1.csv"));
         } catch (Exception e) {
         }
-        List<Station> stations = parser.stations;
+        List<Station> stations = parser.getStations();
         // Check all the stations from CSV are well stack in the stations arrayList
         String stationsFromCSV =
                 utf8String(
@@ -71,7 +71,7 @@ class ParserTest {
                     new File("src/test/java/hubertmap/model/parser/resources/map_data_test1.csv"));
         } catch (Exception e) {
         }
-        List<Station> stations = parser.stations;
+        List<Station> stations = parser.getStations();
 
         // Lourmel is in both the first and the second variant and is the first station of the csv
         // file, and a start-of-line station
@@ -115,7 +115,7 @@ class ParserTest {
                     new File("src/test/java/hubertmap/model/parser/resources/map_data_test1.csv"));
         } catch (Exception e) {
         }
-        List<EdgeTransport> edges = new ArrayList<>(parser.network.getGraph().getEdges());
+        List<EdgeTransport> edges = new ArrayList<>(parser.getNetwork().getGraph().getEdges());
         String lourmelBoucicautEdge =
                 utf8String(
                         "Lourmel - Boucicaut; durationJourney : (minutes : 0, secondes : 41);"
@@ -142,9 +142,9 @@ class ParserTest {
         // Here as parseLines usually uses data retrieved from parseStations we need to insert faked
         // data to parser because we have to prevent dependency between the tests
         Station lourmelStation = new Station("Lourmel", "8 variant 1", null, null);
-        parser.stations.add(lourmelStation);
-        parser.stations.add(new Station("Boucicaut", "8 variant 1", null, null));
-        parser.stations.add(new Station(utf8String("Félix Faure"), "8 variant 1", null, null));
+        parser.getStations().add(lourmelStation);
+        parser.getStations().add(new Station("Boucicaut", "8 variant 1", null, null));
+        parser.getStations().add(new Station(utf8String("Félix Faure"), "8 variant 1", null, null));
 
         ArrayList<DurationJourney> durationJourneys = new ArrayList<>();
         durationJourneys.add(new DurationJourney("4", "14"));

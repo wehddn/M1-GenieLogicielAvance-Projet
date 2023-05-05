@@ -7,6 +7,7 @@ import hubertmap.model.transport.EdgeTransport;
 import hubertmap.model.transport.Line;
 import hubertmap.model.transport.Station;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,11 @@ import org.junit.jupiter.api.Test;
 class ParserTest {
 
     private Parser parser;
+
+    // returns a copy of the input string with UTF8 encoding
+    String utf8String(String input) {
+        return new String(input.getBytes(), StandardCharsets.UTF_8);
+    }
 
     @BeforeEach
     public void setup() {
@@ -44,16 +50,17 @@ class ParserTest {
         List<Station> stations = parser.stations;
         // Check all the stations from CSV are well stack in the stations arrayList
         String stationsFromCSV =
-                "[Lourmel, Boucicaut, Félix Faure, Commerce, La Motte-Picquet - Grenelle, École"
-                    + " Militaire, La Tour-Maubourg, Invalides, Concorde, Madeleine, Opéra,"
-                    + " Richelieu - Drouot, Grands Boulevards, Bonne Nouvelle, Strasbourg -"
-                    + " Saint-Denis, République, Filles du Calvaire, Saint-Sébastien - Froissart,"
-                    + " Chemin Vert, Bastille, Ledru-Rollin, Faidherbe - Chaligny, Reuilly -"
-                    + " Diderot, Montgallet, Daumesnil, Michel Bizot, Porte Dorée, Porte de"
-                    + " Charenton, Liberté, Charenton - Écoles, Ecole Vétérinaire de"
-                    + " Maisons-Alfort, Maisons-Alfort - Stade, Maisons-Alfort - Les Juilliottes,"
-                    + " Créteil - L'Échat, Créteil - Université, Créteil - Préfecture, Pointe du"
-                    + " Lac, Balard]";
+                utf8String(
+                        "[Lourmel, Boucicaut, Félix Faure, Commerce, La Motte-Picquet - Grenelle,"
+                            + " École Militaire, La Tour-Maubourg, Invalides, Concorde, Madeleine,"
+                            + " Opéra, Richelieu - Drouot, Grands Boulevards, Bonne Nouvelle,"
+                            + " Strasbourg - Saint-Denis, République, Filles du Calvaire,"
+                            + " Saint-Sébastien - Froissart, Chemin Vert, Bastille, Ledru-Rollin,"
+                            + " Faidherbe - Chaligny, Reuilly - Diderot, Montgallet, Daumesnil,"
+                            + " Michel Bizot, Porte Dorée, Porte de Charenton, Liberté, Charenton -"
+                            + " Écoles, Ecole Vétérinaire de Maisons-Alfort, Maisons-Alfort -"
+                            + " Stade, Maisons-Alfort - Les Juilliottes, Créteil - L'Échat, Créteil"
+                            + " - Université, Créteil - Préfecture, Pointe du Lac, Balard]");
         assertEquals(stations.toString(), stationsFromCSV);
     }
 
@@ -110,19 +117,22 @@ class ParserTest {
         }
         List<EdgeTransport> edges = new ArrayList<>(parser.network.getGraph().getEdges());
         String lourmelBoucicautEdge =
-                "Lourmel - Boucicaut; durationJourney : (minutes : 0, secondes : 41); distance :"
-                        + " 15.939358; line : 8";
+                utf8String(
+                        "Lourmel - Boucicaut; durationJourney : (minutes : 0, secondes : 41);"
+                                + " distance : 15.939358; line : 8");
 
         String boucicautFelixFaureEdge =
-                "Boucicaut - Félix Faure; durationJourney : (minutes :"
-                        + " 0, secondes : 25); distance : 11.195691; line : 8";
+                utf8String(
+                        "Boucicaut - Félix Faure; durationJourney : (minutes :"
+                                + " 0, secondes : 25); distance : 11.195691; line : 8");
 
         assertTrue(edges.toString().contains(lourmelBoucicautEdge));
         assertTrue(edges.toString().contains(boucicautFelixFaureEdge));
 
         String creteilPrefecturePointeDuLac =
-                "Créteil - Préfecture - Pointe du Lac; durationJourney : (minutes : 2, secondes :"
-                        + " 23); distance : 70.15347; line : 8";
+                utf8String(
+                        "Créteil - Préfecture - Pointe du Lac; durationJourney : (minutes : 2,"
+                                + " secondes : 23); distance : 70.15347; line : 8");
 
         assertTrue(edges.toString().contains(creteilPrefecturePointeDuLac));
     }
@@ -134,7 +144,7 @@ class ParserTest {
         Station lourmelStation = new Station("Lourmel", "8 variant 1", null, null);
         parser.stations.add(lourmelStation);
         parser.stations.add(new Station("Boucicaut", "8 variant 1", null, null));
-        parser.stations.add(new Station("Félix Faure", "8 variant 1", null, null));
+        parser.stations.add(new Station(utf8String("Félix Faure"), "8 variant 1", null, null));
 
         ArrayList<DurationJourney> durationJourneys = new ArrayList<>();
         durationJourneys.add(new DurationJourney("4", "14"));

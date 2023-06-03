@@ -1,8 +1,8 @@
-# projet-gl-avance-groupe-lithium
+# Projet-GenieLogicielAvance-2022-2023
 
-## Video presentation
+Ce projet a été réalisé pour le cours de Génie Logiciel Avancé de M1 Informatique 2022-2023 de l'Université Paris Cité.
 
-https://www.youtube.com/watch?v=ABO1gZ98Icc
+Project information : [WikiPage](https://github.com/wehddn/Projet-GenieLogicielAvance-2022-2023/wiki)
 
 ## Configuration
 
